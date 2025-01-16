@@ -3,19 +3,12 @@ import { env } from '$env/dynamic/private';
 import axios from 'axios';
 import type { Character } from '$lib/models/combine/character';
 import { db } from '$lib/server/db/index.js';
-import { eq, getTableColumns } from 'drizzle-orm';
+import { getTableColumns } from 'drizzle-orm';
 import jwt from 'jsonwebtoken';
 import { users } from '$lib/server/db/schema/users.js';
+import { dev } from '$app/environment';
 
-export const load = async ({ locals, url, cookies }) => {
-	const code = url.searchParams.get('code');
-
-	console.log(url);
-
-	if (!code) {
-		redirect(303, '/login');
-	}
-
+async function getUserFromSwc(code: string) {
 	const params = new URLSearchParams();
 	params.append('client_id', env.COMBINE_CLIENT_ID);
 	params.append('client_secret', env.COMBINE_SECRET_KEY);
@@ -29,33 +22,68 @@ export const load = async ({ locals, url, cookies }) => {
 		}
 	});
 
-	console.log(data);
-
 	const { data: user } = await axios.get<Character>('https://www.swcombine.com/ws/v2.0/character', {
 		headers: {
 			Authorization: `OAuth ${data.access_token}`
 		}
 	});
 
+	return {
+		name: user.swcapi.character.name,
+		combineId: user.swcapi.character.uid,
+		avatar: user.swcapi.character.image,
+		joinDate: new Date(),
+		scopes: data.scope
+	};
+}
+
+function makeImpersonatedUser(devHandle: string, devUid: string) {
+	return {
+		name: devHandle,
+		combineId: devUid,
+		avatar: '',
+		scopes: 'character_read'
+	};
+}
+
+export const load = async ({ url, cookies }) => {
+	let user;
+
+	const code = url.searchParams.get('code');
+	if (code) {
+		user ??= await getUserFromSwc(code);
+	} else if(dev) {
+		const devHandle = url.searchParams.get('dev_handle');
+		const devUid = url.searchParams.get('dev_uid');
+		if(devHandle && devUid) {
+			user ??= makeImpersonatedUser(devHandle, devUid);
+		}
+	}
+
+	if(!user) {
+		redirect(303, '/login');
+	}
+
 	const uimUser = await db
 		.insert(users)
 		.values({
-			name: user.swcapi.character.name,
-			combineId: user.swcapi.character.uid,
-			avatar: user.swcapi.character.image,
+			name: user.name,
+			combineId: user.combineId,
+			avatar: user.avatar,
 			joinDate: new Date(),
-			scopes: data.scope
+			scopes: user.scopes
 		})
 		.onConflictDoUpdate({
 			target: [users.combineId],
 			set: {
-				name: user.swcapi.character.name,
-				scopes: data.scope,
-				avatar: user.swcapi.character.image
+				name: user.name,
+				scopes: user.scopes,
+				...(user.avatar && { avatar: user.avatar } || {}),
 			}
 		})
 		.returning({ ...getTableColumns(users) });
-	let token = jwt.sign(
+
+	const token = jwt.sign(
 		{
 			id: uimUser[0].id
 		},
