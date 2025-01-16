@@ -21,7 +21,7 @@ export const load = async ({ locals, url, cookies }) => {
 	params.append('client_secret', env.COMBINE_SECRET_KEY);
 	params.append('code', code);
 	params.append('grant_type', 'authorization_code');
-	params.append('redirect_uri', `${env.BASE_URL}/callback`);
+	params.append('redirect_uri', `${env.UIM_BASE_URL}/callback`);
 
 	const { data } = await axios.post('https://www.swcombine.com/ws/oauth2/token/', params, {
 		headers: {

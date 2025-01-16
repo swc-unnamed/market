@@ -19,31 +19,40 @@
 	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
 	import Icon from '$lib/components/custom/shared/icon.svelte';
 	import { toast } from 'svelte-sonner';
+	import { zodClient } from 'sveltekit-superforms/adapters';
+	import { newAuctionListingSchema } from '$lib/helpers/zod/auction-listing.schema.js';
 
 	const user = getContext<User>('user');
 	let { data } = $props();
 
-	const { form, errors, delayed, enhance, submit } = superForm(data.form, {
+	const { form, errors, enhance, validateForm, submit } = superForm(data.form, {
 		dataType: 'json',
+		id: 'newListing',
+		validators: zodClient(newAuctionListingSchema),
 		onResult: (res) => {
 			console.log(res);
 			if (res.result.type == 'success') {
 				toast.success(res.result?.data?.form.message);
 			}
+
+			if (res.result.type === 'failure') {
+				errors.set(res.result?.data?.form.errors);
+				toast.error('There as an error trying to submit your request to the holochain.');
+			}
 		}
 	});
 
-	const onFormSubmit = async (e: Event) => {
-		e.preventDefault();
+	async function handleSubmit() {
 		submit();
-	};
+	}
 </script>
 
 <LayoutWrapper
 	title="New Auction Listing"
 	subTitle="Create a new listing to be picked up in an upcoming auction."
 >
-	<div class="grid grid-cols-1 gap-2 md:grid-cols-2">
+	<form method="POST" action="?/createListing" use:enhance></form>
+	<div class="grid grid-cols-1 gap-2 lg:grid-cols-2">
 		<div>
 			<div class="grid grid-cols-1 gap-2">
 				<Alert.Root class="border-0">
@@ -64,22 +73,36 @@
 
 				<Card.Root>
 					<Card.Content>
-						<form class="flex flex-col gap-4" method="POST" action="?/createListing" use:enhance>
+						<div class="flex flex-col gap-4">
 							<div class="grid gap-1">
 								<Label>Title</Label>
 								<Input bind:value={$form.title} />
+
+								{#if $errors.title}
+									<p class="text-xs text-red-600">{$errors.title}</p>
+								{/if}
 							</div>
 							<div class="grid gap-1">
 								<Label>Details</Label>
 								<Textarea bind:value={$form.description} />
+
+								{#if $errors.description}
+									<p class="text-xs text-red-600">{$errors.description}</p>
+								{/if}
 							</div>
 							<div class="grid gap-1">
 								<Label>Location</Label>
 								<Textarea bind:value={$form.location} />
+								{#if $errors.location}
+									<p class="text-xs text-red-600">{$errors.location}</p>
+								{/if}
 							</div>
 							<div class="grid gap-1">
 								<Label>Who should we send the credits to?</Label>
-								<Input bind:value={$form.sendCreditsTo} required />
+								<Input bind:value={$form.sendCreditsTo} />
+								{#if $errors.sendCreditsTo}
+									<p class="text-xs text-red-600">{$errors.sendCreditsTo}</p>
+								{/if}
 							</div>
 							<div class="grid gap-1">
 								<div class="flex items-center gap-1">
@@ -93,19 +116,23 @@
 							</div>
 							<div class="grid gap-1">
 								<CreditInput label="Starting Price" bind:value={$form.startingPrice} />
+								{#if $errors.startingPrice}
+									<p class="text-xs text-red-600">{$errors.startingPrice}</p>
+								{/if}
 							</div>
-						</form>
+						</div>
 					</Card.Content>
 				</Card.Root>
 
 				<div class="flex justify-end gap-2">
-					<Button class="flex items-center" variant="ghost" type="submit" onclick={onFormSubmit}>
+					<Button class="flex items-center" variant="default" onclick={handleSubmit}>
 						<Icon icon="mdi:invoice-check-outline" class="size-8" />
 						Save Listing
 					</Button>
 
 					<Button
 						class="flex items-center"
+						variant="ghost"
 						onclick={() => {
 							$form.items = [
 								...$form.items,
@@ -154,6 +181,9 @@
 									<div class="grid gap-1">
 										<Label>Quantity</Label>
 										<Input type="number" bind:value={$form.items[i].quantity} />
+										{#if $errors?.items?.[i]?.quantity}
+											<p class="text-xs text-red-600">{$errors.items[i].quantity}</p>
+										{/if}
 									</div>
 
 									<div class="grid gap-1">
@@ -166,7 +196,7 @@
 
 									<div class="grid gap-1">
 										<div class="flex items-center gap-1">
-											<Label>U3</Label>
+											<Label>U / U / U</Label>
 											<Switch bind:checked={$form.items[i].u3} />
 										</div>
 										<span class="text-xs text-muted-foreground">
@@ -185,5 +215,6 @@
 			</div>
 		</ScrollArea>
 	</div>
+
 	<!-- <SuperDebug data={$form} /> -->
 </LayoutWrapper>

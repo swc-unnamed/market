@@ -12,19 +12,36 @@
 			title: 'Home',
 			href: '/home',
 			icon: 'mdi:home',
-			nested: []
+			nested: [],
+			allowedRoles: ['user', 'admin', 'owner', 'developer']
 		},
 		{
 			title: 'Auctions',
 			href: '/auctions',
 			icon: 'mdi:invoice-line-items',
-			nested: []
+			nested: [],
+			allowedRoles: ['user', 'admin', 'owner', 'developer']
 		},
 		{
 			title: 'Assets',
 			href: '/assets',
 			icon: 'mdi:database',
-			nested: []
+			nested: [],
+			allowedRoles: ['user', 'admin', 'owner', 'developer']
+		},
+		{
+			title: 'Settings',
+			href: '/settings',
+			icon: 'mdi:cog',
+			allowedRoles: ['admin', 'owner', 'developer'],
+			nested: [
+				{
+					title: 'Access Control',
+					href: '/settings/access-control',
+					icon: 'mdi:shield-account',
+					allowedRoles: ['admin', 'owner', 'developer']
+				}
+			]
 		}
 	];
 

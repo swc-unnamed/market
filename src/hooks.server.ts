@@ -38,7 +38,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 		event.locals.user = {
 			id: userRecord.id,
 			name: userRecord.name,
-			avatar: userRecord.avatar
+			avatar: userRecord.avatar,
+			role: userRecord.role
 		};
 
 		return await resolve(event);

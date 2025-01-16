@@ -2,8 +2,13 @@ import { relations } from 'drizzle-orm';
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
 import { auctionListings } from './auction-listings';
 import { assets } from './assets';
+import { createId } from '../../../helpers/nanoid';
 
 export const auctionListingItems = sqliteTable('auction_listing_items', {
+	id: text('id')
+		.unique()
+		.primaryKey()
+		.$defaultFn(() => createId()),
 	listingId: text('listing_id'),
 	assetId: text('asset_id'),
 	u3: integer('u3', { mode: 'boolean' }),

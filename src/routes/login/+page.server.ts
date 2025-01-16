@@ -4,7 +4,7 @@ export const load = async () => {
 
 	params.append('client_id', env.COMBINE_CLIENT_ID);
 	params.append('response_type', 'code');
-	params.append('redirect_uri', `${env.BASE_URL}/callback`);
+	params.append('redirect_uri', `${env.UIM_BASE_URL}/callback`);
 	params.append('scope', 'character_read');
 
 	const url = `https://www.swcombine.com/ws/oauth2/auth/?${params.toString()}`;

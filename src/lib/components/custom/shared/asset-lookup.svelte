@@ -43,7 +43,7 @@
 		{#if trigger}
 			{@render trigger?.()}
 		{:else}
-			<Button size="sm" variant="default">
+			<Button size="sm" variant="secondary">
 				<Icon icon="mdi:database" class="size-4" />
 				Asset Lookup
 			</Button>

@@ -11,5 +11,7 @@ export const users = sqliteTable('users', {
 	avatar: text('avatar'),
 	joinDate: integer('join_date', { mode: 'timestamp' }).$defaultFn(() => new Date()),
 	scopes: text('scopes'),
-	role: text('role', { enum: ['user', 'moderator', 'admin'] }).default('user')
+	role: text('role', { enum: ['user', 'moderator', 'admin', 'developer', 'owner'] })
+		.default('user')
+		.notNull()
 });
