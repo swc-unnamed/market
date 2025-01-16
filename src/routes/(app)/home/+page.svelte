@@ -4,8 +4,16 @@
 
 	import * as Card from '$lib/components/ui/card';
 	import * as Alert from '$lib/components/ui/alert';
+	import Button from '$lib/components/ui/button/button.svelte';
+	import { Badge } from '$lib/components/ui/badge/index.js';
+	import { formatAuctionListingStatus } from '$lib/helpers/auctions.js';
+	import { goto, preloadData } from '$app/navigation';
 
 	let { data } = $props();
+
+	let auctionListings = $derived(data.userListings);
+
+	$inspect(auctionListings);
 </script>
 
 <LayoutWrapper title="Home" displayTitle={false}>
@@ -13,29 +21,59 @@
 		<div class="flex justify-center">
 			<img class="w-2/3 rounded-lg" src={'/assets/unnamed-banner.png'} alt="Banner" />
 		</div>
-		<Alert.Root>
-			<Alert.Title>Hey {data.user.name}, got something to tell you</Alert.Title>
-			<Alert.AlertDescription>
-				<p>
-					The Unnamed Imperium Market is under heavy, like <span class="font-bold">HEAVY</span> development.
-					I'm not really sure what I'm going to put here, so if you want to help me out with ideas, let
-					me know. This home page should be user-focused.
-				</p>
-			</Alert.AlertDescription>
-		</Alert.Root>
-	</div>
+		<div class="flex justify-center">
+			<p>
+				For now, this is just a simple home page. For now we are just showing listings you have
+				created. Don't worry, this will update over time.
+			</p>
+		</div>
 
-	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-		<Card.Root>
-			<Card.Header>
-				<Card.Title>Card Title</Card.Title>
-				<Card.Description>
-					<span style="font-family: 'Galactic Basic'">$ 10,000,000</span>
-				</Card.Description>
-			</Card.Header>
-			<Card.Content>
-				<p>List out some type of card content or something</p>
-			</Card.Content>
-		</Card.Root>
+		{#if auctionListings.length < 1}
+			<Alert.Root class="border-primary">
+				<Alert.Title>No Auction Listings</Alert.Title>
+				<Alert.Description>
+					You have not created any auction listings yet. <a href="/auctions/new">Create one now!</a>
+				</Alert.Description>
+			</Alert.Root>
+		{/if}
+
+		<div class="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
+			{#if auctionListings.length > 0}
+				{#each auctionListings as al, i (al.id)}
+					<Card.Root
+						class="transition-transform duration-150 hover:scale-95 hover:cursor-pointer"
+						tabindex={1}
+						onmouseenter={async () => {
+							await preloadData(`/auctions/${al.id}`);
+						}}
+						onclick={async () => {
+							await goto(`/auctions/${al.id}`);
+						}}
+					>
+						<Card.Header>
+							<Card.Title>
+								<div class="flex justify-between">
+									<span>{al.title}</span>
+									<Badge>{formatAuctionListingStatus(al.status)}</Badge>
+								</div>
+							</Card.Title>
+							<Card.Description>
+								<span style="font-family: 'Galactic Basic'">$ {al.startingPrice}</span>
+							</Card.Description>
+						</Card.Header>
+						<Card.Content class="flex flex-col gap-2">
+							<p class="text-sm">{al.description}</p>
+						</Card.Content>
+						<Card.Footer>
+							<div class="flex justify-between">
+								<span class="text-xs"
+									>This listing has {al.items.length} item{al.items.length ? '' : 's'}</span
+								>
+							</div>
+						</Card.Footer>
+					</Card.Root>
+				{/each}
+			{/if}
+		</div>
 	</div>
 </LayoutWrapper>

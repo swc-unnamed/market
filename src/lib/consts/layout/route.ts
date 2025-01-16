@@ -4,6 +4,7 @@ export type Route = {
 	icon?: string;
 	isHref?: boolean;
 	nested?: NestedRoute[];
+	allowedRoles?: string[];
 };
 
 export type NestedRoute = Omit<Route, 'nested'>;

@@ -4,7 +4,7 @@ export const auctionListingItemSchema = z.object({
 	listingId: z.string().nullable().optional(),
 	assetId: z.string().nullable(),
 	u3: z.boolean().default(true),
-	quantity: z.number().default(1),
+	quantity: z.number().min(1, { message: `You can't set this to less than 1.` }).default(1),
 	customImageUrl: z.string().nullable().optional()
 });
 
