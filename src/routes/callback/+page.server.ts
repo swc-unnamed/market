@@ -52,15 +52,15 @@ export const load = async ({ url, cookies }) => {
 	const code = url.searchParams.get('code');
 	if (code) {
 		user ??= await getUserFromSwc(code);
-	} else if(dev) {
+	} else if (dev) {
 		const devHandle = url.searchParams.get('dev_handle');
 		const devUid = url.searchParams.get('dev_uid');
-		if(devHandle && devUid) {
+		if (devHandle && devUid) {
 			user ??= makeImpersonatedUser(devHandle, devUid);
 		}
 	}
 
-	if(!user) {
+	if (!user) {
 		redirect(303, '/login');
 	}
 
@@ -78,7 +78,7 @@ export const load = async ({ url, cookies }) => {
 			set: {
 				name: user.name,
 				scopes: user.scopes,
-				...(user.avatar && { avatar: user.avatar } || {}),
+				...((user.avatar && { avatar: user.avatar }) || {})
 			}
 		})
 		.returning({ ...getTableColumns(users) });

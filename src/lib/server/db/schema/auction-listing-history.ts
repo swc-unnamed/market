@@ -1,10 +1,10 @@
 import { createId } from '../../../helpers/nanoid';
-import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { auctionListings } from './auction-listings';
 import { AuctionListingEvents } from '../../../consts/auction-listing-events';
 import { relations } from 'drizzle-orm';
+import { pgTable, text, integer, timestamp } from 'drizzle-orm/pg-core';
 
-export const auctionListingHistory = sqliteTable('auction_listing_history', {
+export const auctionListingHistory = pgTable('auction_listing_history', {
 	id: text('id')
 		.unique()
 		.primaryKey()
@@ -14,7 +14,7 @@ export const auctionListingHistory = sqliteTable('auction_listing_history', {
 		.references(() => auctionListings.id),
 	event: text('event', { enum: AuctionListingEvents }).notNull(),
 	message: text('message').notNull(),
-	time: integer('time', { mode: 'timestamp' }).$defaultFn(() => new Date())
+	time: timestamp('time', ).$defaultFn(() => new Date())
 });
 
 export const auctionListingHistoryRelations = relations(auctionListingHistory, ({ one }) => ({

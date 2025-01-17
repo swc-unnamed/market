@@ -1,7 +1,7 @@
 import { createId } from '../../../helpers/nanoid';
-import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
+import { pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 
-export const users = sqliteTable('users', {
+export const users = pgTable('users', {
 	id: text('id')
 		.unique()
 		.primaryKey()
@@ -9,7 +9,7 @@ export const users = sqliteTable('users', {
 	name: text('name').unique().notNull(),
 	combineId: text('combine_id').unique().notNull(),
 	avatar: text('avatar'),
-	joinDate: integer('join_date', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+	joinDate: timestamp('join_date').$defaultFn(() => new Date()),
 	scopes: text('scopes'),
 	role: text('role', { enum: ['user', 'moderator', 'admin', 'developer', 'owner'] })
 		.default('user')

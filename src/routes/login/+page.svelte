@@ -20,7 +20,7 @@
 			headers: { Accept: 'application/json' }
 		});
 
-		if(handleCheckResponse.status === 404) {
+		if (handleCheckResponse.status === 404) {
 			impersonationUid = '';
 			handlecheckResultText = 'Handle does not exist. Enter the handle of a real SWC user.';
 			impersonationButtonBusy = false;
@@ -28,12 +28,15 @@
 		}
 
 		const handleCheck = (await handleCheckResponse.json()) as { handle: string; uid: string };
-		if(handleCheck.handle.localeCompare(impersonationHandle, undefined, { sensitivity: 'base'}) !== 0) {
+		if (
+			handleCheck.handle.localeCompare(impersonationHandle, undefined, { sensitivity: 'base' }) !==
+			0
+		) {
 			return;
 		}
 
 		impersonationUid = handleCheck.uid;
-		handlecheckResultText = 'Handle found. This user can be impersonated.'
+		handlecheckResultText = 'Handle found. This user can be impersonated.';
 		impersonationButtonBusy = false;
 	}
 
@@ -42,8 +45,8 @@
 	}
 
 	async function onImpersonateButtonClicked() {
-		if(!dev) return
-		if(!impersonationUid) return await retrieveHandleInfo(impersonationHandle);
+		if (!dev) return;
+		if (!impersonationUid) return await retrieveHandleInfo(impersonationHandle);
 		return await impersonateUser(impersonationHandle, impersonationUid);
 	}
 </script>
@@ -75,7 +78,11 @@
 				<Card.Footer class="flex flex-col items-center">
 					<Button variant="link" href={data.url}>Login with SW Combine</Button>
 					{#if dev}
-						<Button class="text-muted-foreground" variant="link" onclick={() => (impersonationDialogOpen = true)}>
+						<Button
+							class="text-muted-foreground"
+							variant="link"
+							onclick={() => (impersonationDialogOpen = true)}
+						>
 							Impersonate user (developer option)
 						</Button>
 					{/if}
@@ -84,31 +91,37 @@
 		</div>
 	</div>
 	{#if dev}
-	<Dialog.Root bind:open={impersonationDialogOpen}>
-		<Dialog.Content>
-			<form>
-			<Dialog.Header>
-				<Dialog.Title>Impersonate User (dev)</Dialog.Title>
-				<Dialog.Description>Enter the handle of the user you wish to impersonate.</Dialog.Description>
-			</Dialog.Header>
-			<div class="flex flex-col gap-2 py-4">
-				<Input type="text" bind:value={impersonationHandle} />
-				<p>{ handlecheckResultText }</p>
-			</div>
-			<Dialog.Footer>
-				<Button
-					type="submit"
-					variant="default"
-					disabled={impersonationButtonBusy || !impersonationHandle.length}
-					onclick={onImpersonateButtonClicked}>
-					{#if impersonationButtonBusy} Busy...
-					{:else if !!impersonationUid} Impersonate User
-					{:else} Retrieve Info
-					{/if}
-				</Button>
-			</Dialog.Footer>
-			</form>
-		</Dialog.Content>
-	</Dialog.Root>
+		<Dialog.Root bind:open={impersonationDialogOpen}>
+			<Dialog.Content>
+				<form>
+					<Dialog.Header>
+						<Dialog.Title>Impersonate User (dev)</Dialog.Title>
+						<Dialog.Description
+							>Enter the handle of the user you wish to impersonate.</Dialog.Description
+						>
+					</Dialog.Header>
+					<div class="flex flex-col gap-2 py-4">
+						<Input type="text" bind:value={impersonationHandle} />
+						<p>{handlecheckResultText}</p>
+					</div>
+					<Dialog.Footer>
+						<Button
+							type="submit"
+							variant="default"
+							disabled={impersonationButtonBusy || !impersonationHandle.length}
+							onclick={onImpersonateButtonClicked}
+						>
+							{#if impersonationButtonBusy}
+								Busy...
+							{:else if !!impersonationUid}
+								Impersonate User
+							{:else}
+								Retrieve Info
+							{/if}
+						</Button>
+					</Dialog.Footer>
+				</form>
+			</Dialog.Content>
+		</Dialog.Root>
 	{/if}
 </div>
