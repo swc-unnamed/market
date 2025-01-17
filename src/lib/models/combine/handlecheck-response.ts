@@ -1,13 +1,13 @@
 export interface HandleCheckResponse {
-	version: "2.0";
+	version: '2.0';
 	timestamp: number;
 	resource: string;
 	request: string;
-	swcapi: HandleCheckResult | HandleCheckErrorResult
+	swcapi: HandleCheckResult | HandleCheckErrorResult;
 }
 
 interface HandleCheckResult {
-	character: HandleCheckCharacter
+	character: HandleCheckCharacter;
 }
 
 interface HandleCheckCharacter {
