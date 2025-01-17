@@ -1,4 +1,4 @@
-# SWC Unnamed Imperium - Market
+****# SWC Unnamed Imperium - Market
 
 <img src="./static/assets/unnamed-banner.png" />
 
@@ -12,12 +12,19 @@ cd market
 pnpm install
 ```
 
-Copy the `.env.example` to `.env` and update the file. At the time of this writing, a Combine account is required and you will need to get a web service account setup. Reach out to the ASIMs to get one approved. Marc might be able willing to provide client creds, but would prefer each developer obtains their own for security reasons.
+Copy the `.env.example` to `.env` and update the file. Reach out to the ASIMs to get one approved. 
+Marc might be able willing to provide client creds, but would prefer each developer obtains their own for security reasons.
 
-Once you get your env file setup, you are ready to run the migrations and seed your local database.
+You will need to have docker installed. If you don't have docker installed, you can install it [here](https://docs.docker.com/get-docker/)
 
+Let's start the database:
 ```shell
-pnpm db:push # Will push the local schema to your local.db file
+docker compose up -d
+```
+
+Run the migrations:
+```shell
+pnpm db:migrate # Will run pending migrations
 
 pnpm db:seed # Will seed your assets table with combine assets
 ```
@@ -33,6 +40,7 @@ pnpm run dev
 
 ## Development
 
+- Docker for running the postgres database
 - UI Market utilizing [TailwindCSS](https://tailwindcss.com/docs/installation) for it's CSS needs.
 - Component library that is utlized is [shadcn svelte](https://next.shadcn-svelte.com/docs)
 - Base libarary is SvelteKit and Svelte 5

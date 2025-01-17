@@ -3,8 +3,8 @@ import { config } from 'dotenv';
 import csvParser from 'csv-parser';
 import { assets } from '../schema';
 import type { InferInsertModel } from 'drizzle-orm';
-import { createClient } from '@libsql/client';
-import { drizzle } from 'drizzle-orm/libsql';
+import 'dotenv/config';
+import { drizzle } from 'drizzle-orm/node-postgres';
 import * as schema from '../schema';
 
 async function seed() {
@@ -12,13 +12,7 @@ async function seed() {
 
 	if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL is not set');
 
-	if (!process.env.DATABASE_AUTH_TOKEN) throw new Error('DATABASE_AUTH_TOKEN is not set');
-
-	const client = createClient({
-		url: process.env.DATABASE_URL,
-		authToken: process.env.DATABASE_AUTH_TOKEN
-	});
-	const db = drizzle(client, { schema: schema });
+	const db = drizzle(process.env.DATABASE_URL!, { schema: schema });
 
 	const result: InferInsertModel<typeof assets>[] = [];
 

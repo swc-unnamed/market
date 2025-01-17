@@ -1,7 +1,7 @@
 import { createId } from '../../../helpers/nanoid';
-import { sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { pgTable, text } from 'drizzle-orm/pg-core';
 
-export const assets = sqliteTable('assets', {
+export const assets = pgTable('assets', {
 	id: text('id')
 		.unique()
 		.primaryKey()

@@ -1,17 +1,17 @@
 import { relations } from 'drizzle-orm';
-import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
 import { auctionListings } from './auction-listings';
 import { assets } from './assets';
 import { createId } from '../../../helpers/nanoid';
+import { pgTable, text, integer, boolean } from 'drizzle-orm/pg-core';
 
-export const auctionListingItems = sqliteTable('auction_listing_items', {
+export const auctionListingItems = pgTable('auction_listing_items', {
 	id: text('id')
 		.unique()
 		.primaryKey()
 		.$defaultFn(() => createId()),
 	listingId: text('listing_id'),
 	assetId: text('asset_id'),
-	u3: integer('u3', { mode: 'boolean' }),
+	u3: boolean('u3'),
 	quantity: integer('quantity'),
 	customImageUrl: text('custom_image_url')
 });
