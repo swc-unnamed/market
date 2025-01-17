@@ -5,7 +5,7 @@
 ## Setup
 
 ```shell
-gh repo clone swc-unnamed/market
+git clone https://github.com/swc-unnamed/market
 
 cd market
 

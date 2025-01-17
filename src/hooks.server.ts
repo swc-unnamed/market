@@ -8,7 +8,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	const sessionToken = event.cookies.get('uim_session');
 
 	// These routes do not require authentication to access
-	const anonRoutes = ['/login', '/callback'];
+	const anonRoutes = ['/login', '/callback', '/api/combine/handlecheck'];
 
 	// Resolve the event if the route is an anonymous route
 	if (anonRoutes.includes(event.url.pathname)) {

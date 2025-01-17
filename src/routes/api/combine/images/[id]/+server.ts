@@ -52,7 +52,7 @@ export const GET = async ({ params }) => {
 					large: null
 				});
 		}
-	} catch (err) {
+	} catch {
 		return new Response(null, {
 			status: 500,
 			statusText: 'Error fetching data from API.'
