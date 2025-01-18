@@ -19,8 +19,6 @@ jobs:
           node-version: '22'
           cache: 'pnpm'
 
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Run linter
-        run: pnpm lint
+      - run: npm install -g pnpm
+      - run: pnpm install
+      - run: pnpm lint
