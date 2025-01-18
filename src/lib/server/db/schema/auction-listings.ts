@@ -6,7 +6,6 @@ import { auctionListingHistory } from './auction-listing-history';
 import { AuctionListingStatus } from '../../../consts/auction-listing-status';
 import { pgTable, text, integer, serial, boolean, timestamp, pgEnum } from 'drizzle-orm/pg-core';
 
-
 export const auctionListings = pgTable('auction_listings', {
 	id: text('id')
 		.unique()
@@ -23,9 +22,8 @@ export const auctionListings = pgTable('auction_listings', {
 	sendCreditsTo: text('sent_credits_to_id').notNull(),
 	listerIsAnon: boolean('lister_is_anon'),
 	createdAt: timestamp('created_at').$defaultFn(() => new Date()),
-	status: text('status', { enum: AuctionListingStatus}).default('new')
+	status: text('status', { enum: AuctionListingStatus }).default('new')
 });
-
 
 export const auctionListingsRelations = relations(auctionListings, ({ many, one }) => ({
 	items: many(auctionListingItems),
