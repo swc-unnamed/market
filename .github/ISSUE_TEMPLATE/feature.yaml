@@ -1,0 +1,13 @@
+name: 🚀 Feature
+description: "Submit a proposal for a new feature"
+title: "🚀 Feature: [FEATURE NAME]"
+labels: [feature]
+body:
+  - type: textarea
+    id: feature-description
+    validations:
+      required: true
+    attributes:
+      label: "Feature Description"
+      description: "Describe the feature you would like to propose. More details are better!"
+      placeholder: "I would like to propose a feature that does..."

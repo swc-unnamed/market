@@ -1,0 +1,12 @@
+name: 🐞 Bug
+description: "Report it so we can squash it"
+title: "🐞 Bug: "
+labels: [bug]
+body:
+  - type: textarea
+    id: bug-report
+    validations:
+      required: true
+    attributes:
+      label: "Description"
+      description: "A clear and concise description of what the bug is, how to reproduce it and what you expected to happen. Screenshots are helpful!"
