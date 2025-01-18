@@ -1,4 +1,4 @@
-FROM --platform=linux/arm64 node:22-alpine AS base
+FROM node:22-alpine AS base
 
 RUN apk update
 
@@ -12,12 +12,11 @@ COPY . .
 
 RUN pnpm install
 
-RUN rm -rf ./src/
+RUN pnpm build
 
 USER node:node
 
 EXPOSE 3000:3000
 
-VOLUME [ "/data" ]
 
 CMD ["node", "build/index.js"]
