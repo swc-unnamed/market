@@ -2,3 +2,14 @@
 package-lock.json
 pnpm-lock.yaml
 yarn.lock
+docker-compose.yaml
+
+# Migration files
+src/lib/server/db/migrations
+
+.github
+.idea
+.svelte-kit
+build
+node_modules
+*.md

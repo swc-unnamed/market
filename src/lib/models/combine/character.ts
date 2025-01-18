@@ -27,7 +27,6 @@ export interface CharacterClass {
 	inventories: Creditlog;
 	privileges: Creditlog;
 	credits: Creditlog;
-	creditlog: Creditlog;
 	events: Creditlog;
 }
 
@@ -36,7 +35,11 @@ export interface CharacterAttributes {
 	isbasic: string;
 }
 
-export interface Creditlog {}
+// TODO: This is a placeholder for the time being.
+export interface Creditlog {
+	// Placeholder
+	uid: string;
+}
 
 export interface RaceClass {
 	attributes: FactionAttributes;

@@ -14,7 +14,7 @@ export const auctionListingHistory = pgTable('auction_listing_history', {
 		.references(() => auctionListings.id),
 	event: text('event', { enum: AuctionListingEvents }).notNull(),
 	message: text('message').notNull(),
-	time: timestamp('time', ).$defaultFn(() => new Date())
+	time: timestamp('time').$defaultFn(() => new Date())
 });
 
 export const auctionListingHistoryRelations = relations(auctionListingHistory, ({ one }) => ({

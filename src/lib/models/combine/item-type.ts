@@ -71,4 +71,8 @@ export interface VolumeAttributes {
 	units: string;
 }
 
-export interface Weapons {}
+// TODO: This is a placeholder for the time being.
+export interface Weapons {
+	// PLACEHOLDER
+	uid: string;
+}
