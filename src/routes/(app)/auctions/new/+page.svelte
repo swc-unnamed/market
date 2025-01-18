@@ -165,7 +165,7 @@
 												variant="ghost"
 												size="sm"
 												onclick={() => {
-													$form.items = $form.items.filter((_: any, j: number) => j !== i);
+													$form.items = $form.items.filter((_, j) => j !== i);
 												}}
 											>
 												<Icon icon="mdi:death-star-variant" class="size-4 text-red-600" />

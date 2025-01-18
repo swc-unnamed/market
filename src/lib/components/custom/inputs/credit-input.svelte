@@ -15,7 +15,7 @@
 		disabled?: boolean;
 	}
 
-	const NUMBER_REGEX = RegExp(/[^0-9 \,]/, '');
+	const NUMBER_REGEX = RegExp(/[^0-9,]/, '');
 
 	let {
 		class: className,
