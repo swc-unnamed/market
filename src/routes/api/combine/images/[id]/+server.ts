@@ -4,13 +4,13 @@ import { json } from '@sveltejs/kit';
 import axios from 'axios';
 
 export const GET = async ({ params }) => {
-	const asset = await db.query.assets.findFirst({
+	const entity = await db.query.entities.findFirst({
 		where: (r, { eq }) => eq(r.id, params.id)
 	});
 
-	console.log(asset);
+	console.log(entity);
 
-	if (!asset) {
+	if (!entity) {
 		return new Response(null, {
 			status: 404,
 			statusText: 'Asset not found. Ensure you are using the correct ID.'
@@ -18,15 +18,15 @@ export const GET = async ({ params }) => {
 	}
 
 	try {
-		const { data } = await axios.get<CombineAssetResponse>(asset.apiLink, {
+		const { data } = await axios.get<CombineAssetResponse>(entity.apiLink, {
 			headers: {
 				Accept: 'application/json'
 			}
 		});
 
-		// console.log(JSON.stringify(data, null, 2));
+		console.log(JSON.stringify(data, null, 2));
 
-		switch (asset.type) {
+		switch (entity.type) {
 			case 'ships':
 				return json({
 					small: data.swcapi.shiptype?.images.small,

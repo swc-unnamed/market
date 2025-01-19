@@ -18,7 +18,7 @@ async function seed() {
 
 	console.log('🌱 Starting seed process');
 
-	fs.createReadStream('./ksrc/lib/server/db/seed/data.csv')
+	fs.createReadStream('./src/lib/server/db/seed/data.csv')
 		.pipe(csvParser())
 		.on('data', (data) => {
 			result.push(data);

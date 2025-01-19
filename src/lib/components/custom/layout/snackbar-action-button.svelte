@@ -16,8 +16,8 @@
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content sideOffset={4} alignOffset={-4} class="mr-4">
 		<DropdownMenu.Group>
-			<DropdownMenu.Item onclick={async () => await goto('/auctions/new')}>
-				Create Listing
+			<DropdownMenu.Item onclick={async () => await goto('/auctions/listings/new')}>
+				Create Auction Listing
 			</DropdownMenu.Item>
 			<DropdownMenu.Item>My Profile</DropdownMenu.Item>
 			<DropdownMenu.Separator />

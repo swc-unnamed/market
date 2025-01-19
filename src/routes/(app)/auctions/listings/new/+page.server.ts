@@ -1,3 +1,4 @@
+import { creditToInteger } from '$lib/helpers/currency-conversion.js';
 import { newAuctionListingSchema } from '$lib/models/zod/auction-listing.schema.js';
 import { db } from '$lib/server/db/index.js';
 import {
@@ -47,6 +48,21 @@ export const actions = {
 			return fail(400, { form, message: 'Please correct the errors in the form.' });
 		}
 
+		// Validate form data
+		for (const item of form.data.items) {
+			const index = form.data.items.findIndex((i) => i === item);
+
+			if (!item.asset.combineId) {
+				setError(form, `items[${index}].asset.combineId`, 'A Combine ID is required');
+				return fail(400, { form, message: 'Please correct the errors in the form.' });
+			}
+
+			if (!item.asset.typeId) {
+				setError(form, `items[${index}].asset.typeId`, 'A Type is required');
+				return fail(400, { form, message: 'Please correct the errors in the form.' });
+			}
+		}
+
 		try {
 			await db.transaction(async (tx) => {
 				const listing = await tx
@@ -56,7 +72,7 @@ export const actions = {
 						description: form.data.description,
 						location: form.data.location,
 						listedById: locals.user.id,
-						startingPrice: form.data.startingPrice,
+						startingPrice: creditToInteger(form.data.startingPrice),
 						sendCreditsTo: form.data.sendCreditsTo,
 						listerIsAnon: form.data.listerIsAnon
 					})
@@ -71,6 +87,8 @@ export const actions = {
 
 				for (const item of form.data.items) {
 					const index = form.data.items.findIndex((i) => i === item);
+
+					// Run this again - this is mostly for typescript. If it passed above it'll pass here.
 
 					if (!item.asset.combineId) {
 						setError(form, `items[${index}].asset.combineId`, 'A Combine ID is required');
@@ -118,12 +136,9 @@ export const actions = {
 					event: 'created',
 					message: `Listing #${listing[0].listingNumber} submitted to the holochain by ${form.data.listerIsAnon ? 'Anonymous' : locals.user.name}.`
 				});
-
-				return message(
-					form,
-					`Listing #${listing[0].listingNumber} has been submitted to the holochain for processing.`
-				);
 			});
+
+			return message(form, `Listing has been submitted to the holochain for processing.`);
 		} catch (err) {
 			console.error(err);
 

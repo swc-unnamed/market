@@ -22,7 +22,10 @@
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { newAuctionListingSchema } from '$lib/models/zod/auction-listing.schema.js';
 	import { USER_CONTEXT } from '$lib/stores/contexts';
-	import { CombineEntityTypeArray } from '$lib/consts/combine/entity-type';
+	import {
+		CombineEntityTypeArray,
+		convertCombineEntityTypeToApiValue
+	} from '$lib/consts/combine/entity-type';
 	import * as Select from '$lib/components/ui/select/index.js';
 
 	const user = getContext<UserContext>(USER_CONTEXT);
@@ -189,6 +192,9 @@
 								</Card.Header>
 								<Card.Content>
 									<div class="grid gap-2">
+										{#if $errors?.items?.[i]?.entityId}
+											<p class="text-xs text-red-600">{$errors.items[i].entityId}</p>
+										{/if}
 										<div class="grid gap-1">
 											<Label>Combine ID</Label>
 											<Input type="number" bind:value={$form.items[i].asset.combineId} />
@@ -199,7 +205,20 @@
 
 										<div class="grid gap-1">
 											<Label>Asset Type</Label>
-											<Select.Root type="single" bind:value={$form.items[i].asset.typeId}>
+											<Select.Root
+												type="single"
+												bind:value={$form.items[i].asset.typeId}
+												onValueChange={(v) => {
+													// Get the type from the array
+													const type = CombineEntityTypeArray.find((x) => x.value.toString() == v);
+
+													if (type) {
+														$form.items[i].asset.type = convertCombineEntityTypeToApiValue(
+															type.value
+														);
+													}
+												}}
+											>
 												<Select.Trigger>
 													{#if $form.items[i].asset.typeId}
 														{CombineEntityTypeArray.find(
@@ -217,6 +236,12 @@
 													{/each}
 												</Select.Content>
 											</Select.Root>
+
+											<input class="hidden" bind:value={$form.items[i].asset.type} />
+
+											{#if $errors?.items?.[i]?.asset?.typeId}
+												<p class="text-xs text-red-600">{$errors.items[i].asset.typeId}</p>
+											{/if}
 										</div>
 
 										<div class="grid gap-1">
@@ -258,5 +283,7 @@
 		</div>
 	</div>
 
-	<!-- <SuperDebug data={$form} /> -->
+	<div class="my-4">
+		<SuperDebug data={$form} />
+	</div>
 </LayoutWrapper>

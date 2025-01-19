@@ -25,8 +25,21 @@
 			title: 'Auctions',
 			href: '/auctions',
 			icon: 'mdi:invoice-line-items',
-			nested: [],
-			allowedRoles: ['patron', 'auctioneer', 'magistrate', 'holochain_architect', 'market_tzar']
+			allowedRoles: ['patron', 'auctioneer', 'magistrate', 'holochain_architect', 'market_tzar'],
+			nested: [
+				{
+					title: 'Current Auctions',
+					href: '/auctions',
+					icon: 'mdi:invoice-line-items',
+					allowedRoles: ['patron', 'auctioneer', 'magistrate', 'holochain_architect', 'market_tzar']
+				},
+				{
+					title: 'New Listing',
+					href: '/auctions/listings/new',
+					icon: 'mdi:plus',
+					allowedRoles: ['patron', 'auctioneer', 'magistrate', 'holochain_architect', 'market_tzar']
+				}
+			]
 		},
 		{
 			title: 'Entity Database',

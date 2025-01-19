@@ -10,11 +10,14 @@ import { pgTable, text, integer, serial, boolean, timestamp, pgEnum } from 'driz
  * Represents a listing in an auction.
  */
 export const auctionListings = pgTable('auction_listings', {
-	id: text('id').unique().primaryKey().$defaultFn(() => createId()),
+	id: text('id')
+		.unique()
+		.primaryKey()
+		.$defaultFn(() => createId()),
 	listingNumber: serial('listing_number'),
 	listedById: text('listed_by_id').references(() => users.id),
-	startingPrice: text('starting_price'),
-	purchasedBy: text('purchased_by_id').references(() => users.id),
+	startingPrice: integer('starting_price').notNull(),
+	purchasedById: text('purchased_by_id').references(() => users.id),
 	purchasedPrice: integer('purchased_price'),
 	title: text('title'),
 	description: text('description'),

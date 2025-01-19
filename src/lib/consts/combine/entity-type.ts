@@ -82,4 +82,42 @@ export const CombineEntityTypeArray = [
 		value: CombineEntityType.customImage,
 		label: 'Custom Images'
 	}
-]
+];
+
+export function convertCombineEntityTypeToApiValue(cet: CombineEntityType) {
+	switch (cet) {
+		case CombineEntityType.ship:
+			return 'ships';
+		case CombineEntityType.vehicle:
+			return 'vehicles';
+		case CombineEntityType.facility:
+			return 'facilities';
+		case CombineEntityType.station:
+			return 'stations';
+		case CombineEntityType.city:
+			return 'cities';
+		case CombineEntityType.planet:
+			return 'planets';
+		case CombineEntityType.npc:
+			return 'npcs';
+		case CombineEntityType.creature:
+			return 'creatures';
+		case CombineEntityType.item:
+			return 'items';
+		case CombineEntityType.droid:
+			return 'droids';
+		case CombineEntityType.datacard:
+			return 'datacards';
+		case CombineEntityType.material:
+			return 'materials';
+		case CombineEntityType.stock:
+			return 'stocks';
+		case CombineEntityType.weapon:
+			return 'weapons';
+		case CombineEntityType.customImage:
+			// TODO: Verify this?
+			return 'custom-images';
+		default:
+			return '';
+	}
+}
