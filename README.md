@@ -26,7 +26,7 @@ Run the migrations:
 ```shell
 pnpm db:migrate # Will run pending migrations
 
-pnpm db:seed # Will seed your assets table with combine assets
+pnpm db:seed # Will seed your entities table with combine entities
 ```
 
 You are now good to run the app

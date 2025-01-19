@@ -1,35 +1,38 @@
-import { auctionListingItemSchema } from '$lib/helpers/zod/auction-listing-item.schema';
-import {
-	auctionListingSchema,
-	newAuctionListingSchema
-} from '$lib/helpers/zod/auction-listing.schema.js';
+import { newAuctionListingSchema } from '$lib/models/zod/auction-listing.schema.js';
 import { db } from '$lib/server/db/index.js';
-import { assets } from '$lib/server/db/schema/assets.js';
-import { auctionListingHistory } from '$lib/server/db/schema/auction-listing-history.js';
-import { auctionListingItems } from '$lib/server/db/schema/auction-listing-items.js';
-import { auctionListings } from '$lib/server/db/schema/auction-listings.js';
+import {
+	assetLedger,
+	assets,
+	auctionListingHistory,
+	auctionListingItems,
+	auctionListings
+} from '$lib/server/db/schema';
 import { getTableColumns } from 'drizzle-orm';
-import { fail, message, superValidate } from 'sveltekit-superforms';
+
+import { fail, message, setError, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { z } from 'zod';
 
 export const load = async ({ locals }) => {
-	const currentAssets = await db.query.assets.findMany();
+	const entityRecords = await db.query.entities.findMany();
 
 	const form = await superValidate(zod(newAuctionListingSchema));
 
 	form.data.items = [
 		{
-			assetId: '',
-			u3: true,
+			entityId: '',
+			uuu: true,
 			quantity: 1,
-			customImageUrl: ''
+			customImageUrl: '',
+			asset: {
+				type: '',
+				combineId: null
+			}
 		}
 	];
 
 	return {
 		user: locals.user,
-		assets: currentAssets,
+		entities: entityRecords,
 		form: form
 	};
 };
@@ -45,45 +48,82 @@ export const actions = {
 		}
 
 		try {
-			const listing = await db
-				.insert(auctionListings)
-				.values({
-					title: form.data.title,
-					description: form.data.description,
-					location: form.data.location,
-					listedBy: locals.user.id,
-					startingPrice: form.data.startingPrice,
-					sendCreditsTo: form.data.sendCreditsTo,
-					listerIsAnon: form.data.listerIsAnon
-				})
-				.returning({ id: auctionListings.id, listingNumber: auctionListings.listingNumber });
+			await db.transaction(async (tx) => {
+				const listing = await tx
+					.insert(auctionListings)
+					.values({
+						title: form.data.title,
+						description: form.data.description,
+						location: form.data.location,
+						listedById: locals.user.id,
+						startingPrice: form.data.startingPrice,
+						sendCreditsTo: form.data.sendCreditsTo,
+						listerIsAnon: form.data.listerIsAnon
+					})
+					.returning({ ...getTableColumns(auctionListings) });
 
-			if (!listing[0].id) {
-				return fail(500, { form, message: 'An error occured on the holochain, try again later.' });
-			}
+				if (!listing[0].id) {
+					return fail(500, {
+						form,
+						message: 'An error occured on the holochain, try again later.'
+					});
+				}
 
-			const items = form.data.items.map((item) => {
-				return {
+				for (const item of form.data.items) {
+					const index = form.data.items.findIndex((i) => i === item);
+
+					if (!item.asset.combineId) {
+						setError(form, `items[${index}].asset.combineId`, 'A Combine ID is required');
+						return fail(400, { form, message: 'Please correct the errors in the form.' });
+					}
+
+					if (!item.asset.typeId) {
+						setError(form, `items[${index}].asset.typeId`, 'A Type is required');
+						return fail(400, { form, message: 'Please correct the errors in the form.' });
+					}
+
+					// Create a new asset record if it doesn't already exist. If it conflicts, we aren't
+					// going to do any. This will keep people from creating fake listings and overwriting
+					// existing assets. Once the listing has been marked as sold, we will update the asset
+					// with the custom image url and other info.
+					const asset = await tx
+						.insert(assets)
+						.values({
+							combineId: item.asset.combineId,
+							typeId: parseInt(item.asset.typeId),
+							type: item.asset.type,
+							entityId: item.entityId
+						})
+						.onConflictDoNothing()
+						.returning({ ...getTableColumns(assets) });
+
+					// Create a new asset chain record
+					await tx.insert(assetLedger).values({
+						assetId: asset[0].id,
+						action: 'listed'
+					});
+
+					await tx.insert(auctionListingItems).values({
+						listingId: listing[0].id,
+						assetId: asset[0].id,
+						entityId: item.entityId,
+						customImageUrl: item.customImageUrl,
+						uuu: item.uuu,
+						quantity: item.quantity
+					});
+				}
+
+				await tx.insert(auctionListingHistory).values({
 					listingId: listing[0].id,
-					assetId: item.assetId,
-					u3: item.u3,
-					quantity: item.quantity,
-					customImageUrl: item.customImageUrl
-				};
+					event: 'created',
+					message: `Listing #${listing[0].listingNumber} submitted to the holochain by ${form.data.listerIsAnon ? 'Anonymous' : locals.user.name}.`
+				});
+
+				return message(
+					form,
+					`Listing #${listing[0].listingNumber} has been submitted to the holochain for processing.`
+				);
 			});
-
-			await db.insert(auctionListingItems).values(items);
-
-			await db.insert(auctionListingHistory).values({
-				listingId: listing[0].id,
-				event: 'created',
-				message: `Listing #${listing[0].listingNumber} submitted to the holochain by ${form.data.listerIsAnon ? 'Anonymous' : locals.user.name}.`
-			});
-
-			return message(
-				form,
-				`Listing #${listing[0].listingNumber} has been submitted to the holochain for processing.`
-			);
 		} catch (err) {
 			console.error(err);
 

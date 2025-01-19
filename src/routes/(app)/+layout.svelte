@@ -3,13 +3,14 @@
 	import AppSidebar from '$lib/components/custom/sidebar/app-sidebar.svelte';
 
 	import { setContext } from 'svelte';
-	import type { User } from '$lib/models/shared/user.js';
+	import type { UserContext } from '$lib/stores';
+	import { USER_CONTEXT } from '$lib/stores/contexts';
 	let { children, data } = $props();
 
-	setContext<User>('user', data.user);
+	setContext<UserContext>(USER_CONTEXT, data.user);
 </script>
 
-<Sidebar.Provider open={false}>
+<Sidebar.Provider open={true}>
 	<AppSidebar />
 	{@render children?.()}
 </Sidebar.Provider>

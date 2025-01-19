@@ -1,7 +1,9 @@
 export const Roles = [
-	'Patron',
-	'Auctioneer',
-	'Magistrate',
-	'Holochain Architect',
-	'Market Tzar'
+	'patron',
+	'auctioneer',
+	'magistrate',
+	'holochain_architect',
+	'market_tzar'
 ] as const;
+
+export type Role = (typeof Roles)[number];

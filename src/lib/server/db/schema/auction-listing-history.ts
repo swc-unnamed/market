@@ -5,13 +5,8 @@ import { relations } from 'drizzle-orm';
 import { pgTable, text, integer, timestamp } from 'drizzle-orm/pg-core';
 
 export const auctionListingHistory = pgTable('auction_listing_history', {
-	id: text('id')
-		.unique()
-		.primaryKey()
-		.$defaultFn(() => createId()),
-	listingId: text('listing_id')
-		.notNull()
-		.references(() => auctionListings.id),
+	id: text('id').unique().primaryKey().$defaultFn(() => createId()),
+	listingId: text('listing_id').notNull().references(() => auctionListings.id),
 	event: text('event', { enum: AuctionListingEvents }).notNull(),
 	message: text('message').notNull(),
 	time: timestamp('time').$defaultFn(() => new Date())

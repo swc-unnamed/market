@@ -5,23 +5,23 @@
 	import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
 	import type { Selected } from 'bits-ui';
 	import * as Select from '$lib/components/ui/select/index.js';
-	import type { AssetType } from '$lib/helpers/zod';
+	import type { EntityType } from '../../../models/zod';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import Icon from './icon.svelte';
 	import type { Snippet } from 'svelte';
 
-	type AssetItemProps = {
-		assets: AssetType[];
+	type EntityProps = {
+		entity: EntityType[];
 		value: string | null;
 		trigger?: Snippet;
 	};
 
-	let { assets: items, value = $bindable(), trigger }: AssetItemProps = $props();
+	let { entity: items, value = $bindable(), trigger }: EntityProps = $props();
 
 	let itemSearch = $state('');
 
 	let selectedValue = $state('');
-	let filteredItems = $state<AssetType[]>(items);
+	let filteredItems = $state<EntityType[]>(items);
 
 	$effect(() => {
 		if (itemSearch) {

@@ -19,7 +19,7 @@
 <LayoutWrapper title="Home" displayTitle={false}>
 	<div class="space-y-4">
 		<div class="flex justify-center">
-			<img class="w-2/3 rounded-lg" src={'/assets/unnamed-banner.png'} alt="Banner" />
+			<img class="w-full rounded-lg" src={'/assets/unnamed-banner.png'} alt="Banner" />
 		</div>
 		<div class="flex justify-center">
 			<p>
@@ -54,7 +54,9 @@
 							<Card.Title>
 								<div class="flex justify-between">
 									<span>{al.title}</span>
-									<Badge>{formatAuctionListingStatus(al.status)}</Badge>
+									{#if al.status}
+										<Badge>{formatAuctionListingStatus(al.status)}</Badge>
+									{/if}
 								</div>
 							</Card.Title>
 							<Card.Description>

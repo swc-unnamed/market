@@ -4,7 +4,7 @@
 	import LayoutWrapper from '$lib/components/custom/layout/layout-wrapper.svelte';
 	import Icon from '$lib/components/custom/shared/icon.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import type { assets } from '$lib/server/db/schema/assets.js';
+	import type { entities } from '$lib/server/db/schema/entities.js';
 	import type { InferSelectModel } from 'drizzle-orm';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
@@ -23,12 +23,12 @@
 			<Dialog.Trigger>
 				<Button>
 					<Icon icon="mdi:plus" />
-					Create Asset
+					Create Entity
 				</Button>
 			</Dialog.Trigger>
 			<Dialog.Content>
 				<Dialog.Header>
-					<Dialog.Title>New Asset</Dialog.Title>
+					<Dialog.Title>New Entity</Dialog.Title>
 					<Dialog.Description>
 						This feature is still under development. It's planned for a later release.
 					</Dialog.Description>
@@ -55,5 +55,6 @@
 			</Dialog.Content>
 		</Dialog.Root>
 	{/snippet}
-	<DataTable data={assetData} {columns} />
+	<pre>{JSON.stringify(data.records)}</pre>
+<!--	<DataTable data={assetData} {columns} />-->
 </LayoutWrapper>

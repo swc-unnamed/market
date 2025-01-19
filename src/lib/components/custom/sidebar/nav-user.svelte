@@ -4,10 +4,12 @@
 	import * as Avatar from '$lib/components/ui/avatar/index.js';
 	import { useSidebar } from '$lib/components/ui/sidebar/index.js';
 	import Icon from '@iconify/svelte';
-	import type { User } from '$lib/models/shared';
+	import type { UserContext } from '$lib/stores';
 	import { getContext } from 'svelte';
+	import { USER_CONTEXT } from '$lib/stores/contexts';
+	import { Badge } from '$lib/components/ui/badge';
 
-	const user = getContext<User>('user');
+	const user = getContext<UserContext>(USER_CONTEXT);
 
 	const sidebar = useSidebar();
 </script>
@@ -28,7 +30,9 @@
 						</Avatar.Root>
 						<div class="grid flex-1 text-left text-sm leading-tight">
 							<span class="truncate font-semibold">{user.name}</span>
-							<span class="truncate text-xs">@mtt</span>
+							<span class="truncate text-xs text-primary">
+								{user.role}
+							</span>
 						</div>
 					</Sidebar.MenuButton>
 				{/snippet}

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const assetSchema = z.object({
+export const entitySchema = z.object({
 	id: z.string(),
 	name: z.string(),
 	type: z.string(),
@@ -8,4 +8,4 @@ export const assetSchema = z.object({
 	apiLink: z.string()
 });
 
-export type AssetType = z.infer<typeof assetSchema>;
+export type EntityType = z.infer<typeof entitySchema>;
