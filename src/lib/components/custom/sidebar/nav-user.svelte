@@ -43,8 +43,10 @@
 			>
 				<DropdownMenu.Group>
 					<DropdownMenu.Item class="cursor-pointer">
-						<Icon icon="mdi:user-settings" />
-						Account Settings
+						<a class="flex items-center" href="/account">
+							<Icon icon="mdi:user-settings" />
+							Account Settings
+						</a>
 					</DropdownMenu.Item>
 					<DropdownMenu.Item class="cursor-pointer">
 						<Icon icon="mdi:logout" />
