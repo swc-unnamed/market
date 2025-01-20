@@ -29,7 +29,7 @@
 		}
 	});
 
-	let auctionListings = $derived(data.userListings);
+	let auctionListings = $derived(data.records);
 
 	$inspect(auctionListings);
 </script>

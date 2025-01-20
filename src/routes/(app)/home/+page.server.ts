@@ -1,8 +1,8 @@
 import { db } from '$lib/server/db/index.js';
 
 export const load = async ({ locals }) => {
-	const userListings = await db.query.auctionListings.findMany({
-		where: (r, { eq }) => eq(r.listedById, locals.user.id),
+	const records = await db.query.auctionListings.findMany({
+		where: (r, { eq }) => eq(r.status, 'new'),
 		with: {
 			items: {
 				with: {
@@ -20,6 +20,6 @@ export const load = async ({ locals }) => {
 	});
 
 	return {
-		userListings: userListings
+		records: records
 	};
 };
