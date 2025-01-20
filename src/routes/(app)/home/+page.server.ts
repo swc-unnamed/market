@@ -2,11 +2,18 @@ import { db } from '$lib/server/db/index.js';
 
 export const load = async ({ locals }) => {
 	const userListings = await db.query.auctionListings.findMany({
-		where: (r, { eq }) => eq(r.listedBy, locals.user.id),
+		where: (r, { eq }) => eq(r.listedById, locals.user.id),
 		with: {
 			items: {
 				with: {
-					item: true
+					asset: true
+				}
+			},
+			listedBy: {
+				columns: {
+					id: true,
+					name: true,
+					avatar: true
 				}
 			}
 		}

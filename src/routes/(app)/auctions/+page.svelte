@@ -7,5 +7,6 @@
 	{#snippet right()}
 		<SnackbarActionButton />
 	{/snippet}
-	<p>landing page</p>
+
+	<p>Current Auctions and auctions that are coming soon.</p>
 </LayoutWrapper>

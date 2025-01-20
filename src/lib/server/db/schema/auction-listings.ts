@@ -1,4 +1,4 @@
-import { createId } from '../../../helpers/nanoid';
+import { createId } from '@paralleldrive/cuid2';
 import { relations } from 'drizzle-orm';
 import { users } from './users';
 import { auctionListingItems } from './auction-listing-items';
@@ -6,15 +6,18 @@ import { auctionListingHistory } from './auction-listing-history';
 import { AuctionListingStatus } from '../../../consts/auction-listing-status';
 import { pgTable, text, integer, serial, boolean, timestamp, pgEnum } from 'drizzle-orm/pg-core';
 
+/**
+ * Represents a listing in an auction.
+ */
 export const auctionListings = pgTable('auction_listings', {
 	id: text('id')
 		.unique()
 		.primaryKey()
 		.$defaultFn(() => createId()),
 	listingNumber: serial('listing_number'),
-	listedBy: text('listed_by_id').references(() => users.id),
-	startingPrice: text('starting_price'),
-	purchasedBy: text('purchased_by_id').references(() => users.id),
+	listedById: text('listed_by_id').references(() => users.id),
+	startingPrice: integer('starting_price').notNull(),
+	purchasedById: text('purchased_by_id').references(() => users.id),
 	purchasedPrice: integer('purchased_price'),
 	title: text('title'),
 	description: text('description'),
@@ -29,7 +32,7 @@ export const auctionListingsRelations = relations(auctionListings, ({ many, one 
 	items: many(auctionListingItems),
 	history: many(auctionListingHistory),
 	listedBy: one(users, {
-		fields: [auctionListings.listedBy],
+		fields: [auctionListings.listedById],
 		references: [users.id]
 	})
 }));

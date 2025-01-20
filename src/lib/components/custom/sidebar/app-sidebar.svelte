@@ -6,7 +6,7 @@
 	import NavMain from './nav-main.svelte';
 	import type { ComponentProps } from 'svelte';
 	import NavUser from './nav-user.svelte';
-	import type { User } from '$lib/models/shared';
+	import type { UserContext } from '$lib/stores';
 
 	let {
 		ref = $bindable(null),

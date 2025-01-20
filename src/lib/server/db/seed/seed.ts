@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { config } from 'dotenv';
 import csvParser from 'csv-parser';
-import { assets } from '../schema';
+import { entities } from '../schema';
 import type { InferInsertModel } from 'drizzle-orm';
 import 'dotenv/config';
 import { drizzle } from 'drizzle-orm/node-postgres';
@@ -14,7 +14,9 @@ async function seed() {
 
 	const db = drizzle(process.env.DATABASE_URL!, { schema: schema });
 
-	const result: InferInsertModel<typeof assets>[] = [];
+	const result: InferInsertModel<typeof entities>[] = [];
+
+	console.log('🌱 Starting seed process');
 
 	fs.createReadStream('./src/lib/server/db/seed/data.csv')
 		.pipe(csvParser())
@@ -25,12 +27,11 @@ async function seed() {
 			console.log(err);
 		})
 		.on('end', async () => {
-			console.log(`Loading ${result.length} records into the database`);
+			console.log(`🌱 Loading ${result.length} records into the database`);
 			try {
-				await db.insert(assets).values(result);
+				await db.insert(entities).values(result);
 
-				console.log('Data loaded successfully');
-
+				console.log('🌱 Data has been seeded successfully');
 				process.exit(0);
 			} catch (error) {
 				console.log(error);

@@ -1,9 +1,17 @@
 <script lang="ts">
-	type AssetImageProps = {
-		id: string;
-	};
+	import { Skeleton } from '$lib/components/ui/skeleton/index.js';
+	import type { WithElementRef } from 'bits-ui';
+	import type { HTMLAttributes } from 'svelte/elements';
 
-	let { id }: AssetImageProps = $props();
+	let {
+		id,
+		large,
+		class: className,
+		...restProps
+	}: WithElementRef<HTMLAttributes<HTMLDivElement>> & {
+		id: string;
+		large?: boolean;
+	} = $props();
 
 	async function fetchImage() {
 		const response = await fetch(`/api/combine/images/${id}`);
@@ -17,9 +25,9 @@
 </script>
 
 {#await fetchImage()}
-	<p>Loading...</p>
+	<Skeleton class="h-48 w-full" />
 {:then data}
-	<img src={data.small} alt={data.small} />
+	<img class={className} src={large ? data.large : data.small} alt={data.small} {...restProps} />
 {:catch error}
 	<p>{error.message}</p>
 {/await}

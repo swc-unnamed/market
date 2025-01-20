@@ -12,7 +12,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	// Resolve the event if the route is an anonymous route
 	if (anonRoutes.includes(event.url.pathname)) {
-		return await resolve(event);
+		return resolve(event);
 	}
 
 	// Redirect to the login page if the session token is not present
@@ -32,6 +32,10 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 		if (!userRecord) {
 			return redirect(303, '/login');
+		}
+
+		if (userRecord.banned) {
+			return redirect(303, `/login?banned=true`);
 		}
 
 		// Attach the user record to the event
