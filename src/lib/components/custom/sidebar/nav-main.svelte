@@ -34,6 +34,12 @@
 					allowedRoles: ['patron', 'auctioneer', 'magistrate', 'holochain_architect', 'market_tzar']
 				},
 				{
+					title: 'New Auction',
+					href: '/auctions/new',
+					icon: 'mdi:invoice-line-items',
+					allowedRoles: ['auctioneer', 'magistrate', 'holochain_architect', 'market_tzar']
+				},
+				{
 					title: 'New Listing',
 					href: '/auctions/listings/new',
 					icon: 'mdi:plus',
