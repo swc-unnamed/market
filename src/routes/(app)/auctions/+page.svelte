@@ -8,7 +8,5 @@
 		<SnackbarActionButton />
 	{/snippet}
 
-	<p>
-		Current Auctions and auctions that are coming soon.
-	</p>
+	<p>Current Auctions and auctions that are coming soon.</p>
 </LayoutWrapper>

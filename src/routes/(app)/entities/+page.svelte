@@ -56,5 +56,5 @@
 		</Dialog.Root>
 	{/snippet}
 	<pre>{JSON.stringify(data.records)}</pre>
-<!--	<DataTable data={assetData} {columns} />-->
+	<!--	<DataTable data={assetData} {columns} />-->
 </LayoutWrapper>

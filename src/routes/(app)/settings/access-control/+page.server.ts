@@ -1,6 +1,6 @@
 import { verifyRole } from '$lib/server/utils/verify-role.js';
 import { db } from '$lib/server/db';
-import { asc, count, desc, ilike } from 'drizzle-orm';
+import { asc, count, ilike } from 'drizzle-orm';
 import { users } from '$lib/server/db/schema/users.js';
 import type { PaginatedMeta } from '$lib/models/general/paginated-meta.js';
 
@@ -25,8 +25,6 @@ export const load = async ({ locals, url }) => {
 		where: (r, { ilike }) => {
 			if (searchTerm) {
 				return ilike(r.name, `%${searchTerm}%`);
-			} else {
-				undefined;
 			}
 		},
 		offset: (page - 1) * MAX_PAGE_SIZE,

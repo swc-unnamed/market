@@ -1,2 +1,1 @@
-
-export const USER_CONTEXT = Symbol("user_context");
+export const USER_CONTEXT = Symbol('user_context');

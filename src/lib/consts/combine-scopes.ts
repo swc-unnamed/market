@@ -1,6 +1,3 @@
-export const CombineScopes = [
-	'character_auth',
-	'character_read',
-] as const;
+export const CombineScopes = ['character_auth', 'character_read'] as const;
 
-export type CombineScope = typeof CombineScopes[number];
+export type CombineScope = (typeof CombineScopes)[number];

@@ -34,7 +34,8 @@ export default ts.config(
 	{
 		rules: {
 			'@typescript-eslint/no-unused-vars': 'off',
-			'no-undef': 'off'
+			'no-undef': 'off',
+			'@typescript-eslint/no-explicit-any': 'off'
 		}
 	}
 );
