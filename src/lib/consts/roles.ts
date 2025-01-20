@@ -1,5 +1,4 @@
-import { formatRole } from '$lib/helpers/format-role';
-
+import { formatRole } from '../helpers/format-role';
 export const Roles = [
 	'patron',
 	'auctioneer',
