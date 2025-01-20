@@ -64,7 +64,7 @@ export const load = async ({ url, cookies }) => {
 		redirect(303, '/login');
 	}
 
-	const formattedScopes = user.scopes.split(' ').map((s: string) => s.replace(/_/g, ' '));
+	const formattedScopes = user.scopes.split(' ').map((s: string) => s);
 
 	const uimUser = await db
 		.insert(users)
@@ -79,6 +79,7 @@ export const load = async ({ url, cookies }) => {
 			target: [users.combineId],
 			set: {
 				name: user.name,
+				scopes: formattedScopes,
 				...((user.avatar && { avatar: user.avatar }) || {})
 			}
 		})
