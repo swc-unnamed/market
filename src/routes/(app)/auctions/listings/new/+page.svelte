@@ -71,7 +71,7 @@
 			</Alert.Description>
 		</Alert.Root>
 
-		<div class="grid grid-cols-1 gap-2 lg:grid-cols-2">
+		<div class="grid grid-cols-1 gap-2 lg:grid-cols-1">
 			<div>
 				<div class="grid grid-cols-1 gap-2">
 					<Card.Root>
@@ -244,13 +244,13 @@
 											{/if}
 										</div>
 
-										<div class="grid gap-1">
+										<!-- <div class="grid gap-1">
 											<Label>Quantity</Label>
 											<Input type="number" bind:value={$form.items[i].quantity} />
 											{#if $errors?.items?.[i]?.quantity}
 												<p class="text-xs text-red-600">{$errors.items[i].quantity}</p>
 											{/if}
-										</div>
+										</div> -->
 
 										<div class="grid gap-1">
 											<Label>Custom Image</Label>
@@ -283,7 +283,7 @@
 		</div>
 	</div>
 
-	<div class="my-4">
+	<!-- <div class="my-4">
 		<SuperDebug data={$form} />
-	</div>
+	</div> -->
 </LayoutWrapper>

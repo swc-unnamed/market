@@ -14,6 +14,7 @@
 	import * as Tabs from '$lib/components/ui/tabs';
 	import Icon from '@iconify/svelte';
 	import AuctionLedgerIcon from '$lib/components/custom/shared/auction-ledger-icon.svelte';
+	import { integerToCredit } from '$lib/helpers/currency-conversion.js';
 
 	let { data } = $props();
 
@@ -24,7 +25,7 @@
 
 <LayoutWrapper title={listing.title || 'Auction Listing'}>
 	{#snippet center()}
-		{#if data.user.role === 'admin' || data.user.role === 'developer'}
+		{#if data.user.role === 'holochain_architect' || data.user.role === 'market_tzar'}
 			<Button>Admin Actions</Button>
 		{/if}
 	{/snippet}
@@ -40,8 +41,7 @@
 									<div class="flex flex-row items-center gap-2">
 										<rect class="h-8 w-8 rounded-md bg-primary/35" />
 										<div class="grid grid-cols-1 gap-0">
-											<span class="text-sm">Anon</span>
-											<span class="text-xs"></span>
+											<span class="text-sm">Anonomyous</span>
 										</div>
 									</div>
 								{:else}
@@ -53,14 +53,15 @@
 										/>
 										<div class="grid grid-cols-1 gap-0">
 											<span class="text-sm">{listing.listedBy?.name}</span>
-											<span class="text-xs">@mtt</span>
 										</div>
 									</div>
 								{/if}
 							</div>
-							<div>
-								<Badge>{formatAuctionListingStatus(listing.status)}</Badge>
-							</div>
+							{#if listing.status}
+								<div>
+									<Badge>{formatAuctionListingStatus(listing.status)}</Badge>
+								</div>
+							{/if}
 						</div>
 					</Card.Title>
 				</Card.Header>
@@ -70,7 +71,7 @@
 							<p class="text-accent-foreground">
 								Starting Bid:
 								<span style="font-family: 'Galactic Basic" class="-mr-1 text-primary">$</span>
-								{listing.startingPrice}
+								{integerToCredit(listing.startingPrice)}
 							</p>
 
 							<Separator orientation="vertical" />
@@ -105,7 +106,7 @@
 		</div>
 
 		<div>
-			<Tabs.Root value="ledger">
+			<Tabs.Root value="items">
 				<Tabs.List>
 					<Tabs.Trigger value="items">
 						<Icon icon="mdi:package" width="24" height="24" />
@@ -123,25 +124,27 @@
 						</Card.Header>
 						<Card.Content>
 							<Table.Root>
-								<Table.Header>
-									<Table.Row>
-										<Table.Head class="w-24"></Table.Head>
-										<Table.Head>Item</Table.Head>
-										<Table.Head>Quantity</Table.Head>
-									</Table.Row>
-								</Table.Header>
 								<Table.Body>
 									{#each listing.items as item, i (item.id)}
 										<Table.Row>
 											<Table.Cell>
-												{#if item.item}
-													<AssetImage id={item.item.id} />
+												{#if item.entityId}
+													<AssetImage id={item.entityId} />
 												{:else}
 													<rect class="h-8 w-8 rounded-md bg-primary/35" />
 												{/if}
 											</Table.Cell>
-											<Table.Cell>{item.item?.name}</Table.Cell>
-											<Table.Cell>{item.quantity}</Table.Cell>
+											<Table.Cell>{item.entity?.name}</Table.Cell>
+											<Table.Cell>
+												<Button
+													class="flex items-center gap-1"
+													variant="link"
+													href={`/assets/${item.assetId}`}
+												>
+													<Icon icon="mdi:block-chain" width="24" height="24" />
+													<span class="ml-2">View Asset Ledger</span>
+												</Button>
+											</Table.Cell>
 										</Table.Row>
 									{/each}
 								</Table.Body>

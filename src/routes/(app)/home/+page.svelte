@@ -40,10 +40,11 @@
 			<img class="w-full rounded-lg" src={'/assets/unnamed-banner.png'} alt="Banner" />
 		</div>
 		<div class="flex justify-center">
-			<p>
-				For now, this is just a simple home page. For now we are just showing listings you have
-				created. Don't worry, this will update over time.
-			</p>
+			<Alert.Root>
+				So for right now, we are showing auction listings that you have created. In the future, I
+				want to show some graphs and statistics about the auction house. I also want to show some of
+				the most recent listings that have been created. All things in time though. -Marc
+			</Alert.Root>
 		</div>
 
 		{#if auctionListings.length < 1}
@@ -63,16 +64,12 @@
 					<Card.Root>
 						<Card.Header>
 							<Card.Title>
-								<div class="flex justify-between">
+								<div class="flex flex-col gap-2">
 									<span>{al.title}</span>
-									<div class="flex items-center gap-2">
+									<div class="mb- flex items-center gap-2">
 										{#if al.status}
 											<Badge>{formatAuctionListingStatus(al.status)}</Badge>
 										{/if}
-										<Badge class="bg-green-600 text-foreground">
-											<Icon icon="mdi:cloud-check" />
-											Assets Verified
-										</Badge>
 									</div>
 								</div>
 							</Card.Title>
@@ -84,7 +81,11 @@
 										{#each al.items as item}
 											{#if item.entityId}
 												<Carousel.Item>
-													<AssetImage id={item.entityId} large />
+													<AssetImage
+														class="rounded-md border border-secondary shadow-md drop-shadow-md"
+														id={item.entityId}
+														large
+													/>
 												</Carousel.Item>
 											{/if}
 										{/each}
@@ -127,10 +128,14 @@
 								<div class="my-3 flex justify-center">
 									<Separator class="full bg-primary" />
 								</div>
-								<span class="whitespace-pre-wrap text-sm">
+								<span class="text-md font-bold">Location:</span>
+								<span
+									class="h-24 overflow-y-auto whitespace-pre-wrap rounded-md border border-secondary p-2 text-sm"
+								>
 									{al.location}
 								</span>
 							</div>
+							<Separator class="-mb-3 mt-3 w-full bg-primary" />
 						</Card.Content>
 						<Card.Footer class="flex items-center justify-between">
 							<div class="flex flex-col gap-1">
@@ -150,9 +155,5 @@
 				{/each}
 			{/if}
 		</div>
-	</div>
-
-	<div class="my-4">
-		<pre>{JSON.stringify(data.userListings, null, 2)}</pre>
 	</div>
 </LayoutWrapper>

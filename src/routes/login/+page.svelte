@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { dev } from '$app/environment';
+	import { page } from '$app/state';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card/index.js';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
@@ -12,6 +13,8 @@
 	let impersonationUid = $state('');
 	let handlecheckResultText = $state('');
 	let impersonationButtonBusy = $state(false);
+
+	let banned = $state(page.url.searchParams.has('banned'));
 
 	async function retrieveHandleInfo(handle: string) {
 		impersonationButtonBusy = true;
@@ -76,7 +79,11 @@
 					</p>
 				</Card.Content>
 				<Card.Footer class="flex flex-col items-center">
-					<Button variant="link" href={data.url}>Login with SW Combine</Button>
+					{#if banned}
+						<p class="text-red-500">Your account has been banned.</p>
+					{:else}
+						<Button variant="link" href={data.url}>Login with SW Combine</Button>
+					{/if}
 					{#if dev}
 						<Button
 							class="text-muted-foreground"

@@ -10,7 +10,7 @@
 </script>
 
 <ModeWatcher defaultMode={'dark'} />
-<Toaster />
+<Toaster richColors />
 
 {@render children?.()}
 

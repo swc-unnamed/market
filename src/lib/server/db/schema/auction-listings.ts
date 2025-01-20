@@ -1,4 +1,4 @@
-import { createId } from '../../../helpers/nanoid';
+import { createId } from '@paralleldrive/cuid2';
 import { relations } from 'drizzle-orm';
 import { users } from './users';
 import { auctionListingItems } from './auction-listing-items';

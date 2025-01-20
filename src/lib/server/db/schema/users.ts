@@ -1,4 +1,4 @@
-import { createId } from '../../../helpers/nanoid';
+import { createId } from '@paralleldrive/cuid2';
 import { Roles } from '../../../consts/roles';
 import { boolean, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 import { CombineScopes } from '../../../consts/combine-scopes';

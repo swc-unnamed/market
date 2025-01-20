@@ -9,7 +9,7 @@ const MAX_PAGE_SIZE = 50;
 export const load = async ({ locals, url }) => {
 	verifyRole({
 		userRole: locals.user.role,
-		allowedRoles: ['Magistrate', 'Holochain Architect', 'Market Tzar']
+		allowedRoles: ['magistrate', 'holochain_architect', 'market_tzar']
 	});
 
 	const searchTerm = url.searchParams.get('q') || '';

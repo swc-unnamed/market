@@ -8,6 +8,7 @@
 	import { getContext } from 'svelte';
 	import { USER_CONTEXT } from '$lib/stores/contexts';
 	import { Badge } from '$lib/components/ui/badge';
+	import { formatRole } from '$lib/helpers/format-role';
 
 	const user = getContext<UserContext>(USER_CONTEXT);
 
@@ -30,9 +31,6 @@
 						</Avatar.Root>
 						<div class="grid flex-1 text-left text-sm leading-tight">
 							<span class="truncate font-semibold">{user.name}</span>
-							<span class="truncate text-xs text-primary">
-								{user.role}
-							</span>
 						</div>
 					</Sidebar.MenuButton>
 				{/snippet}

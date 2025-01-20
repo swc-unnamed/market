@@ -1,8 +1,9 @@
 import { relations } from 'drizzle-orm';
 import { auctionListings } from './auction-listings';
-import { createId } from '../../../helpers/nanoid';
+import { createId } from '@paralleldrive/cuid2';
 import { pgTable, text, integer, boolean } from 'drizzle-orm/pg-core';
 import { assets } from './assets';
+import { entities } from './entities';
 
 /**
  * Represents a listing item in an auction.
@@ -15,12 +16,10 @@ export const auctionListingItems = pgTable('auction_listing_items', {
 	listingId: text('listing_id')
 		.notNull()
 		.references(() => auctionListings.id),
-	assetId: text('asset_id')
-		.notNull()
-		.references(() => assets.id),
+	assetId: text('asset_id').references(() => assets.id),
 	entityId: text('entity_id'),
 	uuu: boolean('uuu'),
-	quantity: integer('quantity'),
+	quantity: integer('quantity').default(1),
 	customImageUrl: text('custom_image_url')
 });
 
@@ -32,5 +31,9 @@ export const auctionListingItemsRelations = relations(auctionListingItems, ({ on
 	listing: one(auctionListings, {
 		fields: [auctionListingItems.listingId],
 		references: [auctionListings.id]
+	}),
+	entity: one(entities, {
+		fields: [auctionListingItems.entityId],
+		references: [entities.id]
 	})
 }));

@@ -34,6 +34,10 @@ export const handle: Handle = async ({ event, resolve }) => {
 			return redirect(303, '/login');
 		}
 
+		if (userRecord.banned) {
+			return redirect(303, `/login?banned=true`);
+		}
+
 		// Attach the user record to the event
 		event.locals.user = {
 			id: userRecord.id,
