@@ -64,7 +64,11 @@
 			<Card.Root class="sm:w-2/3 md:w-1/2">
 				<Card.Header>
 					<Card.Title>
-						<img class="rounded-lg" src="/assets/unnamed-banner.png" alt="Unnamed Market" />
+						<img
+							class="mx-auto h-48 w-48 rounded-lg"
+							src="/assets/uim-17.png"
+							alt="Unnamed Market"
+						/>
 					</Card.Title>
 					<Card.Description class="mt-3">
 						<h1 class="text-center text-2xl font-bold">Unnamed Imperium Market</h1>

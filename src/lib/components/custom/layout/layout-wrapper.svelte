@@ -44,9 +44,6 @@
 				<Button size="icon" variant="outline" onclick={() => sidebar.toggle()}>
 					<Icon icon={sidebar.open ? 'mdi:menu-open' : 'mdi:menu-close'} />
 				</Button>
-				<div class="flex md:hidden">
-					<Sidebar.Trigger />
-				</div>
 				{#if displayTitle}
 					<div class="grid">
 						<h1>{title}</h1>
