@@ -7,6 +7,7 @@
 	import type { ComponentProps } from 'svelte';
 	import NavUser from './nav-user.svelte';
 	import type { UserContext } from '$lib/stores';
+	import NavSettings from './nav-settings.svelte';
 
 	let {
 		ref = $bindable(null),
@@ -23,6 +24,7 @@
 		<NavMain />
 	</Sidebar.Content>
 	<Sidebar.Footer>
+		<NavSettings />
 		<NavUser />
 	</Sidebar.Footer>
 </Sidebar.Root>
