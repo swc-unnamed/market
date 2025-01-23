@@ -6,8 +6,27 @@
 
 	import { ModeWatcher } from 'mode-watcher';
 
-	let { children } = $props();
+	let { children, data } = $props();
 </script>
+
+<svelte:head>
+	<meta name="description" content="Unnamed Imperium Market - Your gateway to the holochain." />
+	<meta name="author" content="Unnamed Imperium Market" />
+	<meta property="og:title" content="Unnamed Imperium Market" />
+	<meta
+		property="og:description"
+		content="Unnamed Imperium Market - Your gateway to the holochain."
+	/>
+	<meta property="og:image" content={`${data.baseUrl}/assets/unnamed-logo.png`} />
+	<meta property="og:url" content={data.baseUrl} />
+	<meta name="twitter:card" content={`${data.baseUrl}/assets/unnamed-banner.png`} />
+	<meta name="twitter:title" content="Unnamed Imperium Market" />
+	<meta
+		name="twitter:description"
+		content="Unnamed Imperium Market - Your gateway to the holochain."
+	/>
+	<meta name="twitter:image" content={`${data.baseUrl}/assets/unnamed-logo.png`} />
+</svelte:head>
 
 <ModeWatcher defaultMode={'dark'} />
 <Toaster richColors />
