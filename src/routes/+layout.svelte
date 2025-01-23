@@ -13,15 +13,15 @@
 	<meta property="og:title" content="Unnamed Imperium Market" />
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content={data.baseUrl} />
-	<meta property="og:image" content={`${data.baseUrl}/assets/unnamed-logo.png`} />
+	<meta property="og:image" content={`${data.baseUrl}/assets/uim-17.png`} />
 	<meta
 		property="og:description"
 		content="Unnamed Imperium Market - Your gateway to the holochain."
 	/>
-	<meta name="theme-color" content="#FF0000" />
+	<meta name="theme-color" content="#facc15" />
 
 	<!-- Include this to make the og:image larger -->
-	<meta name="twitter:card" content={`${data.baseUrl}/assets/unnamed-banner.png`} />
+	<meta name="twitter:card" content={`${data.baseUrl}/assets/uim-17.png`} />
 </svelte:head>
 
 <ModeWatcher defaultMode={'dark'} />

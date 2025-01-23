@@ -53,20 +53,6 @@
 			icon: 'mdi:database',
 			nested: [],
 			allowedRoles: ['patron', 'auctioneer', 'magistrate', 'holochain_architect', 'market_tzar']
-		},
-		{
-			title: 'Settings',
-			href: '/settings',
-			icon: 'mdi:cog',
-			allowedRoles: ['magistrate', 'holochain_architect', 'market_tzar'],
-			nested: [
-				{
-					title: 'Access Control',
-					href: '/settings/access-control',
-					icon: 'mdi:shield-account',
-					allowedRoles: ['magistrate', 'holochain_architect', 'market_tzar']
-				}
-			]
 		}
 	];
 
