@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 export const newAuctionListingItemSchema = z.object({
 	entityId: z.string().min(1, { message: 'Entity Selection is required' }),
+	entityName: z.string(),
 	uuu: z.boolean().default(true),
 	quantity: z.number().min(1).default(1),
 	customImageUrl: z.string().nullable().optional(),

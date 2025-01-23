@@ -13,10 +13,11 @@
 	type EntityProps = {
 		entity: EntityType[];
 		value: string | null;
+		name: string | null;
 		trigger?: Snippet;
 	};
 
-	let { entity: items, value = $bindable(), trigger }: EntityProps = $props();
+	let { entity: items, value = $bindable(), name = $bindable(), trigger }: EntityProps = $props();
 
 	let itemSearch = $state('');
 
@@ -62,6 +63,7 @@
 									variant="outline"
 									onclick={() => {
 										selectedValue = item.id as string;
+										name = item.name as string;
 										value = item.id as string;
 									}}>{item.name}</Button
 								>

@@ -10,8 +10,7 @@
 	import { Switch } from '$lib/components/ui/switch/index.js';
 	import CreditInput from '$lib/components/custom/inputs/credit-input.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import SuperDebug, { superForm } from 'sveltekit-superforms';
-	import * as Dialog from '$lib/components/ui/dialog/index.js';
+	import { superForm } from 'sveltekit-superforms';
 	import { Separator } from '$lib/components/ui/separator/index.js';
 	import { blur } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
@@ -20,16 +19,20 @@
 	import Icon from '$lib/components/custom/shared/icon.svelte';
 	import { toast } from 'svelte-sonner';
 	import { zodClient } from 'sveltekit-superforms/adapters';
-	import { newAuctionListingSchema } from '$lib/models/zod/auction-listing.schema.js';
+	import { newAuctionListingSchema } from '$lib/models/zod/auctions';
 	import { USER_CONTEXT } from '$lib/stores/contexts';
+	import * as Drawer from '$lib/components/ui/drawer/index.js';
+
 	import {
 		CombineEntityTypeArray,
 		convertCombineEntityTypeToApiValue
 	} from '$lib/consts/combine/entity-type';
 	import * as Select from '$lib/components/ui/select/index.js';
+	import ListingPreviewCard from '$lib/components/custom/auctions/listing-preview-card.svelte';
 
 	const user = getContext<UserContext>(USER_CONTEXT);
 	let { data } = $props();
+	let previewOpen = $state(false);
 
 	const { form, errors, enhance, validateForm, submit } = superForm(data.form, {
 		dataType: 'json',
@@ -50,6 +53,7 @@
 
 	async function handleSubmit() {
 		submit();
+		previewOpen = false;
 	}
 </script>
 
@@ -127,11 +131,6 @@
 						</Card.Content>
 
 						<Card.Footer class="flex justify-end gap-2">
-							<Button class="flex items-center" variant="link" onclick={handleSubmit}>
-								<Icon icon="mdi:invoice-check-outline" class="size-8" />
-								Submit to the Holochain
-							</Button>
-
 							<Button
 								class="flex items-center"
 								variant="secondary"
@@ -140,6 +139,7 @@
 										...$form.items,
 										{
 											entityId: '',
+											entityName: '',
 											uuu: true,
 											quantity: 1,
 											customImageUrl: '',
@@ -185,7 +185,11 @@
 													<Icon icon="mdi:death-star-variant" class="size-4 text-red-600" />
 													Remove
 												</Button>
-												<AssetLookup bind:value={$form.items[i].entityId} entity={data.entities} />
+												<AssetLookup
+													bind:value={$form.items[i].entityId}
+													bind:name={$form.items[i].entityName}
+													entity={data.entities}
+												/>
 											</div>
 										</div>
 									</Card.Title>
@@ -244,14 +248,6 @@
 											{/if}
 										</div>
 
-										<!-- <div class="grid gap-1">
-											<Label>Quantity</Label>
-											<Input type="number" bind:value={$form.items[i].quantity} />
-											{#if $errors?.items?.[i]?.quantity}
-												<p class="text-xs text-red-600">{$errors.items[i].quantity}</p>
-											{/if}
-										</div> -->
-
 										<div class="grid gap-1">
 											<Label>Custom Image</Label>
 											<Input bind:value={$form.items[i].customImageUrl} />
@@ -281,6 +277,38 @@
 				</div>
 			</ScrollArea>
 		</div>
+	</div>
+
+	<div class="fixed bottom-6 left-1/2 -translate-x-1/2">
+		<Drawer.Root bind:open={previewOpen}>
+			<Drawer.Trigger>
+				<Button class="w-96">Preview Listing</Button>
+			</Drawer.Trigger>
+			<Drawer.Content class="mx-auto h-3/4 w-full md:w-2/3">
+				<ScrollArea>
+					<div class="container mx-auto w-full">
+						<Drawer.Header>
+							<Drawer.Title>Listing Preview</Drawer.Title>
+							<Drawer.Description
+								>Preview your listing before you submit it. Once submitted, it will be on a cooldown
+								before being submitted to the holochain.
+							</Drawer.Description>
+						</Drawer.Header>
+
+						<Separator class="mb-3 bg-primary" />
+
+						<ListingPreviewCard bind:listing={$form} />
+					</div>
+
+					<div class="mx-auto w-96">
+						<Drawer.Footer>
+							<Button onclick={handleSubmit}>Submit</Button>
+							<Drawer.Close>Cancel</Drawer.Close>
+						</Drawer.Footer>
+					</div>
+				</ScrollArea>
+			</Drawer.Content>
+		</Drawer.Root>
 	</div>
 
 	<!-- <div class="my-4">

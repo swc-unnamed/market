@@ -21,6 +21,7 @@ export const load = async ({ locals }) => {
 	form.data.items = [
 		{
 			entityId: '',
+			entityName: '',
 			uuu: true,
 			quantity: 1,
 			customImageUrl: '',
