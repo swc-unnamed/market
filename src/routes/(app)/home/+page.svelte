@@ -35,7 +35,7 @@
 </script>
 
 <LayoutWrapper title="Home" displayTitle={false}>
-	<div class="space-y-4">
+	<div class="mb-4 space-y-4">
 		<div class="flex justify-center">
 			<img class="w-full rounded-lg" src={'/assets/unnamed-banner.png'} alt="Banner" />
 		</div>

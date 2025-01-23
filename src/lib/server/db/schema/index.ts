@@ -5,3 +5,4 @@ export * from './asset-ledger';
 export * from './auction-listings';
 export * from './auction-listing-items';
 export * from './auction-listing-history';
+export * from './auctions';

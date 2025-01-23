@@ -56,11 +56,10 @@
 				{@render left?.()}
 			</div>
 
-			<div>
-				{@render center?.()}
-			</div>
-
-			<div class="flex items-center justify-end">
+			<div class="flex items-center justify-end gap-4">
+				{#if center}
+					{@render center?.()}
+				{/if}
 				{#if right}
 					{@render right?.()}
 				{:else}

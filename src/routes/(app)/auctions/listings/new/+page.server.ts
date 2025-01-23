@@ -1,5 +1,5 @@
 import { creditToInteger } from '$lib/helpers/currency-conversion.js';
-import { newAuctionListingSchema } from '$lib/models/zod/auction-listing.schema.js';
+import { newAuctionListingSchema } from '$lib/models/zod/auctions';
 import { db } from '$lib/server/db/index.js';
 import {
 	assetLedger,
@@ -21,6 +21,7 @@ export const load = async ({ locals }) => {
 	form.data.items = [
 		{
 			entityId: '',
+			entityName: '',
 			uuu: true,
 			quantity: 1,
 			customImageUrl: '',
