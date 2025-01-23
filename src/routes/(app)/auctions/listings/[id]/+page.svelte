@@ -39,7 +39,11 @@
 								<span>#{listing.listingNumber} {listing.title}</span>
 								{#if listing.listerIsAnon}
 									<div class="flex flex-row items-center gap-2">
-										<rect class="h-8 w-8 rounded-md bg-primary/35" />
+										<img
+											src={'/assets/uim-animated.gif'}
+											alt="Listed By"
+											class="h-8 w-8 rounded-md"
+										/>
 										<div class="grid grid-cols-1 gap-0">
 											<span class="text-sm">Anonomyous</span>
 										</div>
@@ -153,13 +157,15 @@
 					</Card.Root>
 				</Tabs.Content>
 				<Tabs.Content value="ledger">
-					{#each listing.history as ledger}
-						<div class="flex flex-row items-center gap-1 rounded-md bg-sidebar p-3">
-							<AuctionLedgerIcon event={ledger.event} />
-							<Separator orientation="horizontal" class="w-3 rounded-md bg-primary" />
-							<p>{ledger.message}</p>
-						</div>
-					{/each}
+					<div class="grid grid-cols-1 gap-3">
+						{#each listing.history as ledger}
+							<div class="flex flex-row items-center gap-1 rounded-md bg-sidebar p-3">
+								<AuctionLedgerIcon event={ledger.event} />
+								<Separator orientation="horizontal" class="w-3 rounded-md bg-primary" />
+								<p>{ledger.message}</p>
+							</div>
+						{/each}
+					</div>
 				</Tabs.Content>
 			</Tabs.Root>
 		</div>

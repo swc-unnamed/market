@@ -282,7 +282,17 @@
 	<div class="fixed bottom-6 left-1/2 -translate-x-1/2">
 		<Drawer.Root bind:open={previewOpen}>
 			<Drawer.Trigger>
-				<Button class="w-96">Preview Listing</Button>
+				<div class="traced-button-wrapper">
+					<div class="traced-button-gradient">
+						<Button
+							variant="outline"
+							class="relative w-96 border-primary bg-background transition-colors duration-200"
+						>
+							<Icon icon="mage:preview" />
+							Preview Listing
+						</Button>
+					</div>
+				</div>
 			</Drawer.Trigger>
 			<Drawer.Content class="mx-auto h-3/4 w-full md:w-2/3">
 				<ScrollArea>

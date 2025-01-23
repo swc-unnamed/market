@@ -26,7 +26,7 @@
 						{...props}
 					>
 						<Avatar.Root class="h-8 w-8 rounded-lg">
-							<Avatar.Image src={user.avatar} alt="Logo" />
+							<Avatar.Image src={user.avatar || '/assets/uim-animated.gif'} alt="Logo" />
 							<Avatar.Fallback class="rounded-lg">UM</Avatar.Fallback>
 						</Avatar.Root>
 						<div class="grid flex-1 text-left text-sm leading-tight">

@@ -41,7 +41,7 @@
 	</Card.Header>
 	<Card.Content>
 		<div class="grid grid-cols-1 gap-2">
-			<div class="flex items-center gap-2">
+			<div class="flex items-start gap-2">
 				<p class="text-accent-foreground">
 					Starting Bid:
 					<span style="font-family: 'Galactic Basic" class="-mr-1 text-primary">$</span>
