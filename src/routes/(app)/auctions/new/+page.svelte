@@ -72,7 +72,7 @@
 							<Checkbox
 								onCheckedChange={(v) => {
 									if (v) {
-										$form.listings[i] = listing.id;
+										$form.listings = [...$form.listings, listing.id];
 									} else {
 										$form.listings = $form.listings.filter((id) => id !== listing.id);
 									}

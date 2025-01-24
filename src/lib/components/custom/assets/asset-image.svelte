@@ -29,5 +29,5 @@
 {:then data}
 	<img class={className} src={large ? data.large : data.small} alt={data.small} {...restProps} />
 {:catch error}
-	<p>{error.message}</p>
+	<img src="/assets/uim-animated.gif" class="h-8 w-8" alt="animated_gif" />
 {/await}

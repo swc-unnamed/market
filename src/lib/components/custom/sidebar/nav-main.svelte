@@ -28,7 +28,7 @@
 			allowedRoles: ['patron', 'auctioneer', 'magistrate', 'holochain_architect', 'market_tzar'],
 			nested: [
 				{
-					title: 'Current Auctions',
+					title: 'Available Auctions',
 					href: '/auctions',
 					icon: 'mdi:invoice-line-items',
 					allowedRoles: ['patron', 'auctioneer', 'magistrate', 'holochain_architect', 'market_tzar']

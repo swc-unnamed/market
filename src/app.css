@@ -121,4 +121,8 @@ div {
 	input[type='number'] {
 		-moz-appearance: textfield;
 	}
+
+	.aurebesh {
+		font-family: 'Galactic Basic';
+	}
 }

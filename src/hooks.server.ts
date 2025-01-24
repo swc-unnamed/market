@@ -15,6 +15,10 @@ export const handle: Handle = async ({ event, resolve }) => {
 		return resolve(event);
 	}
 
+	if (event.url.pathname.startsWith('/p')) {
+		return resolve(event);
+	}
+
 	// Redirect to the login page if the session token is not present
 	if (!sessionToken) {
 		return redirect(303, '/login');

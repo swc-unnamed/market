@@ -7,7 +7,7 @@
 	import { cn } from '$lib/utils';
 
 	interface LayoutWrapperProps {
-		title: string;
+		title?: string;
 		subTitle?: string;
 		displayTitle?: boolean;
 		children: Snippet;
@@ -59,8 +59,6 @@
 				{/if}
 				{#if right}
 					{@render right?.()}
-				{:else}
-					<SnackbarActionButton />
 				{/if}
 			</div>
 		</div>

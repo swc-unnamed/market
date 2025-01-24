@@ -6,10 +6,17 @@ export const load = async ({ locals, params }) => {
 		where: (r, { eq }) => eq(r.id, params.id),
 		with: {
 			listings: {
+				columns: {
+					id: true,
+					title: true,
+					startingPrice: true,
+					location: true,
+					listerIsAnon: true
+				},
 				with: {
 					items: {
-						with: {
-							asset: true
+						columns: {
+							entityId: true
 						}
 					},
 					listedBy: {

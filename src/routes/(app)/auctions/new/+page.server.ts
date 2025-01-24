@@ -64,7 +64,7 @@ export const actions = {
 				await tx.insert(auctionListingHistory).values({
 					event: 'status_updated',
 					listingId: listingId,
-					message: `Has been selected for auction.`
+					message: `Listing selected for auction.`
 				});
 			}
 		});

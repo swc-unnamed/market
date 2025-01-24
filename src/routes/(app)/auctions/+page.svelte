@@ -10,7 +10,15 @@
 
 <LayoutWrapper title="Current Auction Listings">
 	<div class="flex flex-col gap-3">
-		<p>Current Auctions and auctions that are coming soon.</p>
+		<Card.Root>
+			<Card.Content>
+				<div class="flex flex-col gap-1">
+					<p>There are currently {data.records.length} auctions available.</p>
+
+					<p>You can <a href={'/auctions/new'}>create</a> a new Auction.</p>
+				</div>
+			</Card.Content>
+		</Card.Root>
 
 		<div class="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
 			{#each data.records as record}

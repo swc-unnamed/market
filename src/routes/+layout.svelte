@@ -30,10 +30,6 @@
 {@render children?.()}
 
 <div class="flex items-center justify-end bg-sidebar p-8">
-	<p style="font-family: 'Galactic Basic'; font-size: xx-small;">
-		Powered by Norvik Holonet Solutions
-	</p>
-
 	<div class="flex items-center">
 		<Button size="sm" variant="link">
 			<Icon icon="mdi:discord" class="size-6" />
