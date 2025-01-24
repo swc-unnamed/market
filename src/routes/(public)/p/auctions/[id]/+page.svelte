@@ -52,7 +52,7 @@
 							<div class="flex w-full justify-center">
 								<Card.Root class="w-full md:w-1/2 lg:w-2/3">
 									<Card.Header>
-										<Card.Title>{listing.title}</Card.Title>
+										<Card.Title>#{listing.listingNumber} {listing.title}</Card.Title>
 										<Card.Description>
 											<span>Starting Bid</span>
 											<div class="flex items-center">

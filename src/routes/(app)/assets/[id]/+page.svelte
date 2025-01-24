@@ -32,22 +32,22 @@
 			<Table.Root>
 				<Table.Header>
 					<Table.Row>
-						<Table.Cell class="w-[50px] uppercase">Time</Table.Cell>
-						<Table.Cell class="w-[25px] uppercase">Action</Table.Cell>
-						<Table.Cell class="w-36 uppercase">Listing Price</Table.Cell>
-						<Table.Cell class="w-36 uppercase">Sold Price</Table.Cell>
+						<Table.Cell class="w-36 uppercase">ID</Table.Cell>
+						<Table.Cell class="w-36 uppercase">Time</Table.Cell>
+						<Table.Cell class="w-36 uppercase">Action</Table.Cell>
+						<Table.Cell class="w-36 uppercase">Owner</Table.Cell>
+						<Table.Cell class="w-36 uppercase">Value</Table.Cell>
 					</Table.Row>
 				</Table.Header>
 				<Table.Body>
 					{#if data.record?.ledger}
 						{#each data.record?.ledger as ledger}
 							<Table.Row>
+								<Table.Cell class="w-[50px]">{ledger.id}</Table.Cell>
 								<Table.Cell class="w-[50px]">{format(ledger.time, 'yyyy-MM-dd HH:mm')}</Table.Cell>
 								<Table.Cell class="w-[50px] uppercase">{ledger.action}</Table.Cell>
-								<Table.Cell
-									>{ledger.listedPrice ? integerToCredit(ledger.listedPrice) : ''}</Table.Cell
-								>
-								<Table.Cell>{ledger.soldPrice ? integerToCredit(ledger.soldPrice) : ''}</Table.Cell>
+								<Table.Cell class="">{ledger.ownerId}</Table.Cell>
+								<Table.Cell>{ledger.value}</Table.Cell>
 							</Table.Row>
 						{/each}
 					{/if}

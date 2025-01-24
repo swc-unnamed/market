@@ -12,7 +12,8 @@ export const load = async ({ params }) => {
 					startingPrice: true,
 					location: true,
 					listerIsAnon: true,
-					description: true
+					description: true,
+					listingNumber: true
 				},
 				with: {
 					items: {
