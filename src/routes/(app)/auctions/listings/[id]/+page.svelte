@@ -19,8 +19,6 @@
 	let { data } = $props();
 
 	let listing = $derived(data.listing);
-
-	$inspect(listing);
 </script>
 
 <LayoutWrapper title={listing.title || 'Auction Listing'}>

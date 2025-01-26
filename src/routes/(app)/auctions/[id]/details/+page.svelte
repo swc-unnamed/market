@@ -1,24 +1,17 @@
 <script lang="ts">
 	import LayoutWrapper from '$lib/components/custom/layout/layout-wrapper.svelte';
 	import * as Card from '$lib/components/ui/card';
-	import * as Carousel from '$lib/components/ui/carousel';
-	import { Badge } from '$lib/components/ui/badge';
 	import type { CarouselAPI } from '$lib/components/ui/carousel/context';
-	import { formatAuctionListingStatus } from '$lib/helpers/auctions';
-	import AssetImage from '$lib/components/custom/assets/asset-image.svelte';
 	import { Button } from '$lib/components/ui/button';
-	import { Separator } from '$lib/components/ui/separator';
-	import { integerToCredit } from '$lib/helpers/currency-conversion';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import Icon from '@iconify/svelte';
 	import { goto, preloadData } from '$app/navigation';
 	import { roleCheck } from '$lib/consts/roles.js';
-	import * as Alert from '$lib/components/ui/alert/index.js';
 	import { toast } from 'svelte-sonner';
 	import AurebeshText from '$lib/components/custom/shared/aurebesh-text.svelte';
-	import { Label } from '$lib/components/ui/label';
 	import { format } from 'date-fns';
 	import ListingSummaryCard from '$lib/components/custom/auctions/listing-summary-card.svelte';
+	import * as Tabs from '$lib/components/ui/tabs/index.js';
 
 	let { data } = $props();
 	let api = $state<CarouselAPI>();
@@ -36,8 +29,11 @@
 	const auction = $derived(data.record);
 </script>
 
-<LayoutWrapper title={data.record.title} displayTitle={false}>
-	{#snippet right()}
+<svelte:head>
+	<title>{auction.title} | Unnamed Market</title>
+</svelte:head>
+
+<!-- {#snippet right()}
 		<DropdownMenu.Root>
 			<DropdownMenu.Trigger>
 				<Button size="sm" variant="outline">
@@ -81,24 +77,24 @@
 				</DropdownMenu.Group>
 			</DropdownMenu.Content>
 		</DropdownMenu.Root>
-	{/snippet}
+	{/snippet} -->
 
-	<div class="mb-3 flex w-full flex-col gap-3">
-		<Card.Root class="w-full">
-			<Card.Content>
-				<h1>{auction.title}</h1>
+<div class="mb-3 flex w-full flex-col gap-3">
+	<Card.Root class="w-full">
+		<Card.Content>
+			<h1>{auction.title}</h1>
 
-				<div class="flex flex-row items-center gap-2">
-					<h3>Start Time:</h3>
-					<p>{format(auction.startAt, 'yyyy-MM-dd HH:mm')}</p>
-				</div>
-			</Card.Content>
-		</Card.Root>
+			<div class="flex flex-row items-center gap-2">
+				<h3>Start Time:</h3>
+				<p>{format(auction.startAt, 'yyyy-MM-dd HH:mm')}</p>
+			</div>
+		</Card.Content>
+	</Card.Root>
 
-		<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-			{#each auction.listings as listing}
-				<ListingSummaryCard {listing} />
-				<!-- <Card.Root>
+	<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+		{#each auction.listings as listing}
+			<ListingSummaryCard {listing} />
+			<!-- <Card.Root>
 					<Card.Header>
 						<Card.Title>
 							<div class="flex flex-col gap-2">
@@ -184,7 +180,6 @@
 						</Button>
 					</Card.Footer>
 				</Card.Root> -->
-			{/each}
-		</div>
+		{/each}
 	</div>
-</LayoutWrapper>
+</div>

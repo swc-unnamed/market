@@ -60,8 +60,6 @@
 
 	const user = getContext<UserContext>(USER_CONTEXT);
 
-	$inspect(user, routes);
-
 	let isSidebarOpen = $derived(sidebar.open);
 </script>
 

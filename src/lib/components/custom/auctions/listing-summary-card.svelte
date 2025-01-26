@@ -14,6 +14,7 @@
 		startingPrice: number;
 		location: string;
 		listerIsAnon: boolean;
+		listingNumber: number;
 		listedBy: {
 			id: string;
 			name: string;
@@ -43,9 +44,7 @@
 <Card.Root class="w-full">
 	<Card.Header>
 		<Card.Title>
-			<div class="flex flex-col gap-2">
-				<span class="text-center">{listing.title}</span>
-			</div>
+			#{listing.listingNumber} - {listing.title}
 		</Card.Title>
 	</Card.Header>
 	<Card.Content class="flex flex-col gap-2">

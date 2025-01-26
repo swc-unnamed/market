@@ -40,5 +40,9 @@ export const auctionListingsRelations = relations(auctionListings, ({ many, one 
 	auction: one(auctions, {
 		fields: [auctionListings.auctionId],
 		references: [auctions.id]
+	}),
+	purchasedBy: one(users, {
+		fields: [auctionListings.purchasedById],
+		references: [users.id]
 	})
 }));

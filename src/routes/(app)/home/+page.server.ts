@@ -2,7 +2,7 @@ import { db } from '$lib/server/db/index.js';
 
 export const load = async ({ locals }) => {
 	const records = await db.query.auctionListings.findMany({
-		where: (r, { eq }) => eq(r.status, 'new'),
+		where: (r, { inArray }) => inArray(r.status, ['new', 'selected']),
 		with: {
 			items: {
 				with: {
@@ -19,7 +19,13 @@ export const load = async ({ locals }) => {
 		}
 	});
 
+	const assetLedger = await db.query.assetLedger.findMany({
+		where: (r, { between }) =>
+			between(r.time, new Date(Date.now() - 72 * 60 * 60 * 1000), new Date())
+	});
+
 	return {
-		records: records
+		records: records,
+		assetLedger: assetLedger
 	};
 };

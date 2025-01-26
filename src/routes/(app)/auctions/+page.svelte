@@ -3,9 +3,12 @@
 	import SnackbarActionButton from '$lib/components/custom/layout/snackbar-action-button.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Card from '$lib/components/ui/card';
+	import { AuctioneerPermissionPolicy } from '$lib/consts/permission-policies.js';
 	import { format } from 'date-fns';
 
 	let { data } = $props();
+
+	let canCreateAuction = $derived(AuctioneerPermissionPolicy.includes(data.user.role));
 </script>
 
 <LayoutWrapper title="Current Auction Listings">
@@ -15,7 +18,9 @@
 				<div class="flex flex-col gap-1">
 					<p>There are currently {data.records.length} auctions available.</p>
 
-					<p>You can <a href={'/auctions/new'}>create</a> a new Auction.</p>
+					{#if canCreateAuction}
+						<p>You can <a href={'/auctions/new'}>create</a> a new Auction.</p>
+					{/if}
 				</div>
 			</Card.Content>
 		</Card.Root>

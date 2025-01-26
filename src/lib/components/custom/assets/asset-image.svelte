@@ -18,14 +18,12 @@
 
 		const data = await response.json();
 
-		console.log(data);
-
 		return data;
 	}
 </script>
 
 {#await fetchImage()}
-	<Skeleton class="h-48 w-full" />
+	<Skeleton class="h-24 w-full" />
 {:then data}
 	<img class={className} src={large ? data.large : data.small} alt={data.small} {...restProps} />
 {:catch error}

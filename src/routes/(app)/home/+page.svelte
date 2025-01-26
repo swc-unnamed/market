@@ -14,6 +14,8 @@
 	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import { integerToCredit } from '$lib/helpers/currency-conversion.js';
 	import Icon from '@iconify/svelte';
+	import * as Table from '$lib/components/ui/table/index.js';
+	import { format } from 'date-fns';
 
 	let { data } = $props();
 	let api = $state<CarouselAPI>();
@@ -30,22 +32,12 @@
 	});
 
 	let auctionListings = $derived(data.records);
-
-	$inspect(auctionListings);
+	let assetLedger = $derived(data.assetLedger);
 </script>
 
 <LayoutWrapper title="Home" displayTitle={false}>
 	<div class="mb-4 space-y-4">
-		<div class="flex justify-center">
-			<img class="w-full rounded-lg" src={'/assets/unnamed-banner.png'} alt="Banner" />
-		</div>
-		<div class="flex justify-center">
-			<Alert.Root>
-				So for right now, we are showing auction listings that you have created. In the future, I
-				want to show some graphs and statistics about the auction house. I also want to show some of
-				the most recent listings that have been created. All things in time though. -Marc
-			</Alert.Root>
-		</div>
+		<img class=" w-full rounded-lg" src={'/assets/unnamed-banner.png'} alt="Banner" />
 
 		{#if auctionListings.length < 1}
 			<Alert.Root class="border-primary">
@@ -57,6 +49,43 @@
 				</Alert.Description>
 			</Alert.Root>
 		{/if}
+
+		<div class="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
+			<div class="col-span-2">
+				<Card.Root>
+					<Card.Content>Give us an idea of what you would like to see here.</Card.Content>
+				</Card.Root>
+			</div>
+
+			<div class="col-span-2">
+				<Card.Root>
+					<Card.Header>
+						<Card.Title>Recent Holochain Activities</Card.Title>
+					</Card.Header>
+
+					<Card.Content class="text-xs">
+						<Table.Root>
+							<Table.Header>
+								<Table.Row>
+									<Table.Cell>Time</Table.Cell>
+									<Table.Cell>Chain ID</Table.Cell>
+									<Table.Cell>Activity</Table.Cell>
+								</Table.Row>
+							</Table.Header>
+							<Table.Body>
+								{#each assetLedger as al (al.id)}
+									<Table.Row>
+										<Table.Cell>{format(al.time, 'HH:mm')}</Table.Cell>
+										<Table.Cell>{al.id}</Table.Cell>
+										<Table.Cell>{al.action}</Table.Cell>
+									</Table.Row>
+								{/each}
+							</Table.Body>
+						</Table.Root>
+					</Card.Content>
+				</Card.Root>
+			</div>
+		</div>
 
 		<div class="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
 			{#if auctionListings.length > 0}

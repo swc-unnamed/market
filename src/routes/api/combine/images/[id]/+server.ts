@@ -8,8 +8,6 @@ export const GET = async ({ params }) => {
 		where: (r, { eq }) => eq(r.id, params.id)
 	});
 
-	console.log(entity);
-
 	if (!entity) {
 		return new Response(null, {
 			status: 404,
@@ -23,8 +21,6 @@ export const GET = async ({ params }) => {
 				Accept: 'application/json'
 			}
 		});
-
-		console.log(JSON.stringify(data, null, 2));
 
 		switch (entity.type) {
 			case 'ships':

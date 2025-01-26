@@ -30,14 +30,18 @@
 {@render children?.()}
 
 <div class="flex items-center justify-end bg-sidebar p-8">
-	<div class="flex items-center">
-		<Button size="sm" variant="link">
-			<Icon icon="mdi:discord" class="size-6" />
+	<div class="flex items-center gap-2">
+		<a href="#" class="flex items-center gap-1 text-xs text-foreground">
+			<Icon icon="mdi:discord" class="size-4" />
 			<span>Connect on Discord</span>
-		</Button>
-		<Button size="sm" variant="link" target="_blank" href="https://www.swcombine.com">
-			<Icon icon="mdi:external-link" class="size-6" />
+		</a>
+		<a
+			class="flex items-center gap-1 text-xs text-foreground"
+			target="_blank"
+			href="https://www.swcombine.com"
+		>
+			<Icon icon="mdi:external-link" class="size-4" />
 			<span>Star Wars Combine</span>
-		</Button>
+		</a>
 	</div>
 </div>

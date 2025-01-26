@@ -6,6 +6,7 @@ import { auctionListingHistory } from '$lib/server/db/schema/auction-listing-his
 import { auctionListings } from '$lib/server/db/schema/auction-listings.js';
 import { verifyRole } from '$lib/server/utils/verify-role.js';
 import { json } from '@sveltejs/kit';
+import { eq } from 'drizzle-orm';
 
 export const POST = async ({ params, locals, request }) => {
 	verifyRole({
@@ -33,11 +34,14 @@ export const POST = async ({ params, locals, request }) => {
 		return new Response(JSON.stringify({ message: 'Listing not found' }), { status: 404 });
 	}
 
-	await db.update(auctionListings).set({
-		status: 'pending_completion',
-		purchasedById: body.purchasedById,
-		purchasedPrice: creditToInteger(body.purchasedPrice)
-	});
+	await db
+		.update(auctionListings)
+		.set({
+			status: 'sold',
+			purchasedById: body.purchasedById,
+			purchasedPrice: creditToInteger(body.purchasedPrice)
+		})
+		.where(eq(auctionListings.id, listingRecord.id));
 
 	await db.insert(auctionListingHistory).values({
 		listingId: listingRecord.id,

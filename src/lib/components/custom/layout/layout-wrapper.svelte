@@ -31,7 +31,7 @@
 
 <svelte:head>
 	<title>
-		{title} | Unnamed Imperium Market
+		{title} | Unnamed Market
 	</title>
 </svelte:head>
 

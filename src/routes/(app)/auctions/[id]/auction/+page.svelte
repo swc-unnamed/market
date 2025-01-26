@@ -12,6 +12,10 @@
 	import UserSelect from '$lib/components/custom/shared/user-select.svelte';
 	import axios from 'axios';
 	import { toast } from 'svelte-sonner';
+	import { invalidate } from '$app/navigation';
+	import * as Dialog from '$lib/components/ui/dialog';
+	import { format } from 'date-fns';
+	import { enhance } from '$app/forms';
 
 	let { data } = $props();
 	const record = $derived(data.record);
@@ -20,6 +24,7 @@
 	let selectedListingPurchasePrice = $state<string>('');
 	let drawerOpen = $state(false);
 	let recordingSale = $state(false);
+	let auctionIsCompleted = $derived(record.completedAt ? true : false);
 
 	async function handleListingSale() {
 		recordingSale = true;
@@ -29,7 +34,9 @@
 		});
 
 		if (data.success) {
+			drawerOpen = false;
 			toast('Sale has been recorded on the holochain.');
+			await invalidate('auction:live');
 		} else {
 			toast('Failed to record sale on the holochain.');
 		}
@@ -37,133 +44,160 @@
 	}
 </script>
 
-<LayoutWrapper title="Live Auction" displayTitle={false}>
-	<div class="flex flex-col gap-3">
-		<Card.Root>
-			<Card.Content>
+<svelte:head>
+	<title>{record.title} - Auction | Unnamed Market</title>
+</svelte:head>
+
+<div class="flex flex-col gap-3">
+	<Card.Root>
+		<Card.Content>
+			<div class="mb-3 flex items-center justify-between">
 				<h1>Live Auction for <span class="text-primary">{record.title}</span></h1>
-				<p>
-					To send the listing to discord, press the <span>Send to Discord</span> button. This will notify
-					the channel of the current listing being auctioned.
-				</p>
-			</Card.Content>
-		</Card.Root>
+				<form action="?/end" method="post" use:enhance>
+					<Button variant="secondary" disabled={auctionIsCompleted} size="sm" type="submit"
+						>End Auction</Button
+					>
+				</form>
+			</div>
+			<p class="text-sm">
+				{#if record.completedAt}
+					Completed At: {format(record.completedAt, 'yyyy-MM-dd HH:mm')}
+				{:else}
+					To send the listing to discord, press the <span>Send to Discord</span> button. This will
+					notify the channel of the current listing being auctioned. To record a sale, press the
+					<span>Record Sale</span> button and enter the details of the sale. This will record the
+					sale on the holochain. <br /><br />
 
-		{#each record.listings as listing}
-			<Card.Root>
-				<Card.Header>
-					<Card.Title>
-						<div class="flex items-center justify-between">
-							<span>#{listing.listingNumber} {listing.title}</span>
+					Once the Auction is complete, select the 'End Auction' button to end the auction. This
+					will end the auction and notify the channel of the auction ending.
+				{/if}
+			</p>
+		</Card.Content>
+	</Card.Root>
 
-							<div class="flex items-center gap-3">
-								<Button
-									size="sm"
-									variant="link"
-									class="border-primary"
-									onclick={() => {
-										selectedListing = listing;
-										drawerOpen = true;
-									}}
-								>
-									Record Sale
-								</Button>
-								<Button
-									size="sm"
-									variant="ghost"
-									class="border-primary"
-									onclick={() => alert('Not Yet Implemented')}>Send to Discord</Button
-								>
-							</div>
-						</div>
-					</Card.Title>
-				</Card.Header>
-				<Card.Content>
-					<div class="flex flex-col gap-3">
-						<Separator class="bg-primary" />
-						<div class="flex flex-col gap-3">
-							<div class="grid grid-cols-3 gap-3">
-								<p>Send Credits To: {listing.sendCreditsTo}</p>
-								{#if listing.listedBy}
-									<p>Listed By: {listing.listedBy.name}</p>
-								{:else}
-									<p>Listed By: Anonymous</p>
-								{/if}
+	{#each record.listings as listing}
+		<Card.Root>
+			<Card.Header>
+				<Card.Title>
+					<div class="flex items-center justify-between">
+						<span>#{listing.listingNumber} {listing.title}</span>
 
-								<p>
-									Starting Bid: <AurebeshText text="$" />
-									{integerToCredit(listing.startingPrice)}
-								</p>
-							</div>
-							<Separator />
-
-							<div class="flex flex-col">
-								<p>Description</p>
-								<p class="whitespace-pre-wrap">{listing.description}</p>
-							</div>
-
-							<Separator />
-
-							<div class="flex flex-col">
-								<p>Location</p>
-								<p class="whitespace-pre-wrap">{listing.location}</p>
-							</div>
-
-							<div class="flex flex-col">
-								<p>Assets</p>
-								<Table.Root>
-									<Table.Body>
-										{#each listing.items as item}
-											<Table.Row>
-												<Table.Cell>{item.entity?.name}</Table.Cell>
-												<Table.Cell>{item.entity?.type}</Table.Cell>
-												<Table.Cell>{item.uuu ? 'UUU: Yes' : 'UUU: No'}</Table.Cell>
-												<Table.Cell>
-													<a href={`/assets/${item.assetId}`}>View Asset Ledger</a>
-												</Table.Cell>
-											</Table.Row>
-										{/each}
-									</Table.Body>
-								</Table.Root>
-							</div>
+						<div class="flex items-center gap-3">
+							<Button
+								size="sm"
+								variant="link"
+								class="border-primary"
+								disabled={auctionIsCompleted}
+								onclick={() => {
+									selectedListing = listing;
+									drawerOpen = true;
+								}}
+							>
+								Record Sale
+							</Button>
+							<Button
+								size="sm"
+								variant="ghost"
+								disabled={auctionIsCompleted}
+								class="border-primary"
+								onclick={() => alert('Not Yet Implemented')}>Send to Discord</Button
+							>
 						</div>
 					</div>
-				</Card.Content>
-			</Card.Root>
-		{/each}
-	</div>
+				</Card.Title>
+			</Card.Header>
+			<Card.Content>
+				<div class="flex flex-col gap-3">
+					<Separator class="bg-primary" />
+					<div class="flex flex-col gap-3">
+						<div class="flex flex-col gap-0">
+							<p>Send Credits To: {listing.sendCreditsTo}</p>
+							{#if listing.listedBy}
+								<p>Listed By: {listing.listedBy.name}</p>
+							{:else}
+								<p>Listed By: Anonymous</p>
+							{/if}
 
-	<Drawer.Root
-		bind:open={drawerOpen}
-		onClose={() => {
-			selectedListing = null;
-		}}
-	>
-		<Drawer.Content class="mx-auto h-1/2 w-full md:w-1/3">
-			<Drawer.Header>
-				<Drawer.Title>Record Sale of listing #{selectedListing?.listingNumber}</Drawer.Title>
-				<Drawer.Description>Record the sale of the listing.</Drawer.Description>
-			</Drawer.Header>
-			<div class="flex flex-col gap-3 p-4">
-				<Label>Who won the bid?</Label>
-				<UserSelect users={data.users} bind:selectedUser />
-				<CreditInput label="Purchased Price" bind:value={selectedListingPurchasePrice} />
-			</div>
-			<Drawer.Footer>
-				<Button
-					disabled={recordingSale}
-					onclick={async () => {
-						await handleListingSale();
-					}}
-				>
-					{#if recordingSale}
-						Recording Sale...
-					{:else}
-						Record Sale
-					{/if}
-				</Button>
-				<Drawer.Close>Cancel</Drawer.Close>
-			</Drawer.Footer>
-		</Drawer.Content>
-	</Drawer.Root>
-</LayoutWrapper>
+							<p>
+								Starting Bid: <AurebeshText text="$" />
+								{integerToCredit(listing.startingPrice)}
+							</p>
+
+							<p>
+								Purchased By: {listing.purchasedById ? listing.purchasedBy?.name : 'Not Sold Yet'}
+							</p>
+							<p>
+								Status: {listing.status}
+							</p>
+						</div>
+						<Separator />
+
+						<div class="flex flex-col">
+							<p>Description</p>
+							<p class="whitespace-pre-wrap">{listing.description}</p>
+						</div>
+
+						<Separator />
+
+						<div class="flex flex-col">
+							<p>Location</p>
+							<p class="whitespace-pre-wrap">{listing.location}</p>
+						</div>
+
+						<div class="flex flex-col">
+							<p>Assets</p>
+							<Table.Root>
+								<Table.Body>
+									{#each listing.items as item}
+										<Table.Row>
+											<Table.Cell>{item.entity?.name}</Table.Cell>
+											<Table.Cell>{item.entity?.type}</Table.Cell>
+											<Table.Cell>{item.uuu ? 'UUU: Yes' : 'UUU: No'}</Table.Cell>
+											<Table.Cell>
+												<a href={`/assets/${item.assetId}`}>View Asset Ledger</a>
+											</Table.Cell>
+										</Table.Row>
+									{/each}
+								</Table.Body>
+							</Table.Root>
+						</div>
+					</div>
+				</div>
+			</Card.Content>
+		</Card.Root>
+	{/each}
+</div>
+
+<Dialog.Root
+	bind:open={drawerOpen}
+	onOpenChange={(v) => {
+		if (!v) return (selectedListing = null);
+	}}
+>
+	<Dialog.Content class="mx-auto h-1/2 w-full md:w-1/3">
+		<Dialog.Header>
+			<Dialog.Title>Record Sale of listing #{selectedListing?.listingNumber}</Dialog.Title>
+			<Dialog.Description>Record the sale of the listing.</Dialog.Description>
+		</Dialog.Header>
+		<div class="flex flex-col gap-3 p-4">
+			<Label>Who won the bid?</Label>
+			<UserSelect users={data.users} bind:selectedUser />
+			<CreditInput label="Purchased Price" bind:value={selectedListingPurchasePrice} />
+		</div>
+		<Dialog.Footer class="flex items-center">
+			<Button
+				disabled={recordingSale}
+				onclick={async () => {
+					await handleListingSale();
+				}}
+			>
+				{#if recordingSale}
+					Recording Sale...
+				{:else}
+					Record Sale
+				{/if}
+			</Button>
+			<Dialog.Close>Cancel</Dialog.Close>
+		</Dialog.Footer>
+	</Dialog.Content>
+</Dialog.Root>

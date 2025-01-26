@@ -32,120 +32,120 @@
 	});
 </script>
 
-<LayoutWrapper title={`Editing: ${record.title}`} displayTitle={false}>
-	<Card.Root>
-		<Card.Header>
-			<Card.Title>
-				<div class="flex justify-between">
-					<div>
-						Editing: <span class="text-primary">{record.title}</span>
-					</div>
+<svelte:head>
+	<title>Modify Auction: {record.title} | Unnamed Market</title>
+</svelte:head>
 
-					<div class="flex flex-row gap-3">
-						<AlertDialog.Root>
-							<AlertDialog.Trigger class={buttonVariants({ variant: 'ghost' })}>
-								<Icon icon="mdi:death-star-variant" />
-								<span>Delete Auction</span>
-							</AlertDialog.Trigger>
-							<AlertDialog.Content>
-								<AlertDialog.Header>
-									<AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title>
-									<AlertDialog.Description>
-										This action cannot be undone. This will permanently delete the auction from the
-										holochain. All listings associated with this auction will be returned back to a <span
-											class="text-primary">new</span
-										> state.
-									</AlertDialog.Description>
-								</AlertDialog.Header>
-								<AlertDialog.Footer>
-									<form method="post" action="?/delete" use:enhance>
-										<AlertDialog.Cancel type="button">Cancel</AlertDialog.Cancel>
-										<AlertDialog.Action type="submit">Delete Auction</AlertDialog.Action>
-									</form>
-								</AlertDialog.Footer>
-							</AlertDialog.Content>
-						</AlertDialog.Root>
+<Card.Root>
+	<Card.Header>
+		<Card.Title>
+			<div class="flex justify-between">
+				<div>
+					Editing: <span class="text-primary">{record.title}</span>
+				</div>
 
-						<form method="post" action="?/save" use:enhance>
-							<Button variant="link" size="sm" type="submit">
-								<span><Icon icon="mdi:cloud-plus-outline" /></span>
-								<span>Save Auction</span>
-							</Button>
-						</form>
+				<div class="flex flex-row gap-3">
+					<AlertDialog.Root>
+						<AlertDialog.Trigger class={buttonVariants({ variant: 'ghost' })}>
+							<Icon icon="mdi:death-star-variant" />
+							<span>Delete Auction</span>
+						</AlertDialog.Trigger>
+						<AlertDialog.Content>
+							<AlertDialog.Header>
+								<AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title>
+								<AlertDialog.Description>
+									This action cannot be undone. This will permanently delete the auction from the
+									holochain. All listings associated with this auction will be returned back to a <span
+										class="text-primary">new</span
+									> state.
+								</AlertDialog.Description>
+							</AlertDialog.Header>
+							<AlertDialog.Footer>
+								<form method="post" action="?/delete" use:enhance>
+									<AlertDialog.Cancel type="button">Cancel</AlertDialog.Cancel>
+									<AlertDialog.Action type="submit">Delete Auction</AlertDialog.Action>
+								</form>
+							</AlertDialog.Footer>
+						</AlertDialog.Content>
+					</AlertDialog.Root>
+
+					<form method="post" action="?/save" use:enhance>
+						<Button variant="link" size="sm" type="submit">
+							<span><Icon icon="mdi:cloud-plus-outline" /></span>
+							<span>Save Auction</span>
+						</Button>
+					</form>
+				</div>
+			</div>
+		</Card.Title>
+	</Card.Header>
+	<Card.Content class="flex flex-col gap-3">
+		<div class="flex flex-col gap-1">
+			<Label>Auction Title</Label>
+			<Input bind:value={$form.title} />
+		</div>
+
+		<div class="flex flex-col gap-1">
+			<Label>Start Time</Label>
+			<Input type="datetime-local" bind:value={$form.startAt} />
+		</div>
+
+		<Separator class="bg-primary" />
+
+		<div class="flex flex-col gap-0">
+			<h3>Current Listings</h3>
+			<p class="text-sm">These are the current listings that will be available on this Auction.</p>
+		</div>
+
+		<div class="flex flex-col gap-2">
+			{#each record.listings as listing, i}
+				<div class="flex flex-row items-center gap-3 rounded-md border p-2">
+					<Checkbox
+						checked={$form.listings.some((item) => item === listing.id)}
+						onCheckedChange={(v) => {
+							if (v) {
+								$form.listings = [...$form.listings, listing.id];
+							} else {
+								$form.listings = $form.listings.filter((item) => item !== listing.id);
+							}
+						}}
+					/>
+					<div class="flex flex-col">
+						<span class="-mb-1">{listing.title}</span>
+						<span style="font-family: 'Galactic Basic" class="text-xs"
+							>${integerToCredit(listing.startingPrice)}</span
+						>
 					</div>
 				</div>
-			</Card.Title>
-		</Card.Header>
-		<Card.Content class="flex flex-col gap-3">
-			<div class="flex flex-col gap-1">
-				<Label>Auction Title</Label>
-				<Input bind:value={$form.title} />
-			</div>
+			{/each}
+		</div>
 
-			<div class="flex flex-col gap-1">
-				<Label>Start Time</Label>
-				<Input type="datetime-local" bind:value={$form.startAt} />
-			</div>
+		<div class="flex flex-col gap-0">
+			<h3>Available Listings</h3>
+			<p class="text-sm">You can add these listings to the Auction.</p>
+		</div>
 
-			<Separator class="bg-primary" />
-
-			<div class="flex flex-col gap-0">
-				<h3>Current Listings</h3>
-				<p class="text-sm">
-					These are the current listings that will be available on this Auction.
-				</p>
-			</div>
-
-			<div class="flex flex-col gap-2">
-				{#each record.listings as listing, i}
-					<div class="flex flex-row items-center gap-3 rounded-md border p-2">
-						<Checkbox
-							checked={$form.listings.some((item) => item === listing.id)}
-							onCheckedChange={(v) => {
-								if (v) {
-									$form.listings = [...$form.listings, listing.id];
-								} else {
-									$form.listings = $form.listings.filter((item) => item !== listing.id);
-								}
-							}}
-						/>
-						<div class="flex flex-col">
-							<span class="-mb-1">{listing.title}</span>
-							<span style="font-family: 'Galactic Basic" class="text-xs"
-								>${integerToCredit(listing.startingPrice)}</span
-							>
-						</div>
+		<div class="flex flex-col gap-2">
+			{#each data.listingRecords as listing, i}
+				<div class="flex flex-row items-center gap-3 rounded-md border p-2">
+					<Checkbox
+						checked={$form.listings.some((item) => item === listing.id)}
+						onCheckedChange={(v) => {
+							if (v) {
+								$form.listings = [...$form.listings, listing.id];
+							} else {
+								$form.listings = $form.listings.filter((item) => item !== listing.id);
+							}
+						}}
+					/>
+					<div class="flex flex-col">
+						<span class="-mb-1">{listing.title}</span>
+						<span style="font-family: 'Galactic Basic" class="text-xs"
+							>${integerToCredit(listing.startingPrice)}</span
+						>
 					</div>
-				{/each}
-			</div>
-
-			<div class="flex flex-col gap-0">
-				<h3>Available Listings</h3>
-				<p class="text-sm">You can add these listings to the Auction.</p>
-			</div>
-
-			<div class="flex flex-col gap-2">
-				{#each data.listingRecords as listing, i}
-					<div class="flex flex-row items-center gap-3 rounded-md border p-2">
-						<Checkbox
-							checked={$form.listings.some((item) => item === listing.id)}
-							onCheckedChange={(v) => {
-								if (v) {
-									$form.listings = [...$form.listings, listing.id];
-								} else {
-									$form.listings = $form.listings.filter((item) => item !== listing.id);
-								}
-							}}
-						/>
-						<div class="flex flex-col">
-							<span class="-mb-1">{listing.title}</span>
-							<span style="font-family: 'Galactic Basic" class="text-xs"
-								>${integerToCredit(listing.startingPrice)}</span
-							>
-						</div>
-					</div>
-				{/each}
-			</div>
-		</Card.Content>
-	</Card.Root>
-</LayoutWrapper>
+				</div>
+			{/each}
+		</div>
+	</Card.Content>
+</Card.Root>

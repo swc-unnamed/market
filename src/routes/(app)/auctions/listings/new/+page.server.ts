@@ -6,15 +6,18 @@ import {
 	assets,
 	auctionListingHistory,
 	auctionListingItems,
-	auctionListings
+	auctionListings,
+	entities
 } from '$lib/server/db/schema';
-import { getTableColumns } from 'drizzle-orm';
+import { asc, getTableColumns } from 'drizzle-orm';
 
 import { fail, message, setError, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
 export const load = async ({ locals }) => {
-	const entityRecords = await db.query.entities.findMany();
+	const entityRecords = await db.query.entities.findMany({
+		orderBy: asc(entities.name)
+	});
 
 	const form = await superValidate(zod(newAuctionListingSchema));
 
@@ -109,8 +112,8 @@ export const actions = {
 						// Create a new asset chain record
 						await tx.insert(assetLedger).values({
 							assetId: asset[0].id,
-							action: 'listed',
-							listedPrice: creditToInteger(form.data.startingPrice)
+							action: 'listed_auction',
+							value: creditToInteger(form.data.startingPrice)
 						});
 
 						assetId = asset[0].id;
