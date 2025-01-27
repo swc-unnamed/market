@@ -46,14 +46,14 @@
 		{:else}
 			<Button size="sm" variant="secondary">
 				<Icon icon="mdi:database" class="size-4" />
-				Asset Lookup
+				Entity Lookup
 			</Button>
 		{/if}
 	</Dialog.Trigger>
 	<Dialog.Content>
 		<div class="grid grid-cols-1 gap-2">
 			<div class="grid grid-cols-1 gap-2">
-				<Label>Asset Filter</Label>
+				<Label>Entity Filter</Label>
 				<Input bind:value={itemSearch} placeholder="Start typing to search our Asset holocron..." />
 				<ScrollArea class="mt-3 h-56 rounded-md border border-secondary p-1">
 					<div class="grid grid-cols-1 gap-1">

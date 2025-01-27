@@ -1,1 +1,1 @@
-export const AuctionListingStatus = ['new', 'selected', 'sold', 'completed'] as const;
+export const AuctionListingStatus = ['new', 'selected', 'sold', 'completed', 'draft'] as const;

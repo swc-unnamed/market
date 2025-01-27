@@ -95,7 +95,7 @@
 										{#if route.icon}
 											<Icon icon={route.icon} class="h-8 w-8 text-xl" />
 										{/if}
-										<span class="text-lg">{route.title}</span>
+										<span>{route.title}</span>
 										{#if route?.nested?.length}
 											<Icon
 												icon="tabler:chevron-right"

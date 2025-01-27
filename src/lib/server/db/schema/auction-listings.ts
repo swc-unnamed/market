@@ -17,16 +17,16 @@ export const auctionListings = pgTable('auction_listings', {
 		.$defaultFn(() => createId()),
 	listingNumber: serial('listing_number'),
 	listedById: text('listed_by_id').references(() => users.id),
-	startingPrice: integer('starting_price').notNull(),
+	startingPrice: integer('starting_price'),
 	purchasedById: text('purchased_by_id').references(() => users.id),
 	purchasedPrice: integer('purchased_price'),
 	title: text('title').notNull(),
 	description: text('description'),
-	location: text('location').notNull(),
-	sendCreditsTo: text('sent_credits_to_id').notNull(),
+	location: text('location'),
+	sendCreditsTo: text('sent_credits_to_id'),
 	listerIsAnon: boolean('lister_is_anon').notNull().default(false),
 	createdAt: timestamp('created_at').$defaultFn(() => new Date()),
-	status: text('status', { enum: AuctionListingStatus }).default('new'),
+	status: text('status', { enum: AuctionListingStatus }).default('draft'),
 	auctionId: text('auction_id').references(() => auctions.id)
 });
 

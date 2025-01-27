@@ -174,17 +174,18 @@
 		if (!v) return (selectedListing = null);
 	}}
 >
-	<Dialog.Content class="mx-auto h-1/2 w-full md:w-1/3">
+	<Dialog.Content class="">
 		<Dialog.Header>
 			<Dialog.Title>Record Sale of listing #{selectedListing?.listingNumber}</Dialog.Title>
 			<Dialog.Description>Record the sale of the listing.</Dialog.Description>
 		</Dialog.Header>
-		<div class="flex flex-col gap-3 p-4">
+		<div class="flex flex-col gap-3">
 			<Label>Who won the bid?</Label>
 			<UserSelect users={data.users} bind:selectedUser />
 			<CreditInput label="Purchased Price" bind:value={selectedListingPurchasePrice} />
 		</div>
 		<Dialog.Footer class="flex items-center">
+			<Dialog.Close>Cancel</Dialog.Close>
 			<Button
 				disabled={recordingSale}
 				onclick={async () => {
@@ -197,7 +198,6 @@
 					Record Sale
 				{/if}
 			</Button>
-			<Dialog.Close>Cancel</Dialog.Close>
 		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>
