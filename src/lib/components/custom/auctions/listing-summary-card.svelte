@@ -7,10 +7,13 @@
 	import { integerToCredit } from '$lib/helpers/currency-conversion';
 	import Icon from '@iconify/svelte';
 	import AssetImage from '../assets/asset-image.svelte';
+	import { formatAuctionListingStatus } from '$lib/helpers/auctions';
+	import { Badge } from '$lib/components/ui/badge';
 
 	type ListingSummaryCard = {
 		id: string;
 		title: string;
+		status: string;
 		startingPrice?: number | null;
 		location?: string | null;
 		listerIsAnon?: boolean | null;
@@ -22,6 +25,8 @@
 		} | null;
 		items?: {
 			entityId: string | null;
+			customImageUrl: string | null;
+			uniqueItem: boolean | null;
 		}[];
 	};
 
@@ -44,9 +49,17 @@
 <Card.Root class="w-full">
 	<Card.Header>
 		<Card.Title>
-			<div class="flex flex-col">
+			<div class="flex flex-col gap-1">
 				<span class="truncate">{listing.title}</span>
-				<span class="text-sm text-muted-foreground">ALID: {listing.listingNumber}</span>
+				<div class="flex flex-row items-start justify-between gap-1">
+					<span class="text-sm text-muted-foreground">ALID: {listing.listingNumber}</span>
+					<div>
+						<Badge>{formatAuctionListingStatus(listing.status)}</Badge>
+						{#if listing.items?.find((i) => i.uniqueItem)}
+							<Badge variant="outline" class="uppercase">Unique</Badge>
+						{/if}
+					</div>
+				</div>
 			</div>
 		</Card.Title>
 	</Card.Header>
@@ -58,11 +71,19 @@
 						{#each listing.items as item}
 							{#if item.entityId}
 								<Carousel.Item>
-									<AssetImage
-										class="mx-auto h-48 rounded-md border border-secondary shadow-md drop-shadow-md"
-										id={item.entityId}
-										large
-									/>
+									{#if item.customImageUrl}
+										<img
+											src={item.customImageUrl}
+											alt="custom_image"
+											class="mx-auto h-48 rounded-md border border-secondary shadow-md drop-shadow-md"
+										/>
+									{:else}
+										<AssetImage
+											class="mx-auto h-48 rounded-md border border-secondary shadow-md drop-shadow-md"
+											id={item.entityId}
+											large
+										/>
+									{/if}
 								</Carousel.Item>
 							{/if}
 						{/each}

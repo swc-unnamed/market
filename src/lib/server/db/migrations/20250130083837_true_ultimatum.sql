@@ -1,0 +1,1 @@
+ALTER TABLE "auction_listings" ALTER COLUMN "created_at" SET NOT NULL;

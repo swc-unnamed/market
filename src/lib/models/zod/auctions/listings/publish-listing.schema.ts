@@ -5,8 +5,9 @@ export const publishListingSchema = z.object({
 		.string()
 		.min(4, { message: 'Title must be between 4 and 50 characters.' })
 		.max(50, { message: 'Title must be between 4 and 50 characters' }),
-	description: z.string().max(400, { message: 'Description must be less than 400 characters' }),
+	description: z.string().optional().nullable(),
 	location: z.string().max(400, { message: 'Location must be less than 400 characters' }),
 	startingPrice: z.number().int().min(1, { message: 'Starting price must be at least 1 credit' }),
-	items: z.array(z.any()).min(1)
+	sendCreditsTo: z.string(),
+	listerIsAnon: z.boolean().optional().nullable()
 });

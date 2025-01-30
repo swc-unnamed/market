@@ -9,18 +9,11 @@ export const load = async ({ locals, params }) => {
 		with: {
 			listings: {
 				orderBy: asc(auctionListings.listingNumber),
-				columns: {
-					id: true,
-					title: true,
-					startingPrice: true,
-					location: true,
-					listerIsAnon: true,
-					listingNumber: true
-				},
 				with: {
 					items: {
-						columns: {
-							entityId: true
+						with: {
+							asset: true,
+							entity: true
 						}
 					},
 					listedBy: {

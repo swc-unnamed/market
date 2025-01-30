@@ -12,9 +12,8 @@ export const assets = pgTable('assets', {
 		.primaryKey()
 		.unique()
 		.$defaultFn(() => createId()),
-	entityId: text('entity_id'),
+	entityId: text('entity_id').notNull(),
 	combineId: integer('combine_id').notNull(),
-	typeId: integer().notNull(),
 	type: text().notNull(),
 	customImageUrl: text('custom_image_url')
 });

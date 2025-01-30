@@ -1,5 +1,6 @@
 import { MagistratePermissionPolicy } from '$lib/consts/permission-policies.js';
 import { db } from '$lib/server/db/index.js';
+import { assetLedger } from '$lib/server/db/schema/asset-ledger.js';
 import { auctionListingItems } from '$lib/server/db/schema/auction-listing-items.js';
 import { verifyRole } from '$lib/server/utils/verify-role.js';
 import { error, json } from '@sveltejs/kit';
@@ -38,6 +39,13 @@ export const DELETE = async ({ locals, params }) => {
 	}
 
 	await db.delete(auctionListingItems).where(eq(auctionListingItems.id, listingItemId));
+
+	if (listingItemRecord.assetId) {
+		await db.insert(assetLedger).values({
+			action: 'delisted',
+			assetId: listingItemRecord.assetId
+		});
+	}
 
 	return json({
 		status: 200,

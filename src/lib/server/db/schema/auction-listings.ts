@@ -25,8 +25,10 @@ export const auctionListings = pgTable('auction_listings', {
 	location: text('location'),
 	sendCreditsTo: text('sent_credits_to_id'),
 	listerIsAnon: boolean('lister_is_anon').notNull().default(false),
-	createdAt: timestamp('created_at').$defaultFn(() => new Date()),
-	status: text('status', { enum: AuctionListingStatus }).default('draft'),
+	createdAt: timestamp('created_at')
+		.$defaultFn(() => new Date())
+		.notNull(),
+	status: text('status', { enum: AuctionListingStatus }).default('draft').notNull(),
 	auctionId: text('auction_id').references(() => auctions.id),
 	isDeleted: boolean('is_deleted').default(false),
 	deletedAt: timestamp('deleted_at')

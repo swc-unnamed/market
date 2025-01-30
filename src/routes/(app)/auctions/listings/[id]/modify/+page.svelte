@@ -20,6 +20,9 @@
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import AurebeshText from '$lib/components/custom/shared/aurebesh-text.svelte';
 	import { goto, invalidate } from '$app/navigation';
+	import { publishListingSchema } from '$lib/models/zod/auctions/listings/publish-listing.schema.js';
+	import { z } from 'zod';
+	import { formatAuctionListingStatus } from '$lib/helpers/auctions.js';
 
 	let { data } = $props();
 	let listing = $derived(data.listingRecord);
@@ -45,7 +48,11 @@
 		}
 	});
 
-	const { form: listingForm, enhance: listingEnhance } = superForm(data.listingForm, {
+	const {
+		form: listingForm,
+		enhance: listingEnhance,
+		submit: listingSubmit
+	} = superForm(data.listingForm, {
 		dataType: 'json',
 		id: 'listingForm',
 		onResult: ({ result }) => {
@@ -78,6 +85,35 @@
 	}
 
 	async function handlePublish() {
+		// Save the listing first, just in case
+		listingSubmit();
+
+		if ($listingForm.title.toLocaleLowerCase().includes('draft listing')) {
+			toast.error('The title must not include the Draft Listing text.');
+			publishDialogOpen = false;
+			return;
+		}
+
+		if (data.listingRecord.items.length < 1) {
+			toast.error('You must have at least one item in the listing to publish.');
+			publishDialogOpen = false;
+			return;
+		}
+
+		// Check if the form is valid
+		try {
+			publishListingSchema.parse(data.listingRecord);
+		} catch (err) {
+			if (err instanceof z.ZodError) {
+				console.log('Validation error', err.errors);
+				toast.error('Validation error, unable to publish to the holochain');
+
+				publishDialogOpen = false;
+			}
+
+			return;
+		}
+
 		const res = await fetch(`/api/auctions/listings/${listing?.id}`, {
 			method: 'POST',
 			body: JSON.stringify({
@@ -113,7 +149,7 @@
 </script>
 
 <PageWrapper title={listing?.title}>
-	<div class="mb-3 md:container md:mb-0">
+	<div class="">
 		{#if listing?.status === 'draft'}
 			<Alert.Root class="mb-3 border-primary">
 				<Alert.AlertDescription>
@@ -129,7 +165,18 @@
 			<Card.Root>
 				<Card.Header>
 					<Card.Title>
-						Modify Auction Listing: <span class="text-primary">{listing?.title}</span>
+						<div class="flex items-center justify-between">
+							<div>
+								Modify: <span class="text-primary">{listing?.title}</span>
+							</div>
+
+							<div class="flex gap-2">
+								<Badge class="uppercase">{formatAuctionListingStatus(listing.status)}</Badge>
+								{#if listing.items.find((i) => i.uniqueItem)}
+									<Badge variant="outline" class="uppercase">Unique</Badge>
+								{/if}
+							</div>
+						</div>
 					</Card.Title>
 					<Card.Description>
 						<span>ALID: {listing?.listingNumber}</span>
@@ -203,35 +250,37 @@
 							</AlertDialog.Content>
 						</AlertDialog.Root>
 					</div>
+
 					<div class="flex w-full items-center gap-3 md:w-auto">
 						<div class="flex w-full flex-col items-center gap-3 md:flex-row">
-							<AlertDialog.Root bind:open={publishDialogOpen}>
-								<AlertDialog.Trigger class="w-full md:w-auto">
-									<Button size="sm" variant="action" class="w-full border-primary md:w-auto">
-										<AurebeshText text="P" />
-										Publish
-									</Button>
-								</AlertDialog.Trigger>
-								<AlertDialog.Content>
-									<AlertDialog.Header>
-										<AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title>
-										<AlertDialog.Description>
-											Once you publish the listing, it will be visible to all users. You will not be
-											able to make changes, only cancel the listing and create a new one. Are you
-											sure you want to publish to the holochain?
-										</AlertDialog.Description>
-									</AlertDialog.Header>
-									<AlertDialog.Footer>
-										<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
-										<AlertDialog.Action
-											onclick={async () => {
-												await handlePublish();
-											}}>Continue</AlertDialog.Action
-										>
-									</AlertDialog.Footer>
-								</AlertDialog.Content>
-							</AlertDialog.Root>
-
+							{#if listing.status === 'draft'}
+								<AlertDialog.Root bind:open={publishDialogOpen}>
+									<AlertDialog.Trigger class="w-full md:w-auto">
+										<Button size="sm" variant="action" class="w-full border-primary md:w-auto">
+											<AurebeshText text="P" />
+											Publish
+										</Button>
+									</AlertDialog.Trigger>
+									<AlertDialog.Content>
+										<AlertDialog.Header>
+											<AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title>
+											<AlertDialog.Description>
+												Once you publish the listing, it will be visible to all users. You will not
+												be able to make changes, only cancel the listing and create a new one. Are
+												you sure you want to publish to the holochain?
+											</AlertDialog.Description>
+										</AlertDialog.Header>
+										<AlertDialog.Footer>
+											<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+											<AlertDialog.Action
+												onclick={async () => {
+													await handlePublish();
+												}}>Continue</AlertDialog.Action
+											>
+										</AlertDialog.Footer>
+									</AlertDialog.Content>
+								</AlertDialog.Root>
+							{/if}
 							<form class="w-full" action="?/save" method="post" use:listingEnhance>
 								<Button size="sm" variant="outline" class="w-full border-primary" type="submit">
 									<AurebeshText text="S" />
@@ -282,8 +331,8 @@
 									<Table.Cell>Image</Table.Cell>
 									<Table.Cell>Name</Table.Cell>
 									<Table.Cell>U / U / U</Table.Cell>
-									<Table.Cell>Type</Table.Cell>
-									<Table.Cell>Combine ID</Table.Cell>
+									<Table.Cell>Unique</Table.Cell>
+									<Table.Cell>Asset Hash</Table.Cell>
 									<Table.Cell></Table.Cell>
 								</Table.Row>
 							</Table.Header>
@@ -292,27 +341,38 @@
 									<Table.Row>
 										<Table.Cell class="w-48">
 											{#if item.customImageUrl}
-												<img src={item.customImageUrl} alt={item.customItemName} class="h-8 w-8" />
+												<img
+													src={item.customImageUrl}
+													alt={item.customItemName}
+													class="h-[100px] w-[100px] rounded-md drop-shadow-md"
+												/>
 											{:else if item.entityId}
-												<AssetImage class="h-[100px] w-[100px] drop-shadow-md" id={item.entityId} />
+												<AssetImage
+													class="h-[100px] w-[100px] rounded-md drop-shadow-md"
+													id={item.entityId}
+												/>
 											{/if}
 										</Table.Cell>
-										<Table.Cell class="w-52">
+										<Table.Cell class="w-64">
 											{item.customItemName ? item.customItemName : item.entity?.name}
 										</Table.Cell>
 										<Table.Cell>
 											{#if item.uuu}
-												<Badge>U / U / U: Yes</Badge>
+												<Badge>Yes</Badge>
 											{:else}
-												<Badge>U / U / U: No</Badge>
+												No
 											{/if}
 										</Table.Cell>
 										<Table.Cell>
 											<span class="uppercase">
-												{item.entity?.type}
+												{#if item.uniqueItem}
+													<Badge>Yes</Badge>
+												{:else}
+													No
+												{/if}
 											</span>
 										</Table.Cell>
-										<Table.Cell>
+										<Table.Cell class="w-32 truncate">
 											{#if item.assetId}
 												{item.assetId}
 											{:else}

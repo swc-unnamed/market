@@ -167,18 +167,20 @@ export const actions = {
 		}
 
 		for (const listing of record!.listings) {
-			await db
-				.update(auctionListings)
-				.set({
-					status: 'new',
-					auctionId: null
-				})
-				.where(eq(auctionListings.id, listing.id));
+			await db.transaction(async (tx) => {
+				await tx
+					.update(auctionListings)
+					.set({
+						status: 'new',
+						auctionId: null
+					})
+					.where(eq(auctionListings.id, listing.id));
 
-			await db.insert(auctionListingHistory).values({
-				event: 'status_updated',
-				listingId: listing.id,
-				message: 'Auction deleted, listing status returned to new.'
+				await tx.insert(auctionListingHistory).values({
+					event: 'status_updated',
+					listingId: listing.id,
+					message: 'Auction deleted, listing status returned to new.'
+				});
 			});
 		}
 
