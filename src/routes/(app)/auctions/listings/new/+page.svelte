@@ -63,104 +63,105 @@
 >
 	<form method="POST" action="?/createListing" use:enhance></form>
 
-	<div class="grid gap-3">
-		<Alert.Root class="border-blue-500">
-			<Alert.Title class="flex items-center">
-				<Icon icon="mdi:info-outline" class="mr-2 h-6 w-6 text-blue-600" />
-				Welcome to the Holochain Terminal, {user.name}
-			</Alert.Title>
-			<Alert.Description>
-				Input the following parameters and our droids will take care of the rest. Take your time
-				though, once you have submitted the listing to holochain, you will not be able to change it.
-			</Alert.Description>
-		</Alert.Root>
+	<div class="mb-4">
+		<div class="grid gap-3">
+			<Alert.Root class="border-blue-500">
+				<Alert.Title class="flex items-center">
+					<Icon icon="mdi:info-outline" class="mr-2 h-6 w-6 text-blue-600" />
+					Welcome to the Holochain Terminal, {user.name}
+				</Alert.Title>
+				<Alert.Description>
+					Input the following parameters and our droids will take care of the rest. Take your time
+					though, once you have submitted the listing to holochain, you will not be able to change
+					it.
+				</Alert.Description>
+			</Alert.Root>
 
-		<div class="grid grid-cols-1 gap-2 lg:grid-cols-1">
-			<div>
-				<div class="grid grid-cols-1 gap-2">
-					<Card.Root>
-						<Card.Content>
-							<div class="flex flex-col gap-4">
-								<div class="grid gap-1">
-									<Label>Title</Label>
-									<Input bind:value={$form.title} />
+			<div class="grid grid-cols-1 gap-2 lg:grid-cols-1">
+				<div>
+					<div class="grid grid-cols-1 gap-2">
+						<Card.Root>
+							<Card.Content>
+								<div class="flex flex-col gap-4">
+									<div class="grid gap-1">
+										<Label>Title</Label>
+										<Input bind:value={$form.title} />
 
-									{#if $errors.title}
-										<p class="text-xs text-red-600">{$errors.title}</p>
-									{/if}
-								</div>
-								<div class="grid gap-1">
-									<Label>Details</Label>
-									<Textarea bind:value={$form.description} />
-
-									{#if $errors.description}
-										<p class="text-xs text-red-600">{$errors.description}</p>
-									{/if}
-								</div>
-								<div class="grid gap-1">
-									<Label>Location</Label>
-									<Textarea bind:value={$form.location} />
-									{#if $errors.location}
-										<p class="text-xs text-red-600">{$errors.location}</p>
-									{/if}
-								</div>
-								<div class="grid gap-1">
-									<Label>Who should we send the credits to?</Label>
-									<Input bind:value={$form.sendCreditsTo} />
-									{#if $errors.sendCreditsTo}
-										<p class="text-xs text-red-600">{$errors.sendCreditsTo}</p>
-									{/if}
-								</div>
-								<div class="grid gap-1">
-									<div class="flex items-center gap-1">
-										<Label>Remain Anonymous</Label>
-										<Switch bind:checked={$form.listerIsAnon} />
+										{#if $errors.title}
+											<p class="text-xs text-red-600">{$errors.title}</p>
+										{/if}
 									</div>
-									<span class="text-xs text-muted-foreground">
-										We won't associate your name to this listing and will use a Unnamed Imperium
-										Market approved middle.
-									</span>
-								</div>
-								<div class="grid gap-1">
-									<CreditInput label="Starting Price" bind:value={$form.startingPrice} />
-									{#if $errors.startingPrice}
-										<p class="text-xs text-red-600">{$errors.startingPrice}</p>
-									{/if}
-								</div>
-							</div>
-						</Card.Content>
+									<div class="grid gap-1">
+										<Label>Details</Label>
+										<Textarea bind:value={$form.description} />
 
-						<Card.Footer class="flex justify-end gap-2">
-							<Button
-								class="flex items-center"
-								variant="secondary"
-								onclick={() => {
-									$form.items = [
-										...$form.items,
-										{
-											entityId: '',
-											entityName: '',
-											uuu: true,
-											quantity: 1,
-											customImageUrl: '',
-											asset: {
-												type: '',
-												combineId: null
+										{#if $errors.description}
+											<p class="text-xs text-red-600">{$errors.description}</p>
+										{/if}
+									</div>
+									<div class="grid gap-1">
+										<Label>Location</Label>
+										<Textarea bind:value={$form.location} />
+										{#if $errors.location}
+											<p class="text-xs text-red-600">{$errors.location}</p>
+										{/if}
+									</div>
+									<div class="grid gap-1">
+										<Label>Who should we send the credits to?</Label>
+										<Input bind:value={$form.sendCreditsTo} />
+										{#if $errors.sendCreditsTo}
+											<p class="text-xs text-red-600">{$errors.sendCreditsTo}</p>
+										{/if}
+									</div>
+									<div class="grid gap-1">
+										<div class="flex items-center gap-1">
+											<Label>Remain Anonymous</Label>
+											<Switch bind:checked={$form.listerIsAnon} />
+										</div>
+										<span class="text-xs text-muted-foreground">
+											We won't associate your name to this listing and will use a Unnamed Imperium
+											Market approved middle.
+										</span>
+									</div>
+									<div class="grid gap-1">
+										<CreditInput label="Starting Price" bind:value={$form.startingPrice} />
+										{#if $errors.startingPrice}
+											<p class="text-xs text-red-600">{$errors.startingPrice}</p>
+										{/if}
+									</div>
+								</div>
+							</Card.Content>
+
+							<Card.Footer class="flex justify-end gap-2">
+								<Button
+									class="flex items-center"
+									variant="secondary"
+									onclick={() => {
+										$form.items = [
+											...$form.items,
+											{
+												entityId: '',
+												entityName: '',
+												uuu: true,
+												quantity: 1,
+												customImageUrl: '',
+												asset: {
+													type: '',
+													combineId: null
+												}
 											}
-										}
-									];
-								}}
-							>
-								<Icon icon="mdi:invoice-text-new-outline" class="size-4" />
-								Add Asset
-							</Button>
-						</Card.Footer>
-					</Card.Root>
+										];
+									}}
+								>
+									<Icon icon="mdi:invoice-text-new-outline" class="size-4" />
+									Add Asset
+								</Button>
+							</Card.Footer>
+						</Card.Root>
+					</div>
 				</div>
-			</div>
 
-			<ScrollArea>
-				<div class="grid grid-cols-1 gap-2">
+				<div class="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
 					{#each $form.items as item, i}
 						<div transition:blur={{ duration: 150, easing: cubicOut }}>
 							<Card.Root>
@@ -269,56 +270,52 @@
 								</Card.Content>
 							</Card.Root>
 						</div>
-
-						<div class="flex justify-center">
-							<Separator class="w-2/3 rounded-md bg-primary" />
-						</div>
 					{/each}
 				</div>
-			</ScrollArea>
+			</div>
 		</div>
-	</div>
 
-	<div class="fixed bottom-6 left-1/2 -translate-x-1/2">
-		<Drawer.Root bind:open={previewOpen}>
-			<Drawer.Trigger>
-				<div class="traced-button-wrapper">
-					<div class="traced-button-gradient">
-						<Button
-							variant="outline"
-							class="relative w-96 border-primary bg-background transition-colors duration-200"
-						>
-							<Icon icon="mage:preview" />
-							Preview Listing
-						</Button>
+		<div class="fixed bottom-6 left-1/2 -translate-x-1/2">
+			<Drawer.Root bind:open={previewOpen}>
+				<Drawer.Trigger>
+					<div class="traced-button-wrapper">
+						<div class="traced-button-gradient">
+							<Button
+								variant="outline"
+								class="relative w-96 border-primary bg-background transition-colors duration-200"
+							>
+								<Icon icon="mage:preview" />
+								Preview Listing
+							</Button>
+						</div>
 					</div>
-				</div>
-			</Drawer.Trigger>
-			<Drawer.Content class="mx-auto h-3/4 w-full md:w-2/3">
-				<ScrollArea>
-					<div class="container mx-auto w-full">
-						<Drawer.Header>
-							<Drawer.Title>Listing Preview</Drawer.Title>
-							<Drawer.Description
-								>Preview your listing before you submit it. Once submitted, it will be on a cooldown
-								before being submitted to the holochain.
-							</Drawer.Description>
-						</Drawer.Header>
+				</Drawer.Trigger>
+				<Drawer.Content class="mx-auto h-3/4 w-full md:w-2/3">
+					<ScrollArea>
+						<div class="container mx-auto w-full">
+							<Drawer.Header>
+								<Drawer.Title>Listing Preview</Drawer.Title>
+								<Drawer.Description
+									>Preview your listing before you submit it. Once submitted, it will be on a
+									cooldown before being submitted to the holochain.
+								</Drawer.Description>
+							</Drawer.Header>
 
-						<Separator class="mb-3 bg-primary" />
+							<Separator class="mb-3 bg-primary" />
 
-						<ListingPreviewCard bind:listing={$form} />
-					</div>
+							<ListingPreviewCard bind:listing={$form} />
+						</div>
 
-					<div class="mx-auto w-96">
-						<Drawer.Footer>
-							<Button onclick={handleSubmit}>Submit</Button>
-							<Drawer.Close>Cancel</Drawer.Close>
-						</Drawer.Footer>
-					</div>
-				</ScrollArea>
-			</Drawer.Content>
-		</Drawer.Root>
+						<div class="mx-auto w-96">
+							<Drawer.Footer>
+								<Button onclick={handleSubmit}>Submit</Button>
+								<Drawer.Close>Cancel</Drawer.Close>
+							</Drawer.Footer>
+						</div>
+					</ScrollArea>
+				</Drawer.Content>
+			</Drawer.Root>
+		</div>
 	</div>
 
 	<!-- <div class="my-4">

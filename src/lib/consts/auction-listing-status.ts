@@ -1,7 +1,1 @@
-export const AuctionListingStatus = [
-	'new',
-	'selected',
-	'pending_payment',
-	'pending_delivery',
-	'completed'
-] as const;
+export const AuctionListingStatus = ['new', 'selected', 'sold', 'completed', 'draft'] as const;

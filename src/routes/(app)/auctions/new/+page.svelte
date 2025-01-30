@@ -1,5 +1,6 @@
 <script lang="ts">
-	import LayoutWrapper from '$lib/components/custom/layout/layout-wrapper.svelte';
+	import PageWrapper from '$lib/components/custom/layout/page-wrapper.svelte';
+	import AurebeshText from '$lib/components/custom/shared/aurebesh-text.svelte';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import * as Card from '$lib/components/ui/card';
 	import { Checkbox } from '$lib/components/ui/checkbox/index.js';
@@ -30,15 +31,15 @@
 	});
 </script>
 
-<LayoutWrapper title="New Auction">
+<PageWrapper title="New Auction">
 	<Card.Root>
 		<Card.Header>
 			<Card.Title>
 				<div class="flex justify-between">
 					<span>Create a new Auction</span>
 					<form method="post" action="?/create" use:enhance>
-						<Button variant="link" size="sm" type="submit">
-							<span><Icon icon="mdi:cloud-plus-outline" /></span>
+						<Button variant="action" size="sm" type="submit">
+							<AurebeshText text="C" />
 							<span>Create Auction</span>
 						</Button>
 					</form>
@@ -72,7 +73,7 @@
 							<Checkbox
 								onCheckedChange={(v) => {
 									if (v) {
-										$form.listings[i] = listing.id;
+										$form.listings = [...$form.listings, listing.id];
 									} else {
 										$form.listings = $form.listings.filter((id) => id !== listing.id);
 									}
@@ -81,7 +82,7 @@
 							<div class="flex flex-col">
 								<span class="-mb-1">{listing.title}</span>
 								<span style="font-family: 'Galactic Basic" class="text-xs"
-									>${integerToCredit(listing.startingPrice)}</span
+									>${integerToCredit(listing.startingPrice ?? 0)}</span
 								>
 							</div>
 						</div>
@@ -90,4 +91,4 @@
 			</div>
 		</Card.Content>
 	</Card.Root>
-</LayoutWrapper>
+</PageWrapper>

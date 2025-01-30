@@ -28,7 +28,7 @@
 			allowedRoles: ['patron', 'auctioneer', 'magistrate', 'holochain_architect', 'market_tzar'],
 			nested: [
 				{
-					title: 'Current Auctions',
+					title: 'Available Auctions',
 					href: '/auctions',
 					icon: 'mdi:invoice-line-items',
 					allowedRoles: ['patron', 'auctioneer', 'magistrate', 'holochain_architect', 'market_tzar']
@@ -43,7 +43,14 @@
 					title: 'New Listing',
 					href: '/auctions/listings/new',
 					icon: 'mdi:plus',
-					allowedRoles: ['patron', 'auctioneer', 'magistrate', 'holochain_architect', 'market_tzar']
+					allowedRoles: [
+						'patron',
+						'auctioneer',
+						'magistrate',
+						'holochain_architect',
+						'market_tzar'
+					],
+					disablePrefetch: true
 				}
 			]
 		},
@@ -60,8 +67,6 @@
 
 	const user = getContext<UserContext>(USER_CONTEXT);
 
-	$inspect(user, routes);
-
 	let isSidebarOpen = $derived(sidebar.open);
 </script>
 
@@ -75,6 +80,10 @@
 							<Collapsible.Trigger
 								onmouseover={async () => {
 									if (!route.nested?.length || !isSidebarOpen) {
+										if (route.disablePrefetch) {
+											return;
+										}
+
 										await preloadData(route.href);
 									}
 								}}
@@ -97,7 +106,7 @@
 										{#if route.icon}
 											<Icon icon={route.icon} class="h-8 w-8 text-xl" />
 										{/if}
-										<span class="text-lg">{route.title}</span>
+										<span>{route.title}</span>
 										{#if route?.nested?.length}
 											<Icon
 												icon="tabler:chevron-right"

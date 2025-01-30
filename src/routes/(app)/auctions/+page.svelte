@@ -1,16 +1,29 @@
 <script lang="ts">
-	import LayoutWrapper from '$lib/components/custom/layout/layout-wrapper.svelte';
+	import PageWrapper from '$lib/components/custom/layout/page-wrapper.svelte';
 	import SnackbarActionButton from '$lib/components/custom/layout/snackbar-action-button.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Card from '$lib/components/ui/card';
+	import { AuctioneerPermissionPolicy } from '$lib/consts/permission-policies.js';
 	import { format } from 'date-fns';
 
 	let { data } = $props();
+
+	let canCreateAuction = $derived(AuctioneerPermissionPolicy.includes(data.user.role));
 </script>
 
-<LayoutWrapper title="Current Auction Listings">
+<PageWrapper title="Current Auction Listings">
 	<div class="flex flex-col gap-3">
-		<p>Current Auctions and auctions that are coming soon.</p>
+		<Card.Root>
+			<Card.Content>
+				<div class="flex flex-col gap-1">
+					<p>There are currently {data.records.length} auctions available.</p>
+
+					{#if canCreateAuction}
+						<p>You can <a href={'/auctions/new'}>create</a> a new Auction.</p>
+					{/if}
+				</div>
+			</Card.Content>
+		</Card.Root>
 
 		<div class="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
 			{#each data.records as record}
@@ -31,4 +44,4 @@
 			{/each}
 		</div>
 	</div>
-</LayoutWrapper>
+</PageWrapper>

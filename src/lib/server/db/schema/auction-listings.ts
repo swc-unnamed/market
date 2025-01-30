@@ -1,5 +1,5 @@
 import { createId } from '@paralleldrive/cuid2';
-import { relations } from 'drizzle-orm';
+import { is, relations } from 'drizzle-orm';
 import { users } from './users';
 import { auctionListingItems } from './auction-listing-items';
 import { auctionListingHistory } from './auction-listing-history';
@@ -17,17 +17,19 @@ export const auctionListings = pgTable('auction_listings', {
 		.$defaultFn(() => createId()),
 	listingNumber: serial('listing_number'),
 	listedById: text('listed_by_id').references(() => users.id),
-	startingPrice: integer('starting_price').notNull(),
+	startingPrice: integer('starting_price'),
 	purchasedById: text('purchased_by_id').references(() => users.id),
 	purchasedPrice: integer('purchased_price'),
-	title: text('title'),
+	title: text('title').notNull(),
 	description: text('description'),
 	location: text('location'),
-	sendCreditsTo: text('sent_credits_to_id').notNull(),
-	listerIsAnon: boolean('lister_is_anon'),
+	sendCreditsTo: text('sent_credits_to_id'),
+	listerIsAnon: boolean('lister_is_anon').notNull().default(false),
 	createdAt: timestamp('created_at').$defaultFn(() => new Date()),
-	status: text('status', { enum: AuctionListingStatus }).default('new'),
-	auctionId: text('auction_id').references(() => auctions.id)
+	status: text('status', { enum: AuctionListingStatus }).default('draft'),
+	auctionId: text('auction_id').references(() => auctions.id),
+	isDeleted: boolean('is_deleted').default(false),
+	deletedAt: timestamp('deleted_at')
 });
 
 export const auctionListingsRelations = relations(auctionListings, ({ many, one }) => ({
@@ -40,5 +42,9 @@ export const auctionListingsRelations = relations(auctionListings, ({ many, one 
 	auction: one(auctions, {
 		fields: [auctionListings.auctionId],
 		references: [auctions.id]
+	}),
+	purchasedBy: one(users, {
+		fields: [auctionListings.purchasedById],
+		references: [users.id]
 	})
 }));

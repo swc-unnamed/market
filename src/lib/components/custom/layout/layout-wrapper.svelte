@@ -7,7 +7,7 @@
 	import { cn } from '$lib/utils';
 
 	interface LayoutWrapperProps {
-		title: string;
+		title?: string;
 		subTitle?: string;
 		displayTitle?: boolean;
 		children: Snippet;
@@ -31,7 +31,7 @@
 
 <svelte:head>
 	<title>
-		{title} | Unnamed Imperium Market
+		{title} | Unnamed Market
 	</title>
 </svelte:head>
 
@@ -59,8 +59,6 @@
 				{/if}
 				{#if right}
 					{@render right?.()}
-				{:else}
-					<SnackbarActionButton />
 				{/if}
 			</div>
 		</div>

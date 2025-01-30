@@ -6,37 +6,58 @@ import {
 	assets,
 	auctionListingHistory,
 	auctionListingItems,
-	auctionListings
+	auctionListings,
+	entities
 } from '$lib/server/db/schema';
-import { getTableColumns } from 'drizzle-orm';
+import { redirect } from '@sveltejs/kit';
+import { format } from 'date-fns';
+import { asc, getTableColumns } from 'drizzle-orm';
 
 import { fail, message, setError, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
 export const load = async ({ locals }) => {
-	const entityRecords = await db.query.entities.findMany();
+	const draftDate = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
+	const draftListing = await db
+		.insert(auctionListings)
+		.values({
+			title: `Draft Listing`,
+			listedById: locals.user.id,
+			sendCreditsTo: locals.user.name
+		})
+		.returning({ id: auctionListings.id });
 
-	const form = await superValidate(zod(newAuctionListingSchema));
+	if (!draftListing[0].id) {
+		return fail(500, { message: 'An error occured on the holochain, try again later.' });
+	}
 
-	form.data.items = [
-		{
-			entityId: '',
-			entityName: '',
-			uuu: true,
-			quantity: 1,
-			customImageUrl: '',
-			asset: {
-				type: '',
-				combineId: null
-			}
-		}
-	];
+	return redirect(307, `/auctions/listings/${draftListing[0].id}/modify`);
 
-	return {
-		user: locals.user,
-		entities: entityRecords,
-		form: form
-	};
+	// const entityRecords = await db.query.entities.findMany({
+	// 	orderBy: asc(entities.name)
+	// });
+
+	// const form = await superValidate(zod(newAuctionListingSchema));
+
+	// form.data.items = [
+	// 	{
+	// 		entityId: '',
+	// 		entityName: '',
+	// 		uuu: true,
+	// 		quantity: 1,
+	// 		customImageUrl: '',
+	// 		asset: {
+	// 			type: '',
+	// 			combineId: null
+	// 		}
+	// 	}
+	// ];
+
+	// return {
+	// 	user: locals.user,
+	// 	entities: entityRecords,
+	// 	form: form
+	// };
 };
 
 export const actions = {
@@ -109,8 +130,8 @@ export const actions = {
 						// Create a new asset chain record
 						await tx.insert(assetLedger).values({
 							assetId: asset[0].id,
-							action: 'listed',
-							listedPrice: creditToInteger(form.data.startingPrice)
+							action: 'listed_auction',
+							value: creditToInteger(form.data.startingPrice)
 						});
 
 						assetId = asset[0].id;

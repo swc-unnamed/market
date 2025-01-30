@@ -12,7 +12,8 @@
 				outline: 'border-input bg-background hover:bg-accent hover:text-accent-foreground border',
 				secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
 				ghost: 'hover:bg-accent hover:text-accent-foreground',
-				link: 'text-primary underline-offset-4 hover:underline'
+				link: 'text-primary underline-offset-4 hover:underline',
+				action: 'hover:bg-accent text-primary'
 			},
 			size: {
 				default: 'h-10 px-4 py-2',
@@ -53,7 +54,12 @@
 </script>
 
 {#if href}
-	<a bind:this={ref} class={cn(buttonVariants({ variant, size }), className)} {href} {...restProps}>
+	<a
+		bind:this={ref}
+		class={cn(buttonVariants({ variant, size }), 'hover:no-underline', className)}
+		{href}
+		{...restProps}
+	>
 		{@render children?.()}
 	</a>
 {:else}

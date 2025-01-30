@@ -15,7 +15,7 @@ export const load = async ({ locals }) => {
 	});
 
 	const listingRecords = await db.query.auctionListings.findMany({
-		where: (r, { eq }) => eq(r.status, 'new')
+		where: (r, { and, eq }) => and(eq(r.status, 'new'), eq(r.isDeleted, false))
 	});
 
 	const form = await superValidate(zod(newAuctionSchema));
@@ -64,7 +64,7 @@ export const actions = {
 				await tx.insert(auctionListingHistory).values({
 					event: 'status_updated',
 					listingId: listingId,
-					message: `Has been selected for auction.`
+					message: `Listing selected for auction.`
 				});
 			}
 		});

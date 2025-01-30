@@ -1,15 +1,26 @@
 import { db } from '$lib/server/db/index.js';
+import { auctionListings } from '$lib/server/db/schema/auction-listings.js';
 import { error } from '@sveltejs/kit';
+import { asc } from 'drizzle-orm';
 
 export const load = async ({ locals, params }) => {
 	const record = await db.query.auctions.findFirst({
 		where: (r, { eq }) => eq(r.id, params.id),
 		with: {
 			listings: {
+				orderBy: asc(auctionListings.listingNumber),
+				columns: {
+					id: true,
+					title: true,
+					startingPrice: true,
+					location: true,
+					listerIsAnon: true,
+					listingNumber: true
+				},
 				with: {
 					items: {
-						with: {
-							asset: true
+						columns: {
+							entityId: true
 						}
 					},
 					listedBy: {

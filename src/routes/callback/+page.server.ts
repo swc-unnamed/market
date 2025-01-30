@@ -22,6 +22,8 @@ async function getUserFromSwc(code: string) {
 		}
 	});
 
+	console.log(data);
+
 	const { data: user } = await axios.get<Character>('https://www.swcombine.com/ws/v2.0/character', {
 		headers: {
 			Authorization: `OAuth ${data.access_token}`

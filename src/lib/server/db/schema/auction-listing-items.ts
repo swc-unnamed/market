@@ -20,7 +20,10 @@ export const auctionListingItems = pgTable('auction_listing_items', {
 	entityId: text('entity_id'),
 	uuu: boolean('uuu'),
 	quantity: integer('quantity').default(1),
-	customImageUrl: text('custom_image_url')
+	customItem: boolean('custom_item').default(false),
+	customImageUrl: text('custom_image_url'),
+	customItemName: text('custom_item_name'),
+	uniqueItem: boolean('unique_item').default(false)
 });
 
 export const auctionListingItemsRelations = relations(auctionListingItems, ({ one }) => ({

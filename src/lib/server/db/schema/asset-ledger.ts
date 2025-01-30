@@ -1,4 +1,4 @@
-import { integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { boolean, integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 import { assets } from './assets';
 import { AssetChainAction } from '../../../consts/asset-chain-action';
 import { relations } from 'drizzle-orm/relations';
@@ -16,8 +16,8 @@ export const assetLedger = pgTable('asset_ledger', {
 		.notNull()
 		.references(() => assets.id),
 	action: text('action', { enum: AssetChainAction }).notNull(),
-	listedPrice: integer('listed_price'),
-	soldPrice: integer('sold_price'),
+	ownerId: text('owner_id'),
+	value: integer('value'),
 	time: timestamp('time')
 		.$defaultFn(() => new Date())
 		.notNull()

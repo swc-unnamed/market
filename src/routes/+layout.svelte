@@ -18,7 +18,7 @@
 		property="og:description"
 		content="Unnamed Imperium Market - Your gateway to the holochain."
 	/>
-	<meta name="theme-color" content="#facc15" />
+	<meta name="theme-color" content="#0a0a0a" />
 
 	<!-- Include this to make the og:image larger -->
 	<meta name="twitter:card" content={`${data.baseUrl}/assets/uim-17.png`} />
@@ -29,19 +29,19 @@
 
 {@render children?.()}
 
-<div class="flex items-center justify-end bg-sidebar p-8">
-	<p style="font-family: 'Galactic Basic'; font-size: xx-small;">
-		Powered by Norvik Holonet Solutions
-	</p>
-
-	<div class="flex items-center">
-		<Button size="sm" variant="link">
-			<Icon icon="mdi:discord" class="size-6" />
+<div class="flex items-center justify-center bg-sidebar p-8 md:justify-end">
+	<div class="flex items-center gap-2">
+		<a href="#" class="flex items-center gap-1 text-xs text-foreground">
+			<Icon icon="mdi:discord" class="size-4" />
 			<span>Connect on Discord</span>
-		</Button>
-		<Button size="sm" variant="link" target="_blank" href="https://www.swcombine.com">
-			<Icon icon="mdi:external-link" class="size-6" />
+		</a>
+		<a
+			class="flex items-center gap-1 text-xs text-foreground"
+			target="_blank"
+			href="https://www.swcombine.com"
+		>
+			<Icon icon="mdi:external-link" class="size-4" />
 			<span>Star Wars Combine</span>
-		</Button>
+		</a>
 	</div>
 </div>

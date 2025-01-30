@@ -71,7 +71,7 @@
 						/>
 					</Card.Title>
 					<Card.Description class="mt-3">
-						<h1 class="text-center text-2xl font-bold">Unnamed Imperium Market</h1>
+						<h1 class="text-center text-2xl font-bold">Unnamed Market</h1>
 					</Card.Description>
 				</Card.Header>
 				<Card.Content class="text-center text-muted-foreground">
