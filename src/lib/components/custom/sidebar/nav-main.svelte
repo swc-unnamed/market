@@ -42,7 +42,7 @@
 				{
 					title: 'New Listing',
 					href: '/auctions/listings/new',
-					icon: 'mdi:plus',
+					icon: 'tabler:circle-plus',
 					allowedRoles: [
 						'patron',
 						'auctioneer',
@@ -51,6 +51,12 @@
 						'market_tzar'
 					],
 					disablePrefetch: true
+				},
+				{
+					title: 'Draft Listings',
+					href: '/auctions/draft-listings',
+					icon: 'tabler:circle-dashed',
+					allowedRoles: PatronPermissionPolicy
 				}
 			]
 		},
