@@ -164,7 +164,18 @@
 			<Card.Root>
 				<Card.Header>
 					<Card.Title>
-						Modify Auction Listing: <span class="text-primary">{listing?.title}</span>
+						<div class="flex items-center justify-between">
+							<div>
+								Modify: <span class="text-primary">{listing?.title}</span>
+							</div>
+
+							<div class="flex gap-2">
+								<Badge class="uppercase">{listing.status}</Badge>
+								{#if listing.items.find((i) => i.uniqueItem)}
+									<Badge class="uppercase">Unique</Badge>
+								{/if}
+							</div>
+						</div>
 					</Card.Title>
 					<Card.Description>
 						<span>ALID: {listing?.listingNumber}</span>
