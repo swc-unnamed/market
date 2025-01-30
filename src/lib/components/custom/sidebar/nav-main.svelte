@@ -134,7 +134,13 @@
 															<Sidebar.MenuSubItem>
 																<Sidebar.MenuSubButton>
 																	{#snippet child({ props })}
-																		<a href={subItem.href} {...props}>
+																		<a
+																			data-sveltekit-preload-data={subItem.disablePrefetch
+																				? 'off'
+																				: 'hover'}
+																			href={subItem.href}
+																			{...props}
+																		>
 																			{#if subItem.icon}
 																				<Icon icon={subItem.icon} class="h-6 w-6" />
 																			{/if}
