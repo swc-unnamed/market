@@ -50,6 +50,11 @@ export const DELETE = async ({ locals, params }) => {
 		}
 	}
 
+	let response: { status: number; message: string } = {
+		status: 400,
+		message: 'Unable to process your request on the holochain.'
+	};
+
 	await db.transaction(async (tx) => {
 		await tx.insert(auctionListingHistory).values({
 			event: 'deleted',
@@ -74,11 +79,13 @@ export const DELETE = async ({ locals, params }) => {
 			})
 			.where(eq(auctionListings.id, id));
 
-		return json({
+		response = {
 			status: 200,
 			message: "Listing item deleted successfully. It will be available in the lister's history."
-		});
+		};
 	});
+
+	return json({ ...response });
 };
 
 export const POST = async ({ locals, params, request }) => {
