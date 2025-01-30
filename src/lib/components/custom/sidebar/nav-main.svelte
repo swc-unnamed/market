@@ -24,13 +24,13 @@
 		{
 			title: 'Auctions',
 			href: '/auctions',
-			icon: 'mdi:invoice-line-items',
+			icon: 'tabler:gavel',
 			allowedRoles: ['patron', 'auctioneer', 'magistrate', 'holochain_architect', 'market_tzar'],
 			nested: [
 				{
 					title: 'Available Auctions',
 					href: '/auctions',
-					icon: 'mdi:invoice-line-items',
+					icon: 'tabler:gavel',
 					allowedRoles: ['patron', 'auctioneer', 'magistrate', 'holochain_architect', 'market_tzar']
 				},
 				{
