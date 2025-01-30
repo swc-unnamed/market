@@ -7,10 +7,13 @@
 	import { integerToCredit } from '$lib/helpers/currency-conversion';
 	import Icon from '@iconify/svelte';
 	import AssetImage from '../assets/asset-image.svelte';
+	import { formatAuctionListingStatus } from '$lib/helpers/auctions';
+	import { Badge } from '$lib/components/ui/badge';
 
 	type ListingSummaryCard = {
 		id: string;
 		title: string;
+		status: string;
 		startingPrice?: number | null;
 		location?: string | null;
 		listerIsAnon?: boolean | null;
@@ -23,6 +26,7 @@
 		items?: {
 			entityId: string | null;
 			customImageUrl: string | null;
+			uniqueItem: boolean | null;
 		}[];
 	};
 
@@ -46,10 +50,22 @@
 	<Card.Header>
 		<Card.Title>
 			<div class="flex flex-col">
-				<span class="truncate">{listing.title}</span>
-				<span class="text-sm text-muted-foreground">ALID: {listing.listingNumber}</span>
+				<div class="flex items-center justify-between">
+					<span class="truncate">{listing.title}</span>
+				</div>
 			</div>
 		</Card.Title>
+		<Card.Description>
+			<div class="flex flex-row items-start justify-between gap-1">
+				<span class="text-sm text-muted-foreground">ALID: {listing.listingNumber}</span>
+				<div>
+					<Badge>{formatAuctionListingStatus(listing.status)}</Badge>
+					{#if listing.items?.find((i) => i.uniqueItem)}
+						<Badge variant="outline" class="uppercase">Unique</Badge>
+					{/if}
+				</div>
+			</div>
+		</Card.Description>
 	</Card.Header>
 	<Card.Content class="flex flex-col gap-2">
 		<div class="flex flex-col justify-center">

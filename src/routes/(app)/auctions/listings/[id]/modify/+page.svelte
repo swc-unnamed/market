@@ -173,7 +173,7 @@
 							<div class="flex gap-2">
 								<Badge class="uppercase">{formatAuctionListingStatus(listing.status)}</Badge>
 								{#if listing.items.find((i) => i.uniqueItem)}
-									<Badge class="uppercase">Unique</Badge>
+									<Badge variant="outline" class="uppercase">Unique</Badge>
 								{/if}
 							</div>
 						</div>
