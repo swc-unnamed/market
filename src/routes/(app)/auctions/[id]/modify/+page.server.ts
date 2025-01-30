@@ -166,7 +166,7 @@ export const actions = {
 			return fail(400, { message: 'Auction has already been completed.' });
 		}
 
-		for (const listing of record?.listings) {
+		for (const listing of record!.listings) {
 			await db
 				.update(auctionListings)
 				.set({
