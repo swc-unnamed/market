@@ -24,7 +24,9 @@ export interface ClassAttributes {
 	value: string;
 }
 
-export interface Homeworld {}
+export interface Homeworld {
+	placeholder: string;
+}
 
 export interface Images {
 	small: string;

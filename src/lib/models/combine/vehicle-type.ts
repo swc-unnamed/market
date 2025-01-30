@@ -103,4 +103,6 @@ export interface TerrainrestrictionAttributes {
 	href: string;
 }
 
-export interface Weapons {}
+export interface Weapons {
+	placeholder: string;
+}

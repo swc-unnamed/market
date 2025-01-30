@@ -76,7 +76,7 @@
 				</Card.Header>
 				<Card.Content class="text-center text-muted-foreground">
 					<p>
-						Welcome to the UIM. You must authenticate with the <a
+						Welcome to UM. You must authenticate with the <a
 							href="https://www.swcombine.com"
 							target="_blank">Combine</a
 						> before you can continue.

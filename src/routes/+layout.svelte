@@ -14,10 +14,7 @@
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content={data.baseUrl} />
 	<meta property="og:image" content={`${data.baseUrl}/assets/uim-17.png`} />
-	<meta
-		property="og:description"
-		content="Unnamed Imperium Market - Your gateway to the holochain."
-	/>
+	<meta property="og:description" content="Unnamed Market - Your gateway to the holochain." />
 	<meta name="theme-color" content="#0a0a0a" />
 
 	<!-- Include this to make the og:image larger -->
@@ -31,7 +28,7 @@
 
 <div class="flex items-center justify-center bg-sidebar p-8 md:justify-end">
 	<div class="flex items-center gap-2">
-		<a href="#" class="flex items-center gap-1 text-xs text-foreground">
+		<a href="https://discord.gg/dSmbQ22TJB" class="flex items-center gap-1 text-xs text-foreground">
 			<Icon icon="mdi:discord" class="size-4" />
 			<span>Connect on Discord</span>
 		</a>

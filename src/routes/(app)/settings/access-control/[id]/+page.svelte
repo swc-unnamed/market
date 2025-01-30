@@ -24,6 +24,7 @@
 			duplicateId: false
 		},
 		onResult: ({ result }) => {
+			console.log(result);
 			if (result.type === 'success') {
 				toast.success('Patron updated successfully');
 			}
