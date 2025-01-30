@@ -205,33 +205,34 @@
 					</div>
 					<div class="flex w-full items-center gap-3 md:w-auto">
 						<div class="flex w-full flex-col items-center gap-3 md:flex-row">
-							<AlertDialog.Root bind:open={publishDialogOpen}>
-								<AlertDialog.Trigger class="w-full md:w-auto">
-									<Button size="sm" variant="action" class="w-full border-primary md:w-auto">
-										<AurebeshText text="P" />
-										Publish
-									</Button>
-								</AlertDialog.Trigger>
-								<AlertDialog.Content>
-									<AlertDialog.Header>
-										<AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title>
-										<AlertDialog.Description>
-											Once you publish the listing, it will be visible to all users. You will not be
-											able to make changes, only cancel the listing and create a new one. Are you
-											sure you want to publish to the holochain?
-										</AlertDialog.Description>
-									</AlertDialog.Header>
-									<AlertDialog.Footer>
-										<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
-										<AlertDialog.Action
-											onclick={async () => {
-												await handlePublish();
-											}}>Continue</AlertDialog.Action
-										>
-									</AlertDialog.Footer>
-								</AlertDialog.Content>
-							</AlertDialog.Root>
-
+							{#if listing.status === 'draft'}
+								<AlertDialog.Root bind:open={publishDialogOpen}>
+									<AlertDialog.Trigger class="w-full md:w-auto">
+										<Button size="sm" variant="action" class="w-full border-primary md:w-auto">
+											<AurebeshText text="P" />
+											Publish
+										</Button>
+									</AlertDialog.Trigger>
+									<AlertDialog.Content>
+										<AlertDialog.Header>
+											<AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title>
+											<AlertDialog.Description>
+												Once you publish the listing, it will be visible to all users. You will not
+												be able to make changes, only cancel the listing and create a new one. Are
+												you sure you want to publish to the holochain?
+											</AlertDialog.Description>
+										</AlertDialog.Header>
+										<AlertDialog.Footer>
+											<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+											<AlertDialog.Action
+												onclick={async () => {
+													await handlePublish();
+												}}>Continue</AlertDialog.Action
+											>
+										</AlertDialog.Footer>
+									</AlertDialog.Content>
+								</AlertDialog.Root>
+							{/if}
 							<form class="w-full" action="?/save" method="post" use:listingEnhance>
 								<Button size="sm" variant="outline" class="w-full border-primary" type="submit">
 									<AurebeshText text="S" />
