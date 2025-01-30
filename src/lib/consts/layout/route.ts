@@ -7,6 +7,7 @@ export type Route = {
 	isHref?: boolean;
 	nested?: NestedRoute[];
 	allowedRoles: Role[];
+	disablePrefetch?: boolean;
 };
 
 export type NestedRoute = Omit<Route, 'nested'>;

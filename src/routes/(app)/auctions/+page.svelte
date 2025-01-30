@@ -1,5 +1,5 @@
 <script lang="ts">
-	import LayoutWrapper from '$lib/components/custom/layout/layout-wrapper.svelte';
+	import PageWrapper from '$lib/components/custom/layout/page-wrapper.svelte';
 	import SnackbarActionButton from '$lib/components/custom/layout/snackbar-action-button.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Card from '$lib/components/ui/card';
@@ -11,7 +11,7 @@
 	let canCreateAuction = $derived(AuctioneerPermissionPolicy.includes(data.user.role));
 </script>
 
-<LayoutWrapper title="Current Auction Listings">
+<PageWrapper title="Current Auction Listings">
 	<div class="flex flex-col gap-3">
 		<Card.Root>
 			<Card.Content>
@@ -44,4 +44,4 @@
 			{/each}
 		</div>
 	</div>
-</LayoutWrapper>
+</PageWrapper>

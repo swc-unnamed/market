@@ -7,5 +7,6 @@ export const addItemAuctionListingSchema = z.object({
 	uuu: z.boolean().default(true),
 	customItem: z.boolean().default(false),
 	customItemName: z.string(),
-	customImageUrl: z.string()
+	customImageUrl: z.string(),
+	uniqueItem: z.boolean()
 });

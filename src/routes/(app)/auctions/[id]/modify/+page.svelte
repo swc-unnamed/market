@@ -113,7 +113,7 @@
 					<div class="flex flex-col">
 						<span class="-mb-1">{listing.title}</span>
 						<span style="font-family: 'Galactic Basic" class="text-xs"
-							>${integerToCredit(listing.startingPrice)}</span
+							>${integerToCredit(listing.startingPrice ?? 0)}</span
 						>
 					</div>
 				</div>
@@ -141,7 +141,7 @@
 					<div class="flex flex-col">
 						<span class="-mb-1">{listing.title}</span>
 						<span style="font-family: 'Galactic Basic" class="text-xs"
-							>${integerToCredit(listing.startingPrice)}</span
+							>${integerToCredit(listing.startingPrice ?? 0)}</span
 						>
 					</div>
 				</div>

@@ -21,8 +21,9 @@ export const load = async ({ locals }) => {
 	const draftListing = await db
 		.insert(auctionListings)
 		.values({
-			title: `Draft Listing - ${draftDate}`,
-			listedById: locals.user.id
+			title: `Draft Listing`,
+			listedById: locals.user.id,
+			sendCreditsTo: locals.user.name
 		})
 		.returning({ id: auctionListings.id });
 

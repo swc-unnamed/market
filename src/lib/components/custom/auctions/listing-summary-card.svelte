@@ -11,16 +11,16 @@
 	type ListingSummaryCard = {
 		id: string;
 		title: string;
-		startingPrice: number;
-		location: string;
-		listerIsAnon: boolean;
+		startingPrice?: number | null;
+		location?: string | null;
+		listerIsAnon?: boolean | null;
 		listingNumber: number;
-		listedBy: {
+		listedBy?: {
 			id: string;
 			name: string;
 			avatar: string | null;
 		} | null;
-		items: {
+		items?: {
 			entityId: string | null;
 		}[];
 	};
@@ -44,49 +44,54 @@
 <Card.Root class="w-full">
 	<Card.Header>
 		<Card.Title>
-			#{listing.listingNumber} - {listing.title}
+			<div class="flex flex-col">
+				<span class="truncate">{listing.title}</span>
+				<span class="text-sm text-muted-foreground">ALID: {listing.listingNumber}</span>
+			</div>
 		</Card.Title>
 	</Card.Header>
 	<Card.Content class="flex flex-col gap-2">
 		<div class="flex flex-col justify-center">
-			<Carousel.Root setApi={(emblaApi: any) => (api = emblaApi)}>
-				<Carousel.Content class="-ml-2 h-48 md:-ml-4">
-					{#each listing.items as item}
-						{#if item.entityId}
-							<Carousel.Item>
-								<AssetImage
-									class="mx-auto h-48 rounded-md border border-secondary shadow-md drop-shadow-md"
-									id={item.entityId}
-									large
-								/>
-							</Carousel.Item>
-						{/if}
-					{/each}
-				</Carousel.Content>
-				{#if count > 1}
-					<div class="py-2 text-center text-sm text-muted-foreground">
-						Item {current} of {count}
-					</div>
-					<div class="flex justify-between">
-						<Button
-							size="sm"
-							class="text-primary"
-							variant="ghost"
-							onclick={() => {
-								api?.scrollPrev();
-							}}>Previous Asset</Button
-						>
-						<Button
-							size="sm"
-							class="text-primary"
-							variant="ghost"
-							onclick={() => {
-								api?.scrollNext();
-							}}>Next Asset</Button
-						>
-					</div>
-				{/if}
-			</Carousel.Root>
+			{#if listing.items}
+				<Carousel.Root setApi={(emblaApi: any) => (api = emblaApi)}>
+					<Carousel.Content class="-ml-2 h-48 md:-ml-4">
+						{#each listing.items as item}
+							{#if item.entityId}
+								<Carousel.Item>
+									<AssetImage
+										class="mx-auto h-48 rounded-md border border-secondary shadow-md drop-shadow-md"
+										id={item.entityId}
+										large
+									/>
+								</Carousel.Item>
+							{/if}
+						{/each}
+					</Carousel.Content>
+					{#if count > 1}
+						<div class="py-2 text-center text-sm text-muted-foreground">
+							Item {current} of {count}
+						</div>
+						<div class="flex justify-between">
+							<Button
+								size="sm"
+								class="text-primary"
+								variant="ghost"
+								onclick={() => {
+									api?.scrollPrev();
+								}}>Previous Asset</Button
+							>
+							<Button
+								size="sm"
+								class="text-primary"
+								variant="ghost"
+								onclick={() => {
+									api?.scrollNext();
+								}}>Next Asset</Button
+							>
+						</div>
+					{/if}
+				</Carousel.Root>
+			{/if}
 		</div>
 
 		<div class="my-3 flex justify-center">
@@ -95,10 +100,13 @@
 
 		<div class="flex flex-col gap-1">
 			<div class="flex flex-row items-center justify-between">
-				<span class="text-sm text-primary" style="font-family: 'Galactic Basic'"
-					>${integerToCredit(listing.startingPrice)}</span
-				>
-				<span class="text-sm">U / U / U: Yes</span>
+				<span class="text-sm text-primary" style="font-family: 'Galactic Basic'">
+					{#if listing.startingPrice}
+						${integerToCredit(listing.startingPrice)}
+					{:else}
+						$ N/A
+					{/if}
+				</span>
 			</div>
 			<div class="my-3 flex justify-center">
 				<Separator class="full bg-primary" />
@@ -117,8 +125,8 @@
 			{#if listing.listerIsAnon}
 				<span class="text-sm">Listed By: Anon</span>
 			{:else}
-				<span class="text-sm">Listed By: {listing.listedBy?.name}</span>
-				<span class="text-xs">Rating: 100%</span>
+				<span class="text-sm">Listed By:</span>
+				<span class="text-xs">{listing.listedBy?.name}</span>
 			{/if}
 		</div>
 		<Button size="sm" variant="link" href={`/auctions/listings/${listing.id}`}>

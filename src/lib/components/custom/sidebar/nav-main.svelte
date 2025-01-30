@@ -43,7 +43,14 @@
 					title: 'New Listing',
 					href: '/auctions/listings/new',
 					icon: 'mdi:plus',
-					allowedRoles: ['patron', 'auctioneer', 'magistrate', 'holochain_architect', 'market_tzar']
+					allowedRoles: [
+						'patron',
+						'auctioneer',
+						'magistrate',
+						'holochain_architect',
+						'market_tzar'
+					],
+					disablePrefetch: true
 				}
 			]
 		},
@@ -73,6 +80,10 @@
 							<Collapsible.Trigger
 								onmouseover={async () => {
 									if (!route.nested?.length || !isSidebarOpen) {
+										if (route.disablePrefetch) {
+											return;
+										}
+
 										await preloadData(route.href);
 									}
 								}}

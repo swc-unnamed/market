@@ -1,5 +1,5 @@
 import { createId } from '@paralleldrive/cuid2';
-import { relations } from 'drizzle-orm';
+import { is, relations } from 'drizzle-orm';
 import { users } from './users';
 import { auctionListingItems } from './auction-listing-items';
 import { auctionListingHistory } from './auction-listing-history';
@@ -27,7 +27,9 @@ export const auctionListings = pgTable('auction_listings', {
 	listerIsAnon: boolean('lister_is_anon').notNull().default(false),
 	createdAt: timestamp('created_at').$defaultFn(() => new Date()),
 	status: text('status', { enum: AuctionListingStatus }).default('draft'),
-	auctionId: text('auction_id').references(() => auctions.id)
+	auctionId: text('auction_id').references(() => auctions.id),
+	isDeleted: boolean('is_deleted').default(false),
+	deletedAt: timestamp('deleted_at')
 });
 
 export const auctionListingsRelations = relations(auctionListings, ({ many, one }) => ({

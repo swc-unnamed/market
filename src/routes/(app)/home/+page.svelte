@@ -16,6 +16,8 @@
 	import Icon from '@iconify/svelte';
 	import * as Table from '$lib/components/ui/table/index.js';
 	import { format } from 'date-fns';
+	import PageWrapper from '$lib/components/custom/layout/page-wrapper.svelte';
+	import ListingSummaryCard from '$lib/components/custom/auctions/listing-summary-card.svelte';
 
 	let { data } = $props();
 	let api = $state<CarouselAPI>();
@@ -35,7 +37,7 @@
 	let assetLedger = $derived(data.assetLedger);
 </script>
 
-<LayoutWrapper title="Home" displayTitle={false}>
+<PageWrapper title="Home" displayTitle={false}>
 	<div class="mb-4 space-y-4">
 		<img class=" w-full rounded-lg" src={'/assets/unnamed-banner.png'} alt="Banner" />
 
@@ -87,102 +89,17 @@
 			</div>
 		</div>
 
-		<div class="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
+		<div class="flex flex-col gap-3">
+			<Separator class="w-full bg-primary" />
+			<h3>Auction Listings</h3>
+		</div>
+
+		<div class="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
 			{#if auctionListings.length > 0}
-				{#each auctionListings as al, i (al.id)}
-					<Card.Root>
-						<Card.Header>
-							<Card.Title>
-								<div class="flex flex-col gap-2">
-									<span>{al.title}</span>
-									<div class="mb- flex items-center gap-2">
-										{#if al.status}
-											<Badge>{formatAuctionListingStatus(al.status)}</Badge>
-										{/if}
-									</div>
-								</div>
-							</Card.Title>
-						</Card.Header>
-						<Card.Content class="flex flex-col gap-2">
-							<div class="flex flex-col justify-center">
-								<Carousel.Root setApi={(emblaApi: any) => (api = emblaApi)}>
-									<Carousel.Content class="-ml-2 md:-ml-4">
-										{#each al.items as item}
-											{#if item.entityId}
-												<Carousel.Item>
-													<AssetImage
-														class="rounded-md border border-secondary shadow-md drop-shadow-md"
-														id={item.entityId}
-														large
-													/>
-												</Carousel.Item>
-											{/if}
-										{/each}
-									</Carousel.Content>
-									<div class="py-2 text-center text-sm text-muted-foreground">
-										Item {current} of {count}
-									</div>
-									<div class="flex justify-between">
-										<Button
-											size="sm"
-											class="text-primary"
-											variant="ghost"
-											onclick={() => {
-												api?.scrollPrev();
-											}}>Previous Asset</Button
-										>
-										<Button
-											size="sm"
-											class="text-primary"
-											variant="ghost"
-											onclick={() => {
-												api?.scrollNext();
-											}}>Next Asset</Button
-										>
-									</div>
-								</Carousel.Root>
-							</div>
-
-							<div class="my-3 flex justify-center">
-								<Separator class="w-full bg-primary" />
-							</div>
-
-							<div class="flex flex-col gap-1">
-								<div class="flex flex-row items-center justify-between">
-									<span class="text-sm text-primary" style="font-family: 'Galactic Basic'"
-										>${integerToCredit(al.startingPrice)}</span
-									>
-									<span class="text-sm">U / U / U: Yes</span>
-								</div>
-								<div class="my-3 flex justify-center">
-									<Separator class="full bg-primary" />
-								</div>
-								<span class="text-md font-bold">Location:</span>
-								<span
-									class="h-24 overflow-y-auto whitespace-pre-wrap rounded-md border border-secondary p-2 text-sm"
-								>
-									{al.location}
-								</span>
-							</div>
-							<Separator class="-mb-3 mt-3 w-full bg-primary" />
-						</Card.Content>
-						<Card.Footer class="flex items-center justify-between">
-							<div class="flex flex-col gap-1">
-								{#if al.listerIsAnon}
-									<span class="text-sm">Listed By: Anon</span>
-								{:else}
-									<span class="text-sm">Listed By: {al.listedBy?.name}</span>
-									<span class="text-xs">Rating: 100%</span>
-								{/if}
-							</div>
-							<Button size="sm" variant="link" href={`/auctions/listings/${al.id}`}>
-								<Icon icon="mdi:arrow-right" />
-								View Listing
-							</Button>
-						</Card.Footer>
-					</Card.Root>
+				{#each auctionListings as al (al.id)}
+					<ListingSummaryCard listing={al} />
 				{/each}
 			{/if}
 		</div>
 	</div>
-</LayoutWrapper>
+</PageWrapper>

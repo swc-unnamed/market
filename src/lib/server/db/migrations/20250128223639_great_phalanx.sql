@@ -1,0 +1,1 @@
+ALTER TABLE "auction_listing_items" ADD COLUMN "custom_item" boolean DEFAULT false;

@@ -2,7 +2,8 @@ import { db } from '$lib/server/db/index.js';
 
 export const load = async ({ locals }) => {
 	const records = await db.query.auctionListings.findMany({
-		where: (r, { inArray }) => inArray(r.status, ['new', 'selected']),
+		where: (r, { inArray, and, eq }) =>
+			and(inArray(r.status, ['new', 'selected']), eq(r.isDeleted, false)),
 		with: {
 			items: {
 				with: {

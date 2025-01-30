@@ -15,16 +15,23 @@
 	import Icon from '@iconify/svelte';
 	import AuctionLedgerIcon from '$lib/components/custom/shared/auction-ledger-icon.svelte';
 	import { integerToCredit } from '$lib/helpers/currency-conversion.js';
+	import PageWrapper from '$lib/components/custom/layout/page-wrapper.svelte';
 
 	let { data } = $props();
 
 	let listing = $derived(data.listing);
+	let isOwnListing = $derived(data.isOwnListing);
 </script>
 
-<LayoutWrapper title={listing.title || 'Auction Listing'}>
+<PageWrapper title={listing.title || 'Auction Listing'}>
 	{#snippet center()}
 		{#if data.user.role === 'holochain_architect' || data.user.role === 'market_tzar'}
-			<Button>Admin Actions</Button>
+			<Button size="sm" variant="action">Admin Actions</Button>
+		{/if}
+		{#if isOwnListing}
+			<Button size="sm" variant="action" href={`/auctions/listings/${listing.id}/modify`}>
+				Modify Listing
+			</Button>
 		{/if}
 	{/snippet}
 	<div class="grid grid-cols-1 gap-2">
@@ -72,8 +79,12 @@
 						<div class="flex items-center gap-2">
 							<p class="text-accent-foreground">
 								Starting Bid:
-								<span style="font-family: 'Galactic Basic" class="-mr-1 text-primary">$</span>
-								{integerToCredit(listing.startingPrice)}
+								{#if listing.startingPrice}
+									<span style="font-family: 'Galactic Basic" class="-mr-1 text-primary">$</span>
+									{integerToCredit(listing.startingPrice)}
+								{:else}
+									<span>Not Specified</span>
+								{/if}
 							</p>
 
 							<Separator orientation="vertical" />
@@ -168,4 +179,4 @@
 			</Tabs.Root>
 		</div>
 	</div>
-</LayoutWrapper>
+</PageWrapper>
