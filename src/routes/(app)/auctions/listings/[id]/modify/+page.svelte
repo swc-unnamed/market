@@ -329,9 +329,16 @@
 									<Table.Row>
 										<Table.Cell class="w-48">
 											{#if item.customImageUrl}
-												<img src={item.customImageUrl} alt={item.customItemName} class="h-8 w-8" />
+												<img
+													src={item.customImageUrl}
+													alt={item.customItemName}
+													class="h-[100px] w-[100px] rounded-md drop-shadow-md"
+												/>
 											{:else if item.entityId}
-												<AssetImage class="h-[100px] w-[100px] drop-shadow-md" id={item.entityId} />
+												<AssetImage
+													class="h-[100px] w-[100px] rounded-md drop-shadow-md"
+													id={item.entityId}
+												/>
 											{/if}
 										</Table.Cell>
 										<Table.Cell class="w-52">

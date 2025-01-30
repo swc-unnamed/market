@@ -22,6 +22,7 @@
 		} | null;
 		items?: {
 			entityId: string | null;
+			customImageUrl: string | null;
 		}[];
 	};
 
@@ -58,11 +59,19 @@
 						{#each listing.items as item}
 							{#if item.entityId}
 								<Carousel.Item>
-									<AssetImage
-										class="mx-auto h-48 rounded-md border border-secondary shadow-md drop-shadow-md"
-										id={item.entityId}
-										large
-									/>
+									{#if item.customImageUrl}
+										<img
+											src={item.customImageUrl}
+											alt="custom_image"
+											class="mx-auto h-48 rounded-md border border-secondary shadow-md drop-shadow-md"
+										/>
+									{:else}
+										<AssetImage
+											class="mx-auto h-48 rounded-md border border-secondary shadow-md drop-shadow-md"
+											id={item.entityId}
+											large
+										/>
+									{/if}
 								</Carousel.Item>
 							{/if}
 						{/each}
