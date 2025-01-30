@@ -2,7 +2,7 @@ import { creditToInteger, integerToCredit } from '$lib/helpers/currency-conversi
 import { addItemAuctionListingSchema } from '$lib/models/zod/auctions/listings/add-item-auction-listing.schema.js';
 import { modifyAuctionListingSchema } from '$lib/models/zod/auctions/listings/modify-auction-listing.schema.js';
 import { db } from '$lib/server/db/index.js';
-import { auctionListingItems, auctionListings, entities } from '$lib/server/db/schema';
+import { assets, auctionListingItems, auctionListings, entities } from '$lib/server/db/schema';
 import { error, json } from '@sveltejs/kit';
 import { asc, eq } from 'drizzle-orm';
 import { fail, superValidate } from 'sveltekit-superforms';
@@ -87,24 +87,43 @@ export const actions = {
 			return fail(400, { itemForm: form });
 		}
 
-		await db
-			.insert(auctionListingItems)
-			.values({
-				listingId: params.id,
-				entityId: form.data.entityId,
-				uuu: form.data.uuu,
-				quantity: 1,
-				customImageUrl: form.data.customImageUrl,
-				customItem: form.data.customItem,
-				customItemName: form.data.customItem ? form.data.customItemName : null,
-				uniqueItem: form.data.uniqueItem
-			})
-			.returning({
-				id: auctionListingItems.id
-			});
+		await db.transaction(async (tx) => {
+			let assetId: string | null = null;
 
-		return {
-			itemForm: form
-		};
+			if (form.data.combineId) {
+				const asset = await tx
+					.insert(assets)
+					.values({
+						entityId: form.data.entityId,
+						combineId: Number(form.data.combineId),
+						customImageUrl: form.data.customImageUrl,
+						type: form.data.entityType
+					})
+					.returning({ id: assets.id });
+
+				assetId = asset[0].id;
+			}
+
+			await tx
+				.insert(auctionListingItems)
+				.values({
+					listingId: params.id,
+					entityId: form.data.entityId,
+					assetId: assetId,
+					uuu: form.data.uuu,
+					quantity: 1,
+					customImageUrl: form.data.customImageUrl,
+					customItem: form.data.customItem,
+					customItemName: form.data.customItem ? form.data.customItemName : null,
+					uniqueItem: form.data.uniqueItem
+				})
+				.returning({
+					id: auctionListingItems.id
+				});
+
+			return {
+				itemForm: form
+			};
+		});
 	}
 };

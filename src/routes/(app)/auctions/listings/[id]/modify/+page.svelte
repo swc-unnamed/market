@@ -20,6 +20,8 @@
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import AurebeshText from '$lib/components/custom/shared/aurebesh-text.svelte';
 	import { goto, invalidate } from '$app/navigation';
+	import { publishListingSchema } from '$lib/models/zod/auctions/listings/publish-listing.schema.js';
+	import { z } from 'zod';
 
 	let { data } = $props();
 	let listing = $derived(data.listingRecord);
@@ -45,7 +47,11 @@
 		}
 	});
 
-	const { form: listingForm, enhance: listingEnhance } = superForm(data.listingForm, {
+	const {
+		form: listingForm,
+		enhance: listingEnhance,
+		submit: listingSubmit
+	} = superForm(data.listingForm, {
 		dataType: 'json',
 		id: 'listingForm',
 		onResult: ({ result }) => {
@@ -78,6 +84,35 @@
 	}
 
 	async function handlePublish() {
+		// Save the listing first, just in case
+		listingSubmit();
+
+		if ($listingForm.title.toLocaleLowerCase().includes('draft listing')) {
+			toast.error('The title must not include the Draft Listing text.');
+			publishDialogOpen = false;
+			return;
+		}
+
+		if (data.listingRecord.items.length < 1) {
+			toast.error('You must have at least one item in the listing to publish.');
+			publishDialogOpen = false;
+			return;
+		}
+
+		// Check if the form is valid
+		try {
+			publishListingSchema.parse(data.listingRecord);
+		} catch (err) {
+			if (err instanceof z.ZodError) {
+				console.log('Validation error', err.errors);
+				toast.error('Validation error, unable to publish to the holochain');
+
+				publishDialogOpen = false;
+			}
+
+			return;
+		}
+
 		const res = await fetch(`/api/auctions/listings/${listing?.id}`, {
 			method: 'POST',
 			body: JSON.stringify({
@@ -203,6 +238,7 @@
 							</AlertDialog.Content>
 						</AlertDialog.Root>
 					</div>
+
 					<div class="flex w-full items-center gap-3 md:w-auto">
 						<div class="flex w-full flex-col items-center gap-3 md:flex-row">
 							{#if listing.status === 'draft'}
@@ -284,7 +320,7 @@
 									<Table.Cell>Name</Table.Cell>
 									<Table.Cell>U / U / U</Table.Cell>
 									<Table.Cell>Type</Table.Cell>
-									<Table.Cell>Combine ID</Table.Cell>
+									<Table.Cell>Asset Hash</Table.Cell>
 									<Table.Cell></Table.Cell>
 								</Table.Row>
 							</Table.Header>
