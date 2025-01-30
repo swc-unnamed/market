@@ -22,6 +22,7 @@
 	import { goto, invalidate } from '$app/navigation';
 	import { publishListingSchema } from '$lib/models/zod/auctions/listings/publish-listing.schema.js';
 	import { z } from 'zod';
+	import { formatAuctionListingStatus } from '$lib/helpers/auctions.js';
 
 	let { data } = $props();
 	let listing = $derived(data.listingRecord);
@@ -148,7 +149,7 @@
 </script>
 
 <PageWrapper title={listing?.title}>
-	<div class="mb-3 md:container md:mb-0">
+	<div class="">
 		{#if listing?.status === 'draft'}
 			<Alert.Root class="mb-3 border-primary">
 				<Alert.AlertDescription>
@@ -170,7 +171,7 @@
 							</div>
 
 							<div class="flex gap-2">
-								<Badge class="uppercase">{listing.status}</Badge>
+								<Badge class="uppercase">{formatAuctionListingStatus(listing.status)}</Badge>
 								{#if listing.items.find((i) => i.uniqueItem)}
 									<Badge class="uppercase">Unique</Badge>
 								{/if}
@@ -330,7 +331,7 @@
 									<Table.Cell>Image</Table.Cell>
 									<Table.Cell>Name</Table.Cell>
 									<Table.Cell>U / U / U</Table.Cell>
-									<Table.Cell>Type</Table.Cell>
+									<Table.Cell>Unique</Table.Cell>
 									<Table.Cell>Asset Hash</Table.Cell>
 									<Table.Cell></Table.Cell>
 								</Table.Row>
@@ -352,22 +353,26 @@
 												/>
 											{/if}
 										</Table.Cell>
-										<Table.Cell class="w-52">
+										<Table.Cell class="w-64">
 											{item.customItemName ? item.customItemName : item.entity?.name}
 										</Table.Cell>
 										<Table.Cell>
 											{#if item.uuu}
-												<Badge>U / U / U: Yes</Badge>
+												<Badge>Yes</Badge>
 											{:else}
-												<Badge>U / U / U: No</Badge>
+												No
 											{/if}
 										</Table.Cell>
 										<Table.Cell>
 											<span class="uppercase">
-												{item.entity?.type}
+												{#if item.uniqueItem}
+													<Badge>Yes</Badge>
+												{:else}
+													No
+												{/if}
 											</span>
 										</Table.Cell>
-										<Table.Cell>
+										<Table.Cell class="w-32 truncate">
 											{#if item.assetId}
 												{item.assetId}
 											{:else}

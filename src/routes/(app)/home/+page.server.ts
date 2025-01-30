@@ -1,9 +1,12 @@
 import { db } from '$lib/server/db/index.js';
+import { auctionListings } from '$lib/server/db/schema/auction-listings.js';
+import { asc } from 'drizzle-orm';
 
 export const load = async ({ locals }) => {
 	const records = await db.query.auctionListings.findMany({
 		where: (r, { inArray, and, eq }) =>
 			and(inArray(r.status, ['new', 'selected']), eq(r.isDeleted, false)),
+		orderBy: asc(auctionListings.listingNumber),
 		with: {
 			items: {
 				with: {
