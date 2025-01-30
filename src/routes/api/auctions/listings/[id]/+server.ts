@@ -2,6 +2,7 @@ import { MagistratePermissionPolicy } from '$lib/consts/permission-policies.js';
 import type { PublishListingRequest } from '$lib/models/auctions/publish-listing.req.js';
 import { publishListingSchema } from '$lib/models/zod/auctions/listings/publish-listing.schema.js';
 import { db } from '$lib/server/db/index.js';
+import { assetLedger } from '$lib/server/db/schema/asset-ledger.js';
 import { auctionListingHistory } from '$lib/server/db/schema/auction-listing-history.js';
 import { auctionListingItems } from '$lib/server/db/schema/auction-listing-items.js';
 import { auctionListings } from '$lib/server/db/schema/auction-listings.js';
@@ -16,7 +17,11 @@ export const DELETE = async ({ locals, params }) => {
 	const record = await db.query.auctionListings.findFirst({
 		where: (r, { eq }) => eq(r.id, id),
 		with: {
-			items: true,
+			items: {
+				with: {
+					asset: true
+				}
+			},
 			auction: true
 		}
 	});
@@ -45,23 +50,34 @@ export const DELETE = async ({ locals, params }) => {
 		}
 	}
 
-	await db.insert(auctionListingHistory).values({
-		event: 'deleted',
-		listingId: record.id,
-		message: `Listing delete by ${locals.user.name}. Will be available in the lister's history.`
-	});
+	await db.transaction(async (tx) => {
+		await tx.insert(auctionListingHistory).values({
+			event: 'deleted',
+			listingId: record.id,
+			message: `Listing delete by ${locals.user.name}. Will be available in the lister's history.`
+		});
 
-	await db
-		.update(auctionListings)
-		.set({
-			deletedAt: new Date(),
-			isDeleted: true
-		})
-		.where(eq(auctionListings.id, id));
+		for (const item of record.items) {
+			if (item.assetId) {
+				await tx.insert(assetLedger).values({
+					action: 'delisted',
+					assetId: item.assetId
+				});
+			}
+		}
 
-	return json({
-		status: 200,
-		message: "Listing item deleted successfully. It will be available in the lister's history."
+		await tx
+			.update(auctionListings)
+			.set({
+				deletedAt: new Date(),
+				isDeleted: true
+			})
+			.where(eq(auctionListings.id, id));
+
+		return json({
+			status: 200,
+			message: "Listing item deleted successfully. It will be available in the lister's history."
+		});
 	});
 };
 
@@ -119,6 +135,15 @@ export const POST = async ({ locals, params, request }) => {
 			listingId: record.id,
 			message: `Listing published by ${locals.user.name}.`
 		});
+
+		for (const item of record.items) {
+			if (item.assetId) {
+				await tx.insert(assetLedger).values({
+					action: 'listed_auction',
+					assetId: item.assetId
+				});
+			}
+		}
 	});
 
 	return json({

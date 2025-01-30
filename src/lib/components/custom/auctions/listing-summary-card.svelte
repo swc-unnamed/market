@@ -49,23 +49,19 @@
 <Card.Root class="w-full">
 	<Card.Header>
 		<Card.Title>
-			<div class="flex flex-col">
-				<div class="flex items-center justify-between">
-					<span class="truncate">{listing.title}</span>
+			<div class="flex flex-col gap-1">
+				<span class="truncate">{listing.title}</span>
+				<div class="flex flex-row items-start justify-between gap-1">
+					<span class="text-sm text-muted-foreground">ALID: {listing.listingNumber}</span>
+					<div>
+						<Badge>{formatAuctionListingStatus(listing.status)}</Badge>
+						{#if listing.items?.find((i) => i.uniqueItem)}
+							<Badge variant="outline" class="uppercase">Unique</Badge>
+						{/if}
+					</div>
 				</div>
 			</div>
 		</Card.Title>
-		<Card.Description>
-			<div class="flex flex-row items-start justify-between gap-1">
-				<span class="text-sm text-muted-foreground">ALID: {listing.listingNumber}</span>
-				<div>
-					<Badge>{formatAuctionListingStatus(listing.status)}</Badge>
-					{#if listing.items?.find((i) => i.uniqueItem)}
-						<Badge variant="outline" class="uppercase">Unique</Badge>
-					{/if}
-				</div>
-			</div>
-		</Card.Description>
 	</Card.Header>
 	<Card.Content class="flex flex-col gap-2">
 		<div class="flex flex-col justify-center">
