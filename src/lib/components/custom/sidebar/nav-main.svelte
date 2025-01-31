@@ -8,7 +8,8 @@
 	import { getContext } from 'svelte';
 	import {
 		PatronPermissionPolicy,
-		MagistratePermissionPolicy
+		MagistratePermissionPolicy,
+		AuctioneerPermissionPolicy
 	} from '$lib/consts/permission-policies';
 	import type { UserContext } from '$lib/stores';
 	import { USER_CONTEXT } from '$lib/stores/contexts';
@@ -20,46 +21,32 @@
 			href: '/home',
 			icon: 'mdi:home',
 			nested: [],
-			allowedRoles: ['patron', 'auctioneer', 'magistrate', 'holochain_architect', 'market_tzar']
+			allowedRoles: PatronPermissionPolicy
 		},
 		{
-			title: 'Auctions',
+			title: 'Available Auctions',
 			href: '/auctions',
 			icon: 'tabler:gavel',
-			allowedRoles: ['patron', 'auctioneer', 'magistrate', 'holochain_architect', 'market_tzar'],
-			nested: [
-				{
-					title: 'Available Auctions',
-					href: '/auctions',
-					icon: 'tabler:gavel',
-					allowedRoles: ['patron', 'auctioneer', 'magistrate', 'holochain_architect', 'market_tzar']
-				},
-				{
-					title: 'New Auction',
-					href: '/auctions/new',
-					icon: 'mdi:invoice-line-items',
-					allowedRoles: ['auctioneer', 'magistrate', 'holochain_architect', 'market_tzar']
-				},
-				{
-					title: 'New Listing',
-					href: '/auctions/listings/new',
-					icon: 'tabler:circle-plus',
-					allowedRoles: [
-						'patron',
-						'auctioneer',
-						'magistrate',
-						'holochain_architect',
-						'market_tzar'
-					],
-					disablePrefetch: true
-				},
-				{
-					title: 'Draft Listings',
-					href: '/auctions/draft-listings',
-					icon: 'tabler:circle-dashed',
-					allowedRoles: PatronPermissionPolicy
-				}
-			]
+			allowedRoles: PatronPermissionPolicy
+		},
+		{
+			title: 'New Auction',
+			href: '/auctions/new',
+			icon: 'mdi:invoice-line-items',
+			allowedRoles: AuctioneerPermissionPolicy
+		},
+		{
+			title: 'New Auction Listing',
+			href: '/auctions/listings/new',
+			icon: 'tabler:circle-plus',
+			allowedRoles: PatronPermissionPolicy,
+			disablePrefetch: true
+		},
+		{
+			title: 'My Draft Listings',
+			href: '/auctions/draft-listings',
+			icon: 'tabler:circle-dashed',
+			allowedRoles: PatronPermissionPolicy
 		},
 		{
 			title: 'Entity Database',

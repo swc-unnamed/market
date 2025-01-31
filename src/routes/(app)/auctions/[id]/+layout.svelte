@@ -5,8 +5,9 @@
 	import { page } from '$app/state';
 	import Icon from '@iconify/svelte';
 	import { goto } from '$app/navigation';
+	import { AuctioneerPermissionPolicy } from '$lib/consts/permission-policies.js';
 	let { children, data } = $props();
-
+	let user = $derived(data.user);
 	const sidebar = Sidebar.useSidebar();
 
 	let navTabValue = $state<'available' | 'details' | 'live_auction' | 'modify'>('details');
@@ -37,18 +38,20 @@
 							await goto(`/auctions/${page.params.id}/details`);
 						}}>Details</Tabs.Trigger
 					>
-					<Tabs.Trigger
-						value="modify"
-						onclick={async () => {
-							await goto(`/auctions/${page.params.id}/modify`);
-						}}>Modify Auction</Tabs.Trigger
-					>
-					<Tabs.Trigger
-						value="live_auction"
-						onclick={async () => {
-							await goto(`/auctions/${page.params.id}/auction`);
-						}}>Live Auction</Tabs.Trigger
-					>
+					{#if AuctioneerPermissionPolicy.includes(user.role)}
+						<Tabs.Trigger
+							value="modify"
+							onclick={async () => {
+								await goto(`/auctions/${page.params.id}/modify`);
+							}}>Modify Auction</Tabs.Trigger
+						>
+						<Tabs.Trigger
+							value="live_auction"
+							onclick={async () => {
+								await goto(`/auctions/${page.params.id}/auction`);
+							}}>Live Auction</Tabs.Trigger
+						>
+					{/if}
 				</Tabs.List>
 			</Tabs.Root>
 		</div>
