@@ -10,6 +10,8 @@ export const formatAuctionListingStatus = (status: string) => {
 			return 'Pending Delivery';
 		case 'completed':
 			return 'Completed';
+		case 'sold':
+			return 'Sold';
 		default:
 			return status;
 	}
