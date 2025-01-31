@@ -13,6 +13,7 @@
 	import { toast } from 'svelte-sonner';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { Switch } from '$lib/components/ui/switch/index.js';
+	import PageWrapper from '$lib/components/custom/layout/page-wrapper.svelte';
 
 	let { data } = $props();
 
@@ -64,7 +65,11 @@
 	});
 </script>
 
-<LayoutWrapper title={data.record?.name || 'User Details'}>
+<PageWrapper title={data.record?.name || 'User Details'}>
+	{#snippet right()}
+		<Button variant="action" href="/settings/access-control">Back</Button>
+	{/snippet}
+
 	<Card.Root>
 		<Card.Header>
 			<Card.Title>
@@ -113,7 +118,7 @@
 						</Select.Root>
 						{#if $updateUserForm.role !== data.record.role}
 							<form action="?/updateRole" method="post" use:updateUserEnhance>
-								<Button variant="default">Save</Button>
+								<Button variant="action" type="submit">Save</Button>
 							</form>
 						{/if}
 					</div>
@@ -125,24 +130,26 @@
 					method="post"
 					use:banUserEnhance
 				>
-					<div class="flex flex-col gap-3">
+					<div class="grid grid-cols-1 gap-2 md:grid-cols-3">
 						<div class="flex items-center gap-3">
 							<Label>Banned</Label>
 							<Switch bind:checked={$banForm.banned} />
 						</div>
-						<div class="flex flex-col gap-3">
+						<div class="col-span-2 flex flex-col gap-3">
 							<Label>Banned Reason</Label>
 							<Input bind:value={$banForm.bannedReason} />
 						</div>
 					</div>
 
-					<Button
-						variant="link"
-						onclick={(e) => {
-							e.preventDefault();
-							banSubmit();
-						}}>Save Ban State</Button
-					>
+					<div>
+						<Button
+							variant="action"
+							onclick={(e) => {
+								e.preventDefault();
+								banSubmit();
+							}}>Save Ban State</Button
+						>
+					</div>
 				</form>
 			</div>
 
@@ -159,4 +166,4 @@
 			{/if}
 		</Card.Content>
 	</Card.Root>
-</LayoutWrapper>
+</PageWrapper>

@@ -7,6 +7,7 @@
 	import ServerPagination from '$lib/components/custom/layout/server-pagination.svelte';
 	import ServerSearch from '$lib/components/custom/layout/server-search.svelte';
 	import { goto, preloadData } from '$app/navigation';
+	import PageWrapper from '$lib/components/custom/layout/page-wrapper.svelte';
 	let { data } = $props();
 
 	let meta = $derived(data.meta);
@@ -15,7 +16,7 @@
 	let { searchTerm }: { searchTerm: string } = $state({ searchTerm: '' });
 </script>
 
-<LayoutWrapper title="Access Control">
+<PageWrapper title="Access Control">
 	<div class="grid grid-cols-1 gap-3">
 		<div class="mt-3 flex flex-row justify-end">
 			<div class="w-full">
@@ -62,4 +63,4 @@
 			</Table.Body>
 		</Table.Root>
 	</div>
-</LayoutWrapper>
+</PageWrapper>
