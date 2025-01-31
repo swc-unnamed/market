@@ -3,7 +3,7 @@
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Icon from '$lib/components/custom/shared/icon.svelte';
-	import SnackbarActionButton from './snackbar-action-button.svelte';
+	import SnackbarActionButton from './snackbar-nav.svelte';
 	import { cn } from '$lib/utils';
 
 	interface LayoutWrapperProps {

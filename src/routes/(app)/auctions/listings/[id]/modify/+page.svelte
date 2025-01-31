@@ -23,6 +23,7 @@
 	import { publishListingSchema } from '$lib/models/zod/auctions/listings/publish-listing.schema.js';
 	import { z } from 'zod';
 	import { formatAuctionListingStatus } from '$lib/helpers/auctions.js';
+	import SnackbarNav from '$lib/components/custom/layout/snackbar-nav.svelte';
 
 	let { data } = $props();
 	let listing = $derived(data.listingRecord);
@@ -67,6 +68,13 @@
 			}
 		}
 	});
+
+	const snackbarNavLinks = [
+		{
+			href: '/auctions/draft-listings',
+			label: 'Draft Listings'
+		}
+	];
 
 	async function handleItemDelete({ listingId, itemId }: { listingId: string; itemId: string }) {
 		const res = await fetch(`/api/auctions/listings/${listingId}/items/${itemId}`, {
@@ -149,7 +157,11 @@
 </script>
 
 <PageWrapper title={listing?.title}>
-	<div class="">
+	{#snippet right()}
+		<SnackbarNav links={snackbarNavLinks} />
+	{/snippet}
+
+	<div>
 		{#if listing?.status === 'draft'}
 			<Alert.Root class="mb-3 border-primary">
 				<Alert.AlertDescription>

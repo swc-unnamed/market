@@ -1,6 +1,6 @@
 <script lang="ts">
 	import LayoutWrapper from '$lib/components/custom/layout/layout-wrapper.svelte';
-	import SnackbarActionButton from '$lib/components/custom/layout/snackbar-action-button.svelte';
+	import SnackbarActionButton from '$lib/components/custom/layout/snackbar-nav.svelte';
 
 	import * as Card from '$lib/components/ui/card';
 	import * as Alert from '$lib/components/ui/alert';

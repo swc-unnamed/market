@@ -8,6 +8,7 @@
 	interface CreditInputProps {
 		class?: string;
 		label?: string;
+		min?: HTMLInputElement['min'];
 		onchange?: HTMLInputElement['onchange'];
 		tabindex?: number;
 		value?: string | null;
@@ -22,6 +23,7 @@
 		label,
 		onchange,
 		value = $bindable(),
+		min,
 		disableHelperText = false,
 		disabled,
 		tabindex
@@ -43,6 +45,7 @@
 			bind:value
 			{disabled}
 			{tabindex}
+			{min}
 			class={cn('rounded-bl-none rounded-tl-none border-l-0', className)}
 			oninput={(input) => {
 				if (NUMBER_REGEX.test(input.currentTarget.value)) {

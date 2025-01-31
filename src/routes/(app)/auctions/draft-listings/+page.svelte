@@ -14,6 +14,7 @@
 	let selectAll = $state(false);
 	let checkedItems = $state<string[]>([]);
 	let alertDialogOpen = $state<string[]>([]);
+	let deleteSelectedDialogOpen = $state(false);
 
 	$effect(() => {
 		if (selectAll) {
@@ -66,24 +67,44 @@
 				{selectAll ? 'Deselect All' : 'Select All'}
 			</Button>
 
-			<Button
-				size="sm"
-				variant="action"
-				class="text-red-500"
-				disabled={checkedItems.length === 0}
-				onclick={() => {
-					checkedItems.forEach((listingId) => {
-						handleItemDelete({ listingId });
-					});
+			<AlertDialog.Root bind:open={deleteSelectedDialogOpen}>
+				<AlertDialog.Trigger class="w-full md:w-auto">
+					<Button
+						size="sm"
+						variant="action"
+						class="text-red-500"
+						disabled={checkedItems.length === 0}
+					>
+						<AurebeshText text="D" />
+						Delete Selected
+					</Button>
+				</AlertDialog.Trigger>
+				<AlertDialog.Content>
+					<AlertDialog.Header>
+						<AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title>
+						<AlertDialog.Description>
+							You are about to <span class="text-red-500"> delete all selected </span> draft listing
+							Are you sure you want to do this?
+						</AlertDialog.Description>
+					</AlertDialog.Header>
+					<AlertDialog.Footer>
+						<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+						<AlertDialog.Action
+							onclick={() => {
+								checkedItems.forEach((listingId) => {
+									handleItemDelete({ listingId });
+								});
 
-					if (selectAll) {
-						selectAll = false;
-					}
-				}}
-			>
-				<AurebeshText text="D" />
-				Delete Selected
-			</Button>
+								if (selectAll) {
+									selectAll = false;
+								}
+
+								deleteSelectedDialogOpen = false;
+							}}>Yes, delete all selected Drafts</AlertDialog.Action
+						>
+					</AlertDialog.Footer>
+				</AlertDialog.Content>
+			</AlertDialog.Root>
 		</div>
 
 		<Table.Root>

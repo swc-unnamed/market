@@ -120,7 +120,7 @@
 
 							<p>
 								Starting Bid: <AurebeshText text="$" />
-								{integerToCredit(listing.startingPrice)}
+								{integerToCredit(listing.startingPrice!)}
 							</p>
 
 							<p>
@@ -182,7 +182,11 @@
 		<div class="flex flex-col gap-3">
 			<Label>Who won the bid?</Label>
 			<UserSelect users={data.users} bind:selectedUser />
-			<CreditInput label="Purchased Price" bind:value={selectedListingPurchasePrice} />
+			<CreditInput
+				label="Purchased Price"
+				min={selectedListing?.startingPrice?.toString()}
+				bind:value={selectedListingPurchasePrice}
+			/>
 		</div>
 		<Dialog.Footer class="flex items-center">
 			<Dialog.Close>Cancel</Dialog.Close>

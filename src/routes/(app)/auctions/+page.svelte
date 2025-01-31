@@ -1,6 +1,6 @@
 <script lang="ts">
 	import PageWrapper from '$lib/components/custom/layout/page-wrapper.svelte';
-	import SnackbarActionButton from '$lib/components/custom/layout/snackbar-action-button.svelte';
+	import SnackbarActionButton from '$lib/components/custom/layout/snackbar-nav.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Card from '$lib/components/ui/card';
 	import { AuctioneerPermissionPolicy } from '$lib/consts/permission-policies.js';
