@@ -4,12 +4,12 @@
 	import * as Drawer from '$lib/components/ui/drawer/index.js';
 	import * as Table from '$lib/components/ui/table';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
+	import * as Tabs from '$lib/components/ui/tabs';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
 	import { Textarea } from '$lib/components/ui/textarea';
 	import { Switch } from '$lib/components/ui/switch';
 	import { Button } from '$lib/components/ui/button';
-	import LayoutWrapper from '$lib/components/custom/layout/layout-wrapper.svelte';
 	import PageWrapper from '$lib/components/custom/layout/page-wrapper.svelte';
 	import CreditInput from '$lib/components/custom/inputs/credit-input.svelte';
 	import EntityLookup from '$lib/components/custom/shared/entity-lookup.svelte';
@@ -32,7 +32,11 @@
 	let publishDialogOpen = $state(false);
 	let deleteListingDialogOpen = $state(false);
 
-	const { form: itemForm, enhance: itemEnhance } = superForm(data.itemForm, {
+	const {
+		form: itemForm,
+		enhance: itemEnhance,
+		reset: resetItem
+	} = superForm(data.itemForm, {
 		dataType: 'json',
 		id: 'itemForm',
 		onResult: ({ result }) => {
@@ -41,6 +45,7 @@
 				case 'success':
 					toast('Item added to listing');
 					newItemDrawerOpen = false;
+					resetItem();
 					break;
 				case 'failure':
 					toast('Failed to add item to listing');
@@ -308,182 +313,290 @@
 				</Card.Footer>
 			</Card.Root>
 
-			<Card.Root>
-				<Card.Header>
-					<Card.Title>
-						<div class="flex flex-col justify-between md:flex-row md:items-center">
-							<span>Listing Items</span>
-							<div class="mt-3 flex flex-col gap-1 md:mt-0 md:flex-row">
-								<Button
-									size="sm"
-									variant="ghost"
-									onclick={() => {
-										toast(
-											"Not implemented yet, but hey, we are working on it. Just want to make sure it's right before we release it to you all. -M"
-										);
-									}}>Import From Combine</Button
-								>
-								<Button
-									size="sm"
-									variant="outline"
-									class="border-primary"
-									onclick={() => {
-										newItemDrawerOpen = true;
-									}}
-								>
-									<AurebeshText text="AI" />
-									Add Item
-								</Button>
-							</div>
-						</div>
-					</Card.Title>
-				</Card.Header>
+			<Tabs.Root value="current" class="w-full">
+				<Tabs.List class="w-full md:w-auto">
+					<Tabs.Trigger class="w-full md:w-auto" value="current">Listing Items</Tabs.Trigger>
+					<Tabs.Trigger class="w-full md:w-auto" value="new">New Item</Tabs.Trigger>
+				</Tabs.List>
+				<Tabs.Content value="current">
+					<Card.Root>
+						<Card.Header>
+							<Card.Title>
+								<div class="flex flex-col justify-between md:flex-row md:items-center">
+									<span>Listing Items</span>
+									<div class="mt-3 flex flex-col gap-1 md:mt-0 md:flex-row">
+										<Button
+											size="sm"
+											variant="outline"
+											class="border-primary"
+											onclick={() => {
+												toast(
+													"Not implemented yet, but hey, we are working on it. Just want to make sure it's right before we release it to you all. -M"
+												);
+											}}>Import From Combine</Button
+										>
+									</div>
+								</div>
+							</Card.Title>
+						</Card.Header>
 
-				<Card.Content>
-					<div class="hidden md:flex">
-						<Table.Root>
-							<Table.Header>
-								<Table.Row>
-									<Table.Cell>Image</Table.Cell>
-									<Table.Cell>Name</Table.Cell>
-									<Table.Cell>U / U / U</Table.Cell>
-									<Table.Cell>Unique</Table.Cell>
-									<Table.Cell>Asset Hash</Table.Cell>
-									<Table.Cell></Table.Cell>
-								</Table.Row>
-							</Table.Header>
-							<Table.Body>
-								{#each listing?.items as item}
-									<Table.Row>
-										<Table.Cell class="w-48">
-											{#if item.customImageUrl}
-												<img
-													src={item.customImageUrl}
-													alt={item.customItemName}
-													class="h-[100px] w-[100px] rounded-md drop-shadow-md"
-												/>
-											{:else if item.entityId}
-												<AssetImage
-													class="h-[100px] w-[100px] rounded-md drop-shadow-md"
-													id={item.entityId}
-												/>
-											{/if}
-										</Table.Cell>
-										<Table.Cell class="w-64">
-											{item.customItemName ? item.customItemName : item.entity?.name}
-										</Table.Cell>
-										<Table.Cell>
-											{#if item.uuu}
-												<Badge>Yes</Badge>
-											{:else}
-												No
-											{/if}
-										</Table.Cell>
-										<Table.Cell>
-											<span class="uppercase">
-												{#if item.uniqueItem}
-													<Badge>Yes</Badge>
-												{:else}
-													No
-												{/if}
-											</span>
-										</Table.Cell>
-										<Table.Cell class="w-32 truncate">
-											{#if item.assetId}
-												{item.assetId}
-											{:else}
-												N/A
-											{/if}
-										</Table.Cell>
-										<Table.Cell class="w-56">
-											<AlertDialog.Root bind:open={deleteItemDialogOpen}>
-												<AlertDialog.Trigger class="w-full md:w-auto">
-													<Button size="sm" variant="action" class="text-red-500">
-														<AurebeshText text="D" />
-														Delete
-													</Button>
-												</AlertDialog.Trigger>
-												<AlertDialog.Content>
-													<AlertDialog.Header>
-														<AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title>
-														<AlertDialog.Description>
-															We wil delete this item from the listing. We won't be able to add it
-															back, but you can always add a new item.
-														</AlertDialog.Description>
-													</AlertDialog.Header>
-													<AlertDialog.Footer>
-														<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
-														<AlertDialog.Action
-															onclick={async () => {
-																await handleItemDelete({ listingId: listing?.id, itemId: item.id });
-															}}>Continue</AlertDialog.Action
-														>
-													</AlertDialog.Footer>
-												</AlertDialog.Content>
-											</AlertDialog.Root>
-										</Table.Cell>
-									</Table.Row>
-								{/each}
-							</Table.Body>
-						</Table.Root>
-					</div>
-
-					<div class="grid grid-cols-1 gap-3 md:hidden">
-						{#each listing?.items as item}
-							<div class="rounded-md bg-sidebar p-3">
-								<div class="flex items-start justify-between">
-									<div class="flex gap-1">
-										<div>
-											{#if item.customImageUrl}
-												<img src={item.customImageUrl} alt={item.customItemName} class="h-8 w-8" />
-											{:else if item.entityId}
-												<AssetImage class="h-[100px] w-[100px] drop-shadow-md" id={item.entityId} />
-											{/if}
-										</div>
-
-										<div class="flex flex-col gap-1">
-											<div>
-												<span>{item.customItemName ? item.customItemName : item.entity?.name}</span>
-											</div>
-
-											<div>
-												{#if item.uuu}
-													<Badge>U / U / U: Yes</Badge>
-												{:else}
-													<Badge>U / U / U: No</Badge>
-												{/if}
-											</div>
-
-											<div>
-												<span class="uppercase">{item.entity?.type}</span>
-											</div>
-
-											<div>
-												<span
-													>{#if item.assetId}
+						<Card.Content>
+							<div class="hidden md:flex">
+								<Table.Root>
+									<Table.Header>
+										<Table.Row>
+											<Table.Cell>Image</Table.Cell>
+											<Table.Cell>Name</Table.Cell>
+											<Table.Cell>Quantity</Table.Cell>
+											<Table.Cell>U / U / U</Table.Cell>
+											<Table.Cell>Unique</Table.Cell>
+											<Table.Cell>Asset Hash</Table.Cell>
+											<Table.Cell></Table.Cell>
+										</Table.Row>
+									</Table.Header>
+									<Table.Body>
+										{#each listing?.items as item}
+											<Table.Row>
+												<Table.Cell class="w-48">
+													{#if item.customImageUrl}
+														<img
+															src={item.customImageUrl}
+															alt={item.customItemName}
+															class="h-[100px] w-[100px] rounded-md drop-shadow-md"
+														/>
+													{:else if item.entityId}
+														<AssetImage
+															class="h-[100px] w-[100px] rounded-md drop-shadow-md"
+															id={item.entityId}
+														/>
+													{/if}
+												</Table.Cell>
+												<Table.Cell class="w-64">
+													{item.customItemName ? item.customItemName : item.entity?.name}
+												</Table.Cell>
+												<Table.Cell class="w-32">
+													{item.quantity}
+												</Table.Cell>
+												<Table.Cell>
+													{#if item.uuu}
+														<Badge>Yes</Badge>
+													{:else}
+														No
+													{/if}
+												</Table.Cell>
+												<Table.Cell>
+													<span class="uppercase">
+														{#if item.uniqueItem}
+															<Badge>Yes</Badge>
+														{:else}
+															No
+														{/if}
+													</span>
+												</Table.Cell>
+												<Table.Cell class="w-32 truncate">
+													{#if item.assetId}
 														{item.assetId}
 													{:else}
 														N/A
-													{/if}</span
-												>
+													{/if}
+												</Table.Cell>
+												<Table.Cell class="w-56">
+													<AlertDialog.Root bind:open={deleteItemDialogOpen}>
+														<AlertDialog.Trigger class="w-full md:w-auto">
+															<Button size="sm" variant="action" class="text-red-500">
+																<AurebeshText text="D" />
+																Delete
+															</Button>
+														</AlertDialog.Trigger>
+														<AlertDialog.Content>
+															<AlertDialog.Header>
+																<AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title>
+																<AlertDialog.Description>
+																	We wil delete this item from the listing. We won't be able to add
+																	it back, but you can always add a new item.
+																</AlertDialog.Description>
+															</AlertDialog.Header>
+															<AlertDialog.Footer>
+																<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+																<AlertDialog.Action
+																	onclick={async () => {
+																		await handleItemDelete({
+																			listingId: listing?.id,
+																			itemId: item.id
+																		});
+																	}}>Continue</AlertDialog.Action
+																>
+															</AlertDialog.Footer>
+														</AlertDialog.Content>
+													</AlertDialog.Root>
+												</Table.Cell>
+											</Table.Row>
+										{/each}
+									</Table.Body>
+								</Table.Root>
+							</div>
+
+							<div class="grid grid-cols-1 gap-3 md:hidden">
+								{#each listing?.items as item}
+									<div class="rounded-md bg-sidebar p-3">
+										<div class="flex items-start justify-between">
+											<div class="flex gap-1">
+												<div>
+													{#if item.customImageUrl}
+														<img
+															src={item.customImageUrl}
+															alt={item.customItemName}
+															class="h-8 w-8"
+														/>
+													{:else if item.entityId}
+														<AssetImage
+															class="h-[100px] w-[100px] drop-shadow-md"
+															id={item.entityId}
+														/>
+													{/if}
+												</div>
+
+												<div class="flex flex-col gap-1">
+													<div>
+														<span
+															>{item.customItemName ? item.customItemName : item.entity?.name}</span
+														>
+													</div>
+
+													<div>
+														{#if item.uuu}
+															<Badge>U / U / U: Yes</Badge>
+														{:else}
+															<Badge>U / U / U: No</Badge>
+														{/if}
+													</div>
+
+													<div>
+														<span class="uppercase">{item.entity?.type}</span>
+													</div>
+
+													<div>
+														<span
+															>{#if item.assetId}
+																{item.assetId}
+															{:else}
+																N/A
+															{/if}</span
+														>
+													</div>
+												</div>
+											</div>
+
+											<div class="flex items-center">
+												<Button size="icon" variant="action">
+													<AurebeshText text="E" class="text-primary" />
+												</Button>
+												<Button size="icon" variant="action">
+													<AurebeshText text="D" class="text-red-500" />
+												</Button>
 											</div>
 										</div>
 									</div>
-
-									<div class="flex items-center">
-										<Button size="icon" variant="action">
-											<AurebeshText text="E" class="text-primary" />
-										</Button>
-										<Button size="icon" variant="action">
-											<AurebeshText text="D" class="text-red-500" />
-										</Button>
-									</div>
-								</div>
+								{/each}
 							</div>
-						{/each}
-					</div>
-				</Card.Content>
-			</Card.Root>
+						</Card.Content>
+					</Card.Root>
+				</Tabs.Content>
+
+				<Tabs.Content value="new">
+					<Card.Root>
+						<Card.Header>
+							<Card.Title>New Item</Card.Title>
+						</Card.Header>
+						<Card.Content>
+							<div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+								<div class="flex items-center justify-between rounded-md bg-sidebar p-3">
+									<span
+										>{$itemForm.customItemName ? $itemForm.customItemName : 'Select Entity'}</span
+									>
+									<EntityLookup
+										entity={data.entityRecords!}
+										bind:value={$itemForm.entityId}
+										bind:name={$itemForm.customItemName}
+										bind:type={$itemForm.entityType}
+									/>
+								</div>
+
+								<div class="grid gap-1 rounded-md bg-sidebar p-3">
+									<Label>Quantity</Label>
+									<Input type="number" min="1" bind:value={$itemForm.quantity} />
+								</div>
+
+								<div class="grid gap-1 rounded-md bg-sidebar p-3">
+									<Label>Combine ID</Label>
+									<Input bind:value={$itemForm.combineId} />
+									<span class="text-sm text-muted-foreground">
+										We use the Combine ID to track the asset on the holochain. While not required,
+										it is a staple of the Unnamed Market. Review our
+										<a href="/help#combine-id" target="_blank">help</a> entry for more.
+									</span>
+								</div>
+
+								<div class="flex items-center justify-between rounded-md bg-sidebar p-3">
+									<div class="flex flex-col items-start gap-1">
+										<Label>U / U / U</Label>
+										<span class="text-sm text-muted-foreground">
+											Undocked, Undamaged, Unshielded. These are the conditions of the asset. This
+											is informational only.
+										</span>
+									</div>
+									<Switch bind:checked={$itemForm.uuu} />
+								</div>
+
+								<div class="flex items-center justify-between rounded-md bg-sidebar p-3">
+									<div class="flex flex-col items-start gap-1">
+										<Label>Custom</Label>
+										<span class="text-sm text-muted-foreground">
+											Does this asset have a custom image applied to it or is it a custom item?
+										</span>
+									</div>
+									<Switch bind:checked={$itemForm.customItem} />
+								</div>
+
+								{#if $itemForm.customItem}
+									<div class="flex items-center justify-between rounded-md bg-sidebar p-3">
+										<div class="flex flex-col items-start gap-1">
+											<Label>Unique Asset</Label>
+											<span class="text-sm text-muted-foreground">
+												This asset is a Unique item.
+											</span>
+										</div>
+										<Switch bind:checked={$itemForm.uniqueItem} />
+									</div>
+
+									<div class="grid gap-1 rounded-md bg-sidebar p-3">
+										<Label>Custom Name</Label>
+										<Input bind:value={$itemForm.customItemName} />
+										<span class="text-sm text-muted-foreground"> </span>
+									</div>
+
+									<div class="grid gap-1 rounded-md bg-sidebar p-3">
+										<Label>Custom Image URL</Label>
+										<Input bind:value={$itemForm.customImageUrl} />
+										<span class="text-sm text-muted-foreground">
+											Right now, we do not allow direct uploads. You can upload to Discord and use
+											the link here.
+										</span>
+									</div>
+								{/if}
+							</div>
+						</Card.Content>
+						<Card.Footer class="flex justify-end">
+							<form action="?/addItem" method="post" use:itemEnhance>
+								<Button class="border-primary" variant="outline" type="submit">
+									<AurebeshText text="A" />
+									<span>Add</span>
+								</Button>
+							</form>
+						</Card.Footer>
+					</Card.Root>
+				</Tabs.Content>
+			</Tabs.Root>
 		</div>
 	</div>
 </PageWrapper>
@@ -571,9 +684,6 @@
 
 		<Drawer.Footer>
 			<Drawer.Close class="text-sm">Cancel</Drawer.Close>
-			<form class="w-full" action="?/addItem" method="post" use:itemEnhance>
-				<Button class="w-full" variant="default" type="submit">Save</Button>
-			</form>
 		</Drawer.Footer>
 	</Drawer.Content>
 </Drawer.Root>
