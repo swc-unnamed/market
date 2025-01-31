@@ -52,7 +52,8 @@
 	const {
 		form: listingForm,
 		enhance: listingEnhance,
-		submit: listingSubmit
+		submit: listingSubmit,
+		submitting: listingSubmitting
 	} = superForm(data.listingForm, {
 		dataType: 'json',
 		id: 'listingForm',
@@ -93,8 +94,11 @@
 	}
 
 	async function handlePublish() {
-		// Save the listing first, just in case
 		listingSubmit();
+
+		while ($listingSubmitting) {
+			await new Promise((resolve) => setTimeout(resolve, 100));
+		}
 
 		if ($listingForm.title.toLocaleLowerCase().includes('draft listing')) {
 			toast.error('The title must not include the Draft Listing text.');
