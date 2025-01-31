@@ -4,7 +4,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import { Separator } from '$lib/components/ui/separator';
-	import { integerToCredit } from '$lib/helpers/currency-conversion';
+	import { creditToInteger, integerToCredit } from '$lib/helpers/currency-conversion';
 	import * as Table from '$lib/components/ui/table';
 	import * as Drawer from '$lib/components/ui/drawer/index.js';
 	import Label from '$lib/components/ui/label/label.svelte';
@@ -16,6 +16,8 @@
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { format } from 'date-fns';
 	import { enhance } from '$app/forms';
+	import { formatAuctionListingStatus } from '$lib/helpers/auctions.js';
+	import { cn } from '$lib/utils.js';
 
 	let { data } = $props();
 	const record = $derived(data.record);
@@ -28,9 +30,25 @@
 
 	async function handleListingSale() {
 		recordingSale = true;
+
+		const startPrice = selectedListing?.startingPrice;
+		const purchasePrice = creditToInteger(selectedListingPurchasePrice);
+
+		if (!startPrice) {
+			toast.error('Starting price is not set for the listing.');
+			recordingSale = false;
+			return;
+		}
+
+		if (purchasePrice < startPrice) {
+			toast.error('Purchase price cannot be less than the starting price.');
+			recordingSale = false;
+			return;
+		}
+
 		const { data } = await axios.post(`/api/auctions/listings/${selectedListing?.id}/record-sale`, {
 			purchasedById: selectedUser?.id,
-			purchasedPrice: selectedListingPurchasePrice
+			purchasedPrice: purchasePrice.toString()
 		});
 
 		if (data.success) {
@@ -85,7 +103,7 @@
 						<div class="flex items-center gap-3">
 							<Button
 								size="sm"
-								variant="link"
+								variant="action"
 								class="border-primary"
 								disabled={auctionIsCompleted}
 								onclick={() => {
@@ -95,22 +113,37 @@
 							>
 								Record Sale
 							</Button>
-							<Button
-								size="sm"
-								variant="ghost"
-								disabled={auctionIsCompleted}
-								class="border-primary"
-								onclick={() => alert('Not Yet Implemented')}>Send to Discord</Button
+							<form
+								action="?/sendToDiscord"
+								method="post"
+								use:enhance={() => {
+									return async ({ result }) => {
+										if (result.type === 'success') {
+											toast('Listing has been sent to Discord.');
+										} else {
+											toast.error('Failed to send listing to Discord.');
+										}
+									};
+								}}
 							>
+								<Button
+									size="sm"
+									variant="action"
+									name="listingId"
+									value={listing.id}
+									disabled={auctionIsCompleted && !data.canSendToDiscord}
+									type="submit">Send to Discord</Button
+								>
+							</form>
 						</div>
 					</div>
 				</Card.Title>
 			</Card.Header>
-			<Card.Content>
+			<Card.Content class={cn(listing.status === 'sold' ? 'opacity-60' : '')}>
 				<div class="flex flex-col gap-3">
 					<Separator class="bg-primary" />
 					<div class="flex flex-col gap-3">
-						<div class="flex flex-col gap-0">
+						<div class="flex flex-col gap-1">
 							<p>Send Credits To: {listing.sendCreditsTo}</p>
 							{#if listing.listedBy}
 								<p>Listed By: {listing.listedBy.name}</p>
@@ -120,16 +153,29 @@
 
 							<p>
 								Starting Bid: <AurebeshText text="$" />
-								{integerToCredit(listing.startingPrice)}
+								{integerToCredit(listing.startingPrice!)}
 							</p>
 
 							<p>
 								Purchased By: {listing.purchasedById ? listing.purchasedBy?.name : 'Not Sold Yet'}
 							</p>
 							<p>
-								Status: {listing.status}
+								Status: {formatAuctionListingStatus(listing.status)}
 							</p>
 						</div>
+
+						{#if listing.status === 'sold'}
+							<div class="flex flex-col gap-0">
+								<Separator />
+								<div class="mt-2 flex flex-col gap-1">
+									<p>Sold To: {listing.purchasedBy?.name}</p>
+									<p>
+										Sold For: <AurebeshText text="$" />{integerToCredit(listing.purchasedPrice!)}
+									</p>
+								</div>
+							</div>
+						{/if}
+
 						<Separator />
 
 						<div class="flex flex-col">

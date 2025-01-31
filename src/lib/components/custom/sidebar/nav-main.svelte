@@ -4,7 +4,7 @@
 	import * as Collapsible from '$lib/components/ui/collapsible/index.js';
 	import Icon from '@iconify/svelte';
 	import { useSidebar } from '$lib/components/ui/sidebar/index.js';
-	import { goto, preloadData } from '$app/navigation';
+	import { afterNavigate, goto, preloadData } from '$app/navigation';
 	import { getContext } from 'svelte';
 	import {
 		PatronPermissionPolicy,
@@ -12,6 +12,7 @@
 	} from '$lib/consts/permission-policies';
 	import type { UserContext } from '$lib/stores';
 	import { USER_CONTEXT } from '$lib/stores/contexts';
+	import { IsMobile } from '$lib/hooks/is-mobile.svelte';
 
 	const routes: Route[] = [
 		{
@@ -68,12 +69,17 @@
 			allowedRoles: ['patron', 'auctioneer', 'magistrate', 'holochain_architect', 'market_tzar']
 		}
 	];
-
 	const sidebar = useSidebar();
 
 	const user = getContext<UserContext>(USER_CONTEXT);
 
 	let isSidebarOpen = $derived(sidebar.open);
+
+	afterNavigate(() => {
+		if (sidebar.isMobile) {
+			sidebar.toggle();
+		}
+	});
 </script>
 
 <Sidebar.Group>

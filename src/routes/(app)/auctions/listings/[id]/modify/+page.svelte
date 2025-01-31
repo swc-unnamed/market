@@ -23,6 +23,7 @@
 	import { publishListingSchema } from '$lib/models/zod/auctions/listings/publish-listing.schema.js';
 	import { z } from 'zod';
 	import { formatAuctionListingStatus } from '$lib/helpers/auctions.js';
+	import SnackbarNav from '$lib/components/custom/layout/snackbar-nav.svelte';
 
 	let { data } = $props();
 	let listing = $derived(data.listingRecord);
@@ -51,7 +52,8 @@
 	const {
 		form: listingForm,
 		enhance: listingEnhance,
-		submit: listingSubmit
+		submit: listingSubmit,
+		submitting: listingSubmitting
 	} = superForm(data.listingForm, {
 		dataType: 'json',
 		id: 'listingForm',
@@ -67,6 +69,13 @@
 			}
 		}
 	});
+
+	const snackbarNavLinks = [
+		{
+			href: '/auctions/draft-listings',
+			label: 'Draft Listings'
+		}
+	];
 
 	async function handleItemDelete({ listingId, itemId }: { listingId: string; itemId: string }) {
 		const res = await fetch(`/api/auctions/listings/${listingId}/items/${itemId}`, {
@@ -85,8 +94,11 @@
 	}
 
 	async function handlePublish() {
-		// Save the listing first, just in case
 		listingSubmit();
+
+		while ($listingSubmitting) {
+			await new Promise((resolve) => setTimeout(resolve, 100));
+		}
 
 		if ($listingForm.title.toLocaleLowerCase().includes('draft listing')) {
 			toast.error('The title must not include the Draft Listing text.');
@@ -149,7 +161,11 @@
 </script>
 
 <PageWrapper title={listing?.title}>
-	<div class="">
+	{#snippet right()}
+		<SnackbarNav links={snackbarNavLinks} />
+	{/snippet}
+
+	<div>
 		{#if listing?.status === 'draft'}
 			<Alert.Root class="mb-3 border-primary">
 				<Alert.AlertDescription>

@@ -9,7 +9,7 @@
 
 	const sidebar = Sidebar.useSidebar();
 
-	let navTabValue = $state<'details' | 'live_auction' | 'modify'>('details');
+	let navTabValue = $state<'available' | 'details' | 'live_auction' | 'modify'>('details');
 </script>
 
 <Sidebar.Inset>
@@ -25,6 +25,12 @@
 
 			<Tabs.Root bind:value={navTabValue}>
 				<Tabs.List>
+					<Tabs.Trigger
+						value="available"
+						onclick={async () => {
+							await goto(`/auctions`);
+						}}>Avail. Auctions</Tabs.Trigger
+					>
 					<Tabs.Trigger
 						value="details"
 						onclick={async () => {

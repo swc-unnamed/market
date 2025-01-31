@@ -1,6 +1,6 @@
 <script lang="ts">
 	import LayoutWrapper from '$lib/components/custom/layout/layout-wrapper.svelte';
-	import SnackbarActionButton from '$lib/components/custom/layout/snackbar-action-button.svelte';
+	import SnackbarActionButton from '$lib/components/custom/layout/snackbar-nav.svelte';
 	import { type CarouselAPI } from '$lib/components/ui/carousel/context.js';
 
 	import * as Card from '$lib/components/ui/card';

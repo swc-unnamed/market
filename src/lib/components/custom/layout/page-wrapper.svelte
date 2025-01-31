@@ -61,7 +61,7 @@
 			</div>
 		</div>
 	</header>
-	<div class="w-full p-1 md:container md:p-0">
+	<div class="w-full p-3 md:container">
 		<div class="mb-3 mt-3">
 			{@render children?.()}
 		</div>
