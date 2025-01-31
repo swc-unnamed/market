@@ -95,13 +95,28 @@
 							>
 								Record Sale
 							</Button>
-							<Button
-								size="sm"
-								variant="ghost"
-								disabled={auctionIsCompleted}
-								class="border-primary"
-								onclick={() => alert('Not Yet Implemented')}>Send to Discord</Button
+							<form
+								action="?/sendToDiscord"
+								method="post"
+								use:enhance={() => {
+									return async ({ result }) => {
+										if (result.type === 'success') {
+											toast('Listing has been sent to Discord.');
+										} else {
+											toast.error('Failed to send listing to Discord.');
+										}
+									};
+								}}
 							>
+								<Button
+									size="sm"
+									variant="action"
+									name="listingId"
+									value={listing.id}
+									disabled={auctionIsCompleted && !data.canSendToDiscord}
+									type="submit">Send to Discord</Button
+								>
+							</form>
 						</div>
 					</div>
 				</Card.Title>
