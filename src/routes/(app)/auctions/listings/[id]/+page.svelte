@@ -139,6 +139,7 @@
 									<Table.Row>
 										<Table.Cell>Image</Table.Cell>
 										<Table.Cell>Name</Table.Cell>
+										<Table.Cell>Quantity</Table.Cell>
 										<Table.Cell>U / U / U</Table.Cell>
 										<Table.Cell>Unique</Table.Cell>
 										<Table.Cell>Asset Hash</Table.Cell>
@@ -164,6 +165,9 @@
 											</Table.Cell>
 											<Table.Cell class="w-64">
 												{item.customItemName ? item.customItemName : item.entity?.name}
+											</Table.Cell>
+											<Table.Cell class="w-32">
+												{item.quantity}
 											</Table.Cell>
 											<Table.Cell>
 												{#if item.uuu}

@@ -50,8 +50,8 @@
 	// );
 </script>
 
-<Drawer.Root bind:open={dialogOpen}>
-	<Drawer.Trigger>
+<Dialog.Root bind:open={dialogOpen}>
+	<Dialog.Trigger>
 		{#if trigger}
 			{@render trigger?.()}
 		{:else}
@@ -60,19 +60,23 @@
 				Entity Lookup
 			</Button>
 		{/if}
-	</Drawer.Trigger>
-	<Drawer.Content class="mx-auto w-full p-3 md:w-1/2">
+	</Dialog.Trigger>
+	<Dialog.Content class="mx-auto w-[90%] rounded-md p-3 md:w-1/2">
 		<div class="grid grid-cols-1 gap-2">
-			<div class="grid grid-cols-1 gap-2">
+			<div class="mt-3 grid grid-cols-1 gap-2">
 				<Label>Entity Filter</Label>
-				<Input bind:value={itemSearch} placeholder="Start typing to search our Asset holocron..." />
-				<ScrollArea class="mt-3 h-56 rounded-md border border-secondary p-1">
-					<div class="grid grid-cols-1 gap-1">
+				<Input
+					bind:value={itemSearch}
+					placeholder="Start typing to search our Entity holocron..."
+				/>
+				<ScrollArea class="mt-3 h-56 rounded-md p-1">
+					<div class="grid grid-cols-1 gap-2 p-2">
 						{#each filteredItems as item}
 							{#if item.id && item.name}
-								<Button
-									variant="outline"
-									class="flex w-full"
+								<!-- svelte-ignore a11y_no_static_element_interactions -->
+								<!-- svelte-ignore a11y_click_events_have_key_events -->
+								<div
+									class="flex w-full items-center justify-between rounded-md border p-2 hover:cursor-pointer hover:bg-secondary"
 									onclick={() => {
 										selectedValue = item.id as string;
 										name = item.name as string;
@@ -82,15 +86,15 @@
 									}}
 								>
 									<div class="flex flex-col">
-										<span>{item.name}</span>
+										<span class="text-sm">{item.name}</span>
 										<span class="text-xs uppercase">{item.type}</span>
 									</div>
-								</Button>
+								</div>
 							{/if}
 						{/each}
 					</div>
 				</ScrollArea>
 			</div>
 		</div>
-	</Drawer.Content>
-</Drawer.Root>
+	</Dialog.Content>
+</Dialog.Root>

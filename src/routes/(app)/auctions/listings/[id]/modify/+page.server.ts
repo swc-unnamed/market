@@ -111,7 +111,7 @@ export const actions = {
 					entityId: form.data.entityId,
 					assetId: assetId,
 					uuu: form.data.uuu,
-					quantity: 1,
+					quantity: form.data.quantity,
 					customImageUrl: form.data.customImageUrl,
 					customItem: form.data.customItem,
 					customItemName: form.data.customItem ? form.data.customItemName : null,
