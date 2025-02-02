@@ -6,4 +6,4 @@ if (!process.env.DATABASE_URL) {
 	console.error('DATABASE_URL is not set');
 }
 
-export const db = drizzle(process.env.DATABASE_URL!, { schema: schema, logger: true });
+export const db = drizzle(process.env.DATABASE_URL!, { schema: schema, logger: false });

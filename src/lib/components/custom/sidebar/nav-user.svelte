@@ -27,8 +27,9 @@
 							<Avatar.Image src={user.avatar || '/assets/uim-animated.gif'} alt="Logo" />
 							<Avatar.Fallback class="rounded-lg">UM</Avatar.Fallback>
 						</Avatar.Root>
-						<div class="grid flex-1 text-left text-sm leading-tight">
+						<div class="flex flex-1 items-center justify-between text-left text-sm leading-tight">
 							<span class="truncate font-semibold">{user.name}</span>
+							<Icon icon="tabler:arrows-diagonal" class="size-5" />
 						</div>
 					</Sidebar.MenuButton>
 				{/snippet}
@@ -41,10 +42,7 @@
 			>
 				<DropdownMenu.Group>
 					<DropdownMenu.Item class="cursor-pointer">
-						<a class="flex items-center" href="/account">
-							<Icon icon="mdi:user-settings" />
-							Account Settings
-						</a>
+						<a class="flex items-center" href="/account"> Account Settings </a>
 					</DropdownMenu.Item>
 					<DropdownMenu.Item class="cursor-pointer">
 						<Icon icon="mdi:logout" />

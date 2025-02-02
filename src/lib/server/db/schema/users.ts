@@ -1,6 +1,6 @@
 import { createId } from '@paralleldrive/cuid2';
 import { Roles } from '../../../consts/roles';
-import { boolean, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { bigint, boolean, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 import { CombineScopes } from '../../../consts/combine-scopes';
 
 /**
@@ -21,5 +21,7 @@ export const users = pgTable('users', {
 	scopes: text('scopes').array().notNull(),
 	role: text('role', { enum: Roles }).default('patron').notNull(),
 	banned: boolean('banned').default(false).notNull(),
-	banned_reason: text('banned_reason')
+	bannedReason: text('banned_reason'),
+	refreshToken: text('refreshToken'),
+	refreshTokenExpires: bigint('refresh_token_expires', { mode: 'number' })
 });

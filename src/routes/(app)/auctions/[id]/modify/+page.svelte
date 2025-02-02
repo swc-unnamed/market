@@ -12,6 +12,8 @@
 	import { toast } from 'svelte-sonner';
 	import SuperDebug, { superForm } from 'sveltekit-superforms';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
+	import AurebeshText from '$lib/components/custom/shared/aurebesh-text.svelte';
+	import { cn } from '$lib/utils.js';
 
 	let { data } = $props();
 	let record = $derived(data.record);
@@ -39,16 +41,16 @@
 <Card.Root>
 	<Card.Header>
 		<Card.Title>
-			<div class="flex justify-between">
+			<div class="flex flex-col gap-3 md:justify-between">
 				<div>
-					Editing: <span class="text-primary">{record.title}</span>
+					<span class="text-primary">{record.title}</span>
 				</div>
 
-				<div class="flex flex-row gap-3">
+				<div class="flex justify-between gap-3">
 					<AlertDialog.Root>
-						<AlertDialog.Trigger class={buttonVariants({ variant: 'ghost' })}>
-							<Icon icon="mdi:death-star-variant" />
-							<span>Delete Auction</span>
+						<AlertDialog.Trigger class={cn(buttonVariants({ variant: 'action' }), 'text-red-500')}>
+							<AurebeshText text="D" />
+							<span>Delete</span>
 						</AlertDialog.Trigger>
 						<AlertDialog.Content>
 							<AlertDialog.Header>
@@ -71,8 +73,8 @@
 
 					<form method="post" action="?/save" use:enhance>
 						<Button variant="link" size="sm" type="submit">
-							<span><Icon icon="mdi:cloud-plus-outline" /></span>
-							<span>Save Auction</span>
+							<AurebeshText text="S" />
+							<span>Save</span>
 						</Button>
 					</form>
 				</div>

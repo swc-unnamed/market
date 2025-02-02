@@ -50,7 +50,7 @@
 	<Card.Header>
 		<Card.Title>
 			<div class="flex flex-col gap-1">
-				<span class="truncate">{listing.title}</span>
+				<span class="truncate text-lg">{listing.title}</span>
 				<div class="flex flex-row items-start justify-between gap-1">
 					<span class="text-sm text-muted-foreground">ALID: {listing.listingNumber}</span>
 					<div>
