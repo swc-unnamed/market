@@ -47,7 +47,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 			id: userRecord.id,
 			name: userRecord.name,
 			avatar: userRecord.avatar,
-			role: userRecord.role
+			role: userRecord.role,
+			scopes: userRecord.scopes.join(' ')
 		};
 
 		return await resolve(event);

@@ -2,10 +2,12 @@
 	import { Button } from '$lib/components/ui/button/index.js';
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
+	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import { page } from '$app/state';
 	import Icon from '@iconify/svelte';
 	import { goto } from '$app/navigation';
 	import { AuctioneerPermissionPolicy } from '$lib/consts/permission-policies.js';
+	import AurebeshText from '$lib/components/custom/shared/aurebesh-text.svelte';
 	let { children, data } = $props();
 	let user = $derived(data.user);
 	const sidebar = Sidebar.useSidebar();
@@ -24,7 +26,7 @@
 				</Button>
 			</div>
 
-			<Tabs.Root bind:value={navTabValue}>
+			<Tabs.Root class="hidden md:flex" bind:value={navTabValue}>
 				<Tabs.List>
 					<Tabs.Trigger
 						value="available"
@@ -54,6 +56,39 @@
 					{/if}
 				</Tabs.List>
 			</Tabs.Root>
+
+			<DropdownMenu.Root>
+				<DropdownMenu.Trigger class="flex md:hidden">
+					<Button size="sm" variant="outline">
+						<div class="flex items-center gap-2">
+							<AurebeshText text="T" />
+						</div>
+					</Button>
+				</DropdownMenu.Trigger>
+				<DropdownMenu.Content sideOffset={4} alignOffset={-4} class="mr-4">
+					<DropdownMenu.Item onclick={async () => await goto(`/auctions`)}
+						>Avail. Auctions</DropdownMenu.Item
+					>
+					<DropdownMenu.Item
+						onclick={async () => {
+							await goto(`/auctions/${page.params.id}/details`);
+						}}>Details</DropdownMenu.Item
+					>
+
+					{#if AuctioneerPermissionPolicy.includes(user.role)}
+						<DropdownMenu.Item
+							onclick={async () => {
+								await goto(`/auctions/${page.params.id}/modify`);
+							}}>Modify Auction</DropdownMenu.Item
+						>
+						<DropdownMenu.Item
+							onclick={async () => {
+								await goto(`/auctions/${page.params.id}/auction`);
+							}}>Live Auction</DropdownMenu.Item
+						>
+					{/if}
+				</DropdownMenu.Content>
+			</DropdownMenu.Root>
 		</div>
 	</header>
 	<div class="container">

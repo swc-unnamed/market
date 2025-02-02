@@ -32,7 +32,7 @@ export const load = async ({ locals, params }) => {
 		defaults: {
 			id: record.id,
 			banned: record.banned,
-			bannedReason: record.banned_reason
+			bannedReason: record.bannedReason
 		}
 	});
 
@@ -128,7 +128,7 @@ export const actions = {
 			.update(users)
 			.set({
 				banned: form.data.banned,
-				banned_reason: form.data.bannedReason
+				bannedReason: form.data.bannedReason
 			})
 			.where(eq(users.id, form.data.id));
 

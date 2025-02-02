@@ -15,9 +15,12 @@
 	import { integerToCredit } from '$lib/helpers/currency-conversion.js';
 	import Icon from '@iconify/svelte';
 	import * as Table from '$lib/components/ui/table/index.js';
-	import { format } from 'date-fns';
+	import { format, formatDate } from 'date-fns';
 	import PageWrapper from '$lib/components/custom/layout/page-wrapper.svelte';
 	import ListingSummaryCard from '$lib/components/custom/auctions/listing-summary-card.svelte';
+	import { Arc, Axis, Canvas, Chart, Group, LinearGradient, Spline, Svg, Text } from 'layerchart';
+	import * as Tabs from '$lib/components/ui/tabs/index.js';
+	import NumberFlow, { NumberFlowGroup } from '@number-flow/svelte';
 
 	let { data } = $props();
 	let api = $state<CarouselAPI>();
@@ -35,6 +38,29 @@
 
 	let auctionListings = $derived(data.records);
 	let assetLedger = $derived(data.assetLedger);
+
+	let seconds = $state(2254219);
+	let dd = $state(0);
+	let hh = $state(0);
+	let mm = $state(0);
+	let ss = $state(0);
+	// const days = $derived(Math.floor(seconds / 86400));
+	// const hh = $derived(Math.floor(days / 3600));
+	// const mm = $derived(Math.floor((hh % 3600) / 60));
+	// const ss = $derived(mm % 60);
+
+	$effect(() => {
+		const interval = setInterval(() => {
+			seconds -= 1;
+
+			dd = Math.floor(seconds / 86400);
+			hh = Math.floor((seconds % 86400) / 3600);
+			mm = Math.floor(((seconds % 86400) % 3600) / 60);
+			ss = Math.floor(((seconds % 86400) % 3600) % 60);
+		}, 1000);
+
+		return () => clearInterval(interval);
+	});
 </script>
 
 <PageWrapper title="Home" displayTitle={false}>
@@ -53,53 +79,140 @@
 		{/if}
 
 		<div class="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
-			<div class="col-span-2">
-				<Card.Root>
-					<Card.Content>Give us an idea of what you would like to see here.</Card.Content>
-				</Card.Root>
-			</div>
+			<Tabs.Root value="listings" class="col-span-4 ">
+				<Tabs.List class="w-full md:w-auto">
+					<Tabs.Trigger value="listings">Auction Listings</Tabs.Trigger>
+					<Tabs.Trigger value="stats">Stats</Tabs.Trigger>
+					<Tabs.Trigger value="holochain">Holochain Activities</Tabs.Trigger>
+				</Tabs.List>
 
-			<div class="col-span-2">
-				<Card.Root>
-					<Card.Header>
-						<Card.Title>Recent Holochain Activities</Card.Title>
-					</Card.Header>
+				<Tabs.Content value="listings">
+					<div class="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
+						{#if auctionListings.length > 0}
+							{#each auctionListings as al (al.id)}
+								<ListingSummaryCard listing={al} />
+							{/each}
+						{/if}
+					</div>
+				</Tabs.Content>
 
-					<Card.Content class="text-xs">
-						<Table.Root>
-							<Table.Header>
-								<Table.Row>
-									<Table.Cell>Time</Table.Cell>
-									<Table.Cell>Chain ID</Table.Cell>
-									<Table.Cell>Activity</Table.Cell>
-								</Table.Row>
-							</Table.Header>
-							<Table.Body>
-								{#each assetLedger as al (al.id)}
-									<Table.Row>
-										<Table.Cell>{format(al.time, 'HH:mm')}</Table.Cell>
-										<Table.Cell>{al.id}</Table.Cell>
-										<Table.Cell>{al.action}</Table.Cell>
-									</Table.Row>
-								{/each}
-							</Table.Body>
-						</Table.Root>
-					</Card.Content>
-				</Card.Root>
-			</div>
-		</div>
+				<Tabs.Content value="stats">
+					<Alert.Root>
+						<Alert.Description>
+							The stats displayed below are fake and just a placeholder. Once this alert is removed,
+							the stats will be live stats.
+						</Alert.Description>
+					</Alert.Root>
+					<div class="grid grid-cols-1 md:grid-cols-2">
+						<div class="h-56 w-full rounded p-4">
+							<p>Some Random Stat</p>
+							<Chart
+								data={[
+									{ date: new Date(2021, 0, 1), value: 10 },
+									{ date: new Date(2021, 0, 2), value: 20 },
+									{ date: new Date(2021, 0, 3), value: 14 },
+									{ date: new Date(2021, 0, 4), value: 16 },
+									{ date: new Date(2021, 0, 5), value: 18 },
+									{ date: new Date(2021, 0, 6), value: 60 },
+									{ date: new Date(2021, 0, 7), value: 70 }
+								]}
+								x="date"
+								y="value"
+								yDomain={[0, null]}
+								yNice
+								padding={{ left: 16, bottom: 24 }}
+							>
+								<Svg>
+									<Axis
+										placement="left"
+										grid
+										rule
+										classes={{
+											rule: '',
+											tick: '',
+											tickLabel: 'fill-foreground font-semibold'
+										}}
+									/>
+									<Axis
+										placement="bottom"
+										format={(d) => 'Y26 D261'}
+										rule
+										classes={{
+											rule: '',
+											tick: '',
+											tickLabel: 'fill-foreground font-semibold'
+										}}
+									/>
+									<Spline class="stroke-primary stroke-2" />
+								</Svg>
+							</Chart>
+						</div>
+						<div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+							<div class="h-56 w-full rounded p-4">
+								<p>Your Current Rating</p>
+								<Chart>
+									<Svg center>
+										<Group y={16}>
+											<LinearGradient class="from-red-500 to-primary" let:gradient>
+												<Arc
+													value={78}
+													range={[-120, 120]}
+													outerRadius={60}
+													innerRadius={50}
+													cornerRadius={5}
+													spring
+													let:value
+													fill={gradient}
+													track={{ class: 'fill-none stroke-foreground/10' }}
+												>
+													<Text
+														value={`${Math.round(value) + '%'} Upvotes`}
+														textAnchor="middle"
+														verticalAnchor="middle"
+														fill="white"
+														class="text-sm tabular-nums text-primary"
+													/>
+												</Arc>
+											</LinearGradient>
+										</Group>
+									</Svg>
+								</Chart>
+							</div>
+						</div>
+					</div>
+				</Tabs.Content>
 
-		<div class="flex flex-col gap-3">
-			<Separator class="w-full bg-primary" />
-			<h3>Auction Listings</h3>
-		</div>
+				<Tabs.Content value="holochain">
+					<div class="col-span-2">
+						<Card.Root>
+							<Card.Header>
+								<Card.Title>Recent Holochain Activities</Card.Title>
+							</Card.Header>
 
-		<div class="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
-			{#if auctionListings.length > 0}
-				{#each auctionListings as al (al.id)}
-					<ListingSummaryCard listing={al} />
-				{/each}
-			{/if}
+							<Card.Content class="text-xs">
+								<Table.Root>
+									<Table.Header>
+										<Table.Row>
+											<Table.Cell>Time</Table.Cell>
+											<Table.Cell>Chain ID</Table.Cell>
+											<Table.Cell>Activity</Table.Cell>
+										</Table.Row>
+									</Table.Header>
+									<Table.Body>
+										{#each assetLedger as al (al.id)}
+											<Table.Row>
+												<Table.Cell>{format(al.time, 'HH:mm')}</Table.Cell>
+												<Table.Cell>{al.id}</Table.Cell>
+												<Table.Cell>{al.action}</Table.Cell>
+											</Table.Row>
+										{/each}
+									</Table.Body>
+								</Table.Root>
+							</Card.Content>
+						</Card.Root>
+					</div>
+				</Tabs.Content>
+			</Tabs.Root>
 		</div>
 	</div>
 </PageWrapper>

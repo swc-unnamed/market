@@ -11,6 +11,7 @@ declare global {
 				name: string;
 				avatar: string | null;
 				role: Role;
+				scopes: string;
 			};
 		}
 		// interface PageData {}

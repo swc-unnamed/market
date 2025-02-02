@@ -7,6 +7,7 @@ import { getTableColumns } from 'drizzle-orm';
 import jwt from 'jsonwebtoken';
 import { users } from '$lib/server/db/schema/users.js';
 import { dev } from '$app/environment';
+import { Encryption } from '$lib/server/utils/encryption.js';
 
 async function getUserFromSwc(code: string) {
 	const params = new URLSearchParams();
@@ -14,6 +15,7 @@ async function getUserFromSwc(code: string) {
 	params.append('client_secret', env.COMBINE_SECRET_KEY);
 	params.append('code', code);
 	params.append('grant_type', 'authorization_code');
+	params.append('access_type', 'offline');
 	params.append('redirect_uri', `${env.UIM_BASE_URL}/callback`);
 
 	const { data } = await axios.post('https://www.swcombine.com/ws/oauth2/token/', params, {
@@ -23,6 +25,12 @@ async function getUserFromSwc(code: string) {
 	});
 
 	console.log(data);
+
+	const encryption = new Encryption();
+	const encryptedToken = encryption.encrypt(data.refresh_token);
+	const timeNow = Date.now();
+
+	const expireTime = timeNow + data.expires_in * 1000;
 
 	const { data: user } = await axios.get<Character>('https://www.swcombine.com/ws/v2.0/character', {
 		headers: {
@@ -35,7 +43,9 @@ async function getUserFromSwc(code: string) {
 		combineId: user.swcapi.character.uid,
 		avatar: user.swcapi.character.image,
 		joinDate: new Date(),
-		scopes: data.scope
+		scopes: data.scope,
+		refreshToken: encryptedToken,
+		refreshTokenExpires: expireTime
 	};
 }
 
@@ -44,7 +54,9 @@ function makeImpersonatedUser(devHandle: string, devUid: string) {
 		name: devHandle,
 		combineId: devUid,
 		avatar: '',
-		scopes: 'character_read'
+		scopes: 'character_read',
+		refreshToken: 'fake',
+		refreshTokenExpires: Date.now() + 3960 * 1000
 	};
 }
 
@@ -75,13 +87,17 @@ export const load = async ({ url, cookies }) => {
 			combineId: user.combineId,
 			avatar: user.avatar,
 			joinDate: new Date(),
-			scopes: formattedScopes
+			scopes: formattedScopes,
+			refreshToken: user.refreshToken,
+			refreshTokenExpires: user.refreshTokenExpires
 		})
 		.onConflictDoUpdate({
 			target: [users.combineId],
 			set: {
 				name: user.name,
 				scopes: formattedScopes,
+				refreshToken: user.refreshToken,
+				refreshTokenExpires: user.refreshTokenExpires,
 				...((user.avatar && { avatar: user.avatar }) || {})
 			}
 		})
