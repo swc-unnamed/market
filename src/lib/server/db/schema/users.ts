@@ -2,6 +2,8 @@ import { createId } from '@paralleldrive/cuid2';
 import { Roles } from '../../../consts/roles';
 import { bigint, boolean, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 import { CombineScopes } from '../../../consts/combine-scopes';
+import { relations } from 'drizzle-orm';
+import { userWebhooks } from './user-webhooks';
 
 /**
  * Represents a user in the system.
@@ -25,3 +27,7 @@ export const users = pgTable('users', {
 	refreshToken: text('refreshToken'),
 	refreshTokenExpires: bigint('refresh_token_expires', { mode: 'number' })
 });
+
+export const userRelations = relations(users, ({ many }) => ({
+	webhooks: many(userWebhooks)
+}));

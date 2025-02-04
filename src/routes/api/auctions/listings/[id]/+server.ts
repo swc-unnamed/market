@@ -1,4 +1,5 @@
 import { MagistratePermissionPolicy } from '$lib/consts/permission-policies.js';
+import { onNewAuctionListingHook } from '$lib/hooks/server/auctions/new-listing.hook.js';
 import type { PublishListingRequest } from '$lib/models/auctions/publish-listing.req.js';
 import { publishListingSchema } from '$lib/models/zod/auctions/listings/publish-listing.schema.js';
 import { db } from '$lib/server/db/index.js';
@@ -152,6 +153,8 @@ export const POST = async ({ locals, params, request }) => {
 			}
 		}
 	});
+
+	await onNewAuctionListingHook(record.id);
 
 	return json({
 		status: 200,
