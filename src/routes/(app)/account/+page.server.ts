@@ -56,8 +56,6 @@ export const actions = {
 	deleteHook: async ({ locals, request }) => {
 		const formData = await request.formData();
 
-		console.log(formData);
-
 		const record = await db.query.userWebhooks.findFirst({
 			where: (r, { eq, and }) =>
 				and(eq(r.id, formData.get('id') as string), eq(r.userId, locals.user.id))
