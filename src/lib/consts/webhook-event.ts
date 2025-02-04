@@ -1,1 +1,1 @@
-export const WebhookEvent = ['auction_started', 'auction_listing_created'] as const;
+export const WebhookEvent = ['auction_listing_created'] as const;
