@@ -16,7 +16,7 @@
 	}: ComponentProps<typeof Sidebar.Root> = $props();
 </script>
 
-<Sidebar.Root class="z-50" bind:ref {collapsible} {...restProps}>
+<Sidebar.Root variant="floating" class="z-50" bind:ref {collapsible} {...restProps}>
 	<Sidebar.Header>
 		<Header />
 	</Sidebar.Header>
@@ -24,7 +24,6 @@
 		<NavMain />
 	</Sidebar.Content>
 	<Sidebar.Footer>
-		<NavSettings />
 		<NavUser />
 	</Sidebar.Footer>
 </Sidebar.Root>

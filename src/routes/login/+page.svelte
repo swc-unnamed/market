@@ -65,8 +65,8 @@
 		<!-- Background Image -->
 		<div
 			class="absolute inset-0 bg-[url('/images/login/banner-1.png')] bg-cover bg-center"
-			style="mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0) 90%);
--webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0) 90%);
+			style="mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 1%, rgba(0, 0, 0, 0) 90%);
+-webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 1%, rgba(0, 0, 0, 0) 90%);
 "
 		></div>
 
@@ -77,19 +77,17 @@
 
 		<!-- Login Card -->
 		<div class="relative z-10 rounded-xl">
-			<div class="flex flex-col items-center justify-center">
-				<img class="mx-auto h-48 w-48 rounded-lg" src="/assets/uim-17.png" alt="Unnamed Market" />
-				<h1 class="text-center text-2xl font-bold tracking-wider">Unnamed Market</h1>
-				<span class="text-primary">Your gateway to the holochain </span>
+			<div class=" flex flex-col items-center justify-center">
+				<img class="mx-auto h-40 w-40 rounded-lg" src="/assets/uim-17.png" alt="Unnamed Market" />
+				<h1 class="text-center text-6xl font-bold tracking-wider">Unnamed Market</h1>
+				<span class="text-2xl text-primary">Your gateway to the holochain </span>
 			</div>
-			<div class="flex items-center justify-center p-4">
+			<div class="mt-12 flex items-center justify-center p-4">
 				<Card.Root class="sm:w-2/3 md:w-3/4">
 					<Card.Content class="text-center text-muted-foreground">
 						<p>
-							Welcome to UM. You must authenticate with the <a
-								href="https://www.swcombine.com"
-								target="_blank">Combine</a
-							> before you can continue.
+							Welcome to UM. <br /> You must authenticate with the
+							<a href="https://www.swcombine.com" target="_blank">Combine</a> before you can continue.
 						</p>
 					</Card.Content>
 					<Card.Footer class="flex flex-col items-center">
@@ -115,9 +113,10 @@
 		</div>
 	</div>
 
-	<div class="mx-auto mb-6 flex w-full flex-col justify-start md:w-2/3">
+	<!-- Platform Features-->
+	<div class="mx-auto flex w-full flex-col justify-start p-4 md:w-2/3 md:p-0">
 		<h1 class="mb-2">Platform Features</h1>
-		<div class="grid grid-cols-2 gap-4">
+		<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 			<div class="grid grid-cols-1 gap-2">
 				<Card.Root>
 					<Card.Content class="space-y-3">
@@ -269,12 +268,12 @@
 	</div>
 
 	<img
-		class="mx-auto -mt-6 w-full rounded-lg opacity-30 md:w-2/3"
+		class="mx-auto w-full rounded-lg opacity-30 md:w-2/3"
 		src="/images/login/banner-2.png"
 		alt="Unnamed Market"
 	/>
 
-	<div class="mx-auto mb-6 flex w-full flex-col justify-start md:w-2/3">
+	<div class="mx-auto mb-6 flex w-full flex-col justify-start p-4 md:w-2/3 md:p-0">
 		<div class="mb-2 flex flex-col gap-0">
 			<h1>SWCombine Integration</h1>
 			<p class="text-primary">
@@ -322,14 +321,14 @@
 		</div>
 	</div>
 
-	<div class="mx-auto mb-6 flex w-full flex-col justify-start md:w-2/3">
+	<div class="mx-auto mb-6 flex w-full flex-col justify-start p-4 md:w-2/3 md:p-0">
 		<div class="flex flex-col gap-0">
 			<h1>Integration Security</h1>
 			<span class="text-primary"
 				>We ensure the platform is safe and secure to integrate without risks.</span
 			>
 		</div>
-		<div class="grid grid-cols-2 gap-4">
+		<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 			<div class="grid grid-cols-1 gap-2">
 				<Card.Root>
 					<Card.Content class="space-y-3">
@@ -390,6 +389,13 @@
 						</div>
 					</Card.Content>
 				</Card.Root>
+			</div>
+
+			<div class="relative w-fit">
+				<img src="/images/login/cargo.png" alt="cargo" class="opacity-50" />
+				<div
+					class="absolute inset-0 bg-gradient-to-r from-transparent via-black/0 to-black/0"
+				></div>
 			</div>
 		</div>
 	</div>

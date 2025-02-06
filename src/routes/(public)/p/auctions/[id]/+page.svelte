@@ -9,6 +9,8 @@
 	import * as Table from '$lib/components/ui/table';
 	import AssetImage from '$lib/components/custom/assets/asset-image.svelte';
 	import * as Avatar from '$lib/components/ui/avatar/index.js';
+	import NumberFlow, { NumberFlowGroup } from '@number-flow/svelte';
+	import ListingPreviewCard from '$lib/components/custom/auctions/listing-preview-card.svelte';
 
 	let { data } = $props();
 	const record = $derived(data.record);
@@ -16,6 +18,10 @@
 	let api = $state<CarouselAPI>();
 	let current = $state(0);
 	const count = $derived(api ? api.scrollSnapList().length : 0);
+
+	let secondsUntilStart = $state(
+		Math.floor((new Date(record.startAt).getTime() - Date.now()) / 1000)
+	);
 
 	$effect(() => {
 		if (api) {
@@ -25,6 +31,24 @@
 			});
 		}
 	});
+
+	$effect(() => {
+		const interval = setInterval(() => {
+			secondsUntilStart = secondsUntilStart - 1;
+		}, 1000);
+
+		return () => {
+			clearInterval(interval);
+		};
+	});
+
+	const dd = $derived(Math.floor(secondsUntilStart / 86400));
+
+	// calculate hours based on a 24 hour day but only show 0-23
+
+	const hh = $derived(Math.floor(secondsUntilStart / 3600) % 24);
+	const mm = $derived(Math.floor((secondsUntilStart % 3600) / 60));
+	const ss = $derived(secondsUntilStart % 60);
 </script>
 
 <svelte:head>
@@ -44,6 +68,37 @@
 			</Card.Description>
 		</Card.Header>
 		<Card.Content>
+			{#if secondsUntilStart > 0}
+				<div class="flex items-center gap-1">
+					<p class="text-center">Auction starts in:</p>
+					<NumberFlowGroup>
+						<div
+							style="font-variant-numeric: tabular-nums; --number-flow-char-height: 0.85em"
+							class="~text-3xl/4xl flex items-baseline font-semibold"
+						>
+							<NumberFlow trend={-1} value={dd} format={{ minimumIntegerDigits: 2 }} />
+							<NumberFlow trend={-1} prefix=":" value={hh} format={{ minimumIntegerDigits: 2 }} />
+							<NumberFlow
+								prefix=":"
+								trend={-1}
+								value={mm}
+								digits={{ 1: { max: 5 } }}
+								format={{ minimumIntegerDigits: 2 }}
+							/>
+							<NumberFlow
+								prefix=":"
+								trend={-1}
+								value={ss}
+								digits={{ 1: { max: 5 } }}
+								format={{ minimumIntegerDigits: 2 }}
+							/>
+						</div>
+					</NumberFlowGroup>
+				</div>
+			{:else}
+				<p class="text-center">Auction starting soon!</p>
+			{/if}
+
 			<Separator class="mb-3 bg-primary" />
 			<Carousel.Root setApi={(emblaApi: any) => (api = emblaApi)}>
 				<Carousel.Content>
@@ -57,7 +112,9 @@
 											<span>Starting Bid</span>
 											<div class="flex items-center">
 												<AurebeshText text={'$'} />
-												<span>{integerToCredit(listing.startingPrice)}</span>
+												{#if listing.startingPrice}
+													<span>{integerToCredit(listing.startingPrice)}</span>
+												{/if}
 											</div>
 										</Card.Description>
 									</Card.Header>
@@ -156,6 +213,10 @@
 					</div>
 				</div>
 			</Carousel.Root>
+
+			{#each data.record.listings as listing}
+				<ListingPreviewCard {listing} />
+			{/each}
 
 			<Card.Footer class="mt-3 flex justify-center">
 				<p>Want to see more? <a href="/login">Login</a>.</p>

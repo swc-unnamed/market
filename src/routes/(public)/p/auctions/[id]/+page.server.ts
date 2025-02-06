@@ -6,22 +6,8 @@ export const load = async ({ params }) => {
 		where: (r, { eq }) => eq(r.id, params.id),
 		with: {
 			listings: {
-				columns: {
-					id: true,
-					title: true,
-					startingPrice: true,
-					location: true,
-					listerIsAnon: true,
-					description: true,
-					listingNumber: true
-				},
 				with: {
 					items: {
-						columns: {
-							entityId: true,
-							uuu: true,
-							customImageUrl: true
-						},
 						with: {
 							asset: true,
 							entity: true
@@ -35,7 +21,6 @@ export const load = async ({ params }) => {
 	if (!record) {
 		return error(404, 'Auction not found');
 	}
-
 	return {
 		record: record
 	};
