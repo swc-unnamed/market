@@ -8,6 +8,7 @@ export type Route = {
 	nested?: NestedRoute[];
 	allowedRoles: Role[];
 	disablePrefetch?: boolean;
+	initialOpen?: boolean;
 };
 
 export type NestedRoute = Omit<Route, 'nested'>;

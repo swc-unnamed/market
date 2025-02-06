@@ -13,47 +13,78 @@
 	} from '$lib/consts/permission-policies';
 	import type { UserContext } from '$lib/stores';
 	import { USER_CONTEXT } from '$lib/stores/contexts';
-	import { IsMobile } from '$lib/hooks/is-mobile.svelte';
 
 	const routes: Route[] = [
 		{
-			title: 'Home',
+			title: 'Terminal',
 			href: '/home',
 			icon: 'mdi:home',
 			nested: [],
 			allowedRoles: PatronPermissionPolicy
 		},
 		{
-			title: 'Available Auctions',
+			title: 'Auction Terminal',
 			href: '/auctions',
 			icon: 'tabler:gavel',
-			allowedRoles: PatronPermissionPolicy
-		},
-		{
-			title: 'New Auction',
-			href: '/auctions/new',
-			icon: 'mdi:invoice-line-items',
-			allowedRoles: AuctioneerPermissionPolicy
-		},
-		{
-			title: 'New Auction Listing',
-			href: '/auctions/listings/new',
-			icon: 'tabler:circle-plus',
 			allowedRoles: PatronPermissionPolicy,
-			disablePrefetch: true
+			initialOpen: true,
+			nested: [
+				{
+					title: 'New Auction Listing',
+					href: '/auctions/listings/new',
+					icon: 'tabler:circle-plus',
+					allowedRoles: PatronPermissionPolicy,
+					disablePrefetch: true
+				},
+				{
+					title: 'Available Auctions',
+					href: '/auctions',
+					icon: 'tabler:gavel',
+					allowedRoles: PatronPermissionPolicy
+				},
+				{
+					title: 'New Auction',
+					href: '/auctions/new',
+					icon: 'mdi:invoice-line-items',
+					allowedRoles: AuctioneerPermissionPolicy
+				}
+			]
 		},
 		{
-			title: 'My Draft Listings',
-			href: '/auctions/draft-listings',
-			icon: 'tabler:circle-dashed',
-			allowedRoles: PatronPermissionPolicy
+			title: 'Account Terminal',
+			href: '/account',
+			icon: 'tabler:adjustments-search',
+			allowedRoles: PatronPermissionPolicy,
+			initialOpen: true,
+			nested: [
+				{
+					title: 'AL Drafts',
+					href: '/auctions/draft-listings',
+					icon: 'tabler:git-pull-request-draft',
+					allowedRoles: PatronPermissionPolicy
+				},
+				{
+					title: 'My Account',
+					href: '/account',
+					icon: 'tabler:adjustments-search',
+					allowedRoles: PatronPermissionPolicy
+				}
+			]
 		},
 		{
-			title: 'Entity Database',
+			title: 'Holochain',
 			href: '/entities',
-			icon: 'mdi:database',
-			nested: [],
-			allowedRoles: ['patron', 'auctioneer', 'magistrate', 'holochain_architect', 'market_tzar']
+			icon: 'tabler:database',
+			allowedRoles: PatronPermissionPolicy,
+			initialOpen: true,
+			nested: [
+				{
+					title: 'Entity Database',
+					href: '/entities',
+					icon: 'tabler:sitemap',
+					allowedRoles: PatronPermissionPolicy
+				}
+			]
 		}
 	];
 	const sidebar = useSidebar();
@@ -73,7 +104,7 @@
 	<Sidebar.Menu>
 		{#each routes as route (route.title)}
 			{#if route.allowedRoles.includes(user.role)}
-				<Collapsible.Root class="group/collapsible">
+				<Collapsible.Root class="group/collapsible" open={route.initialOpen}>
 					{#snippet child({ props })}
 						<Sidebar.MenuItem {...props}>
 							<Collapsible.Trigger

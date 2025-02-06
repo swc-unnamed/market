@@ -17,7 +17,7 @@
 
 <Sidebar.Inset>
 	<header
-		class="transition=[width,height] ease-linear, z-10 flex h-fit flex-col justify-center gap-2 rounded border border-b-primary bg-background group-has-[[data-collasibile=icon]]/siebar-wrapper:h-fit md:sticky md:top-0 md:py-2"
+		class="transition=[width,height] ease-linear, z-10 flex h-fit flex-col justify-center gap-2 rounded border-b border-b-primary bg-background group-has-[[data-collasibile=icon]]/siebar-wrapper:h-fit md:sticky md:top-0 md:py-2"
 	>
 		<div class="flex w-full items-center justify-between gap-2 px-4 py-2">
 			<div class="flex min-w-fit items-center gap-2">
