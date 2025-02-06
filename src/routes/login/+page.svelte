@@ -335,24 +335,12 @@
 					<Card.Content class="space-y-3">
 						<div class="flex items-center gap-1">
 							<div class="w-24 p-3">
-								<Icon icon="tabler:database" class="size-12" />
+								<Icon icon="tabler:lock-check" class="size-12" />
 							</div>
 							<div class="col-span-2 space-y-1">
-								<h2>Seemless Integration</h2>
-								<p class="text-sm">Our API allows the platform to synchronize with SWCombine.</p>
-							</div>
-						</div>
-
-						<Separator />
-
-						<div class="flex items-center gap-1">
-							<div class="w-24 p-3">
-								<Icon icon="tabler:trending-up" class="size-12" />
-							</div>
-							<div class="col-span-2 space-y-1">
-								<h2>Market Data</h2>
+								<h2>Data Storage</h2>
 								<p class="text-sm">
-									Entity sales provides data to better inform your profiting decisions.
+									We do not store any data that is read through integration with the platform.
 								</p>
 							</div>
 						</div>
@@ -361,12 +349,27 @@
 
 						<div class="flex items-center gap-1">
 							<div class="w-24 p-3">
-								<Icon icon="tabler:packages" class="size-12" />
+								<Icon icon="tabler:align-justified" class="size-12" />
 							</div>
 							<div class="col-span-2 space-y-1">
-								<h2>Entity Ledger</h2>
+								<h2>Optional Full Integration</h2>
 								<p class="text-sm">
-									Entity IDs are tracked in-order to prevent malicious price manipulation.
+									Full integration is always optional and you will not be bothered to enable it.
+								</p>
+							</div>
+						</div>
+
+						<Separator />
+
+						<div class="flex items-center gap-1">
+							<div class="w-24 p-3">
+								<Icon icon="tabler:cloud-lock" class="size-12" />
+							</div>
+							<div class="col-span-2 space-y-1">
+								<h2>Encryption</h2>
+								<p class="text-sm">
+									Data that is processed through the API is encrypted to make it difficult to read
+									through a third party.
 								</p>
 							</div>
 						</div>
@@ -375,13 +378,13 @@
 
 						<div class="flex items-center gap-1">
 							<div class="w-28 p-3">
-								<Icon icon="tabler:chart-arcs" class="size-12" />
+								<Icon icon="tabler:brand-github" class="size-12" />
 							</div>
 							<div class="col-span-2 space-y-1">
-								<h2>All Encompassing Market</h2>
+								<h2>Open Source</h2>
 								<p class="text-sm">
-									Live auctions by Unnamed Market, auctions, buying, and selling is possible on the
-									platform.
+									We do not hide anything, as such we have detailed the platform on GitHub for
+									anyone to view the source code.
 								</p>
 							</div>
 						</div>
