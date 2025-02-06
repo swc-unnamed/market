@@ -6,6 +6,13 @@ export const load = async ({ params }) => {
 		where: (r, { eq }) => eq(r.id, params.id),
 		with: {
 			listings: {
+				columns: {
+					description: true,
+					location: true,
+					startingPrice: true,
+					title: true,
+					listingNumber: true
+				},
 				with: {
 					items: {
 						with: {
