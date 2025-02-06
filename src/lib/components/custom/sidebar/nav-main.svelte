@@ -64,7 +64,13 @@
 					allowedRoles: PatronPermissionPolicy
 				},
 				{
-					title: 'My Account',
+					title: 'Auction Listings',
+					href: '/account/auction-listings',
+					icon: 'tabler:gavel',
+					allowedRoles: PatronPermissionPolicy
+				},
+				{
+					title: 'Account Settings',
 					href: '/account',
 					icon: 'tabler:adjustments-search',
 					allowedRoles: PatronPermissionPolicy
