@@ -5,6 +5,8 @@
 	import * as Card from '$lib/components/ui/card/index.js';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
+	import { Separator } from '$lib/components/ui/separator';
+	import Icon from '@iconify/svelte';
 
 	let { data } = $props();
 
@@ -113,80 +115,277 @@
 		</div>
 	</div>
 
-	<div class="mx-auto flex w-1/2 flex-col justify-start">
-		<h1>Platform Features</h1>
+	<div class="mx-auto mb-6 flex w-full flex-col justify-start md:w-2/3">
+		<h1 class="mb-2">Platform Features</h1>
 		<div class="grid grid-cols-2 gap-4">
 			<div class="grid grid-cols-1 gap-2">
 				<Card.Root>
-					<Card.Header>
-						<Card.Title>Seamless Integration</Card.Title>
-					</Card.Header>
-					<Card.Content></Card.Content>
-				</Card.Root>
+					<Card.Content class="space-y-3">
+						<div class="flex items-center gap-1">
+							<div class="w-24 p-3">
+								<Icon icon="tabler:database" class="size-12" />
+							</div>
+							<div class="col-span-2 space-y-1">
+								<h2>Seemless Integration</h2>
+								<p class="text-sm">Our API allows the platform to synchronize with SWCombine.</p>
+							</div>
+						</div>
 
-				<Card.Root>
-					<Card.Header>
-						<Card.Title>Market Data</Card.Title>
-					</Card.Header>
-					<Card.Content></Card.Content>
-				</Card.Root>
+						<Separator />
 
-				<Card.Root>
-					<Card.Header>
-						<Card.Title>Entity Ledger</Card.Title>
-					</Card.Header>
-					<Card.Content></Card.Content>
-				</Card.Root>
+						<div class="flex items-center gap-1">
+							<div class="w-24 p-3">
+								<Icon icon="tabler:trending-up" class="size-12" />
+							</div>
+							<div class="col-span-2 space-y-1">
+								<h2>Market Data</h2>
+								<p class="text-sm">
+									Entity sales provides data to better inform your profiting decisions.
+								</p>
+							</div>
+						</div>
 
-				<Card.Root>
-					<Card.Header>
-						<Card.Title>All Encompassing Market</Card.Title>
-					</Card.Header>
-					<Card.Content></Card.Content>
-				</Card.Root>
+						<Separator />
 
-				<Card.Root>
-					<Card.Header>
-						<Card.Title>User Feedback</Card.Title>
-					</Card.Header>
-					<Card.Content></Card.Content>
+						<div class="flex items-center gap-1">
+							<div class="w-24 p-3">
+								<Icon icon="tabler:packages" class="size-12" />
+							</div>
+							<div class="col-span-2 space-y-1">
+								<h2>Entity Ledger</h2>
+								<p class="text-sm">
+									Entity IDs are tracked in-order to prevent malicious price manipulation.
+								</p>
+							</div>
+						</div>
+
+						<Separator />
+
+						<div class="flex items-center gap-1">
+							<div class="w-28 p-3">
+								<Icon icon="tabler:chart-arcs" class="size-12" />
+							</div>
+							<div class="col-span-2 space-y-1">
+								<h2>All Encompassing Market</h2>
+								<p class="text-sm">
+									Live auctions by Unnamed Market, auctions, buying, and selling is possible on the
+									platform.
+								</p>
+							</div>
+						</div>
+
+						<Separator />
+
+						<div class="flex gap-1">
+							<div class="w-28 p-3">
+								<Icon icon="tabler:thumb-up" class="size-12" />
+							</div>
+							<div class="col-span-2 space-y-1">
+								<h2>User Feedback</h2>
+								<p class="text-sm">
+									You are able to leave feedback for each transaction you make, ensuring everyone is
+									trustworthy.
+								</p>
+							</div>
+						</div>
+					</Card.Content>
 				</Card.Root>
 			</div>
 
 			<div class="grid grid-cols-1 gap-2">
 				<Card.Root>
-					<Card.Header>
-						<Card.Title>Automated Discord Notifications</Card.Title>
-					</Card.Header>
-					<Card.Content></Card.Content>
-				</Card.Root>
+					<Card.Content class="space-y-3">
+						<div class="flex items-center gap-1">
+							<div class="w-24 p-3">
+								<Icon icon="tabler:building-broadcast-tower" class="size-12" />
+							</div>
+							<div class="col-span-2 space-y-1">
+								<h2>Custom Discord Notifications</h2>
+								<p class="text-sm">New listings automatically notify you upon their creation.</p>
+							</div>
+						</div>
 
-				<Card.Root>
-					<Card.Header>
-						<Card.Title>Intuitive Modern UI</Card.Title>
-					</Card.Header>
-					<Card.Content></Card.Content>
-				</Card.Root>
+						<Separator />
 
-				<Card.Root>
-					<Card.Header>
-						<Card.Title>Draft Listings</Card.Title>
-					</Card.Header>
-					<Card.Content></Card.Content>
-				</Card.Root>
+						<div class="flex items-center gap-1">
+							<div class="w-24 p-3">
+								<Icon icon="tabler:brand-trello" class="size-12" />
+							</div>
+							<div class="col-span-2 space-y-1">
+								<h2>Intuitive Modern UI</h2>
+								<p class="text-sm">
+									The platform is streamlined to be simple, load fast, and be intuitive.
+								</p>
+							</div>
+						</div>
 
-				<Card.Root>
-					<Card.Header>
-						<Card.Title>Watchlisting</Card.Title>
-					</Card.Header>
-					<Card.Content></Card.Content>
-				</Card.Root>
+						<Separator />
 
+						<div class="flex items-center gap-1">
+							<div class="w-32 p-3">
+								<Icon icon="tabler:clock-24" class="size-12" />
+							</div>
+							<div class="col-span-2 space-y-1">
+								<h2>Draft Listings</h2>
+								<p class="text-sm">
+									Want to start a listing, but are unsure of the details? You can save it as a draft
+									listing and publish it later!
+								</p>
+							</div>
+						</div>
+
+						<Separator />
+
+						<div class="flex items-center gap-1">
+							<div class="w-32 p-3">
+								<Icon icon="tabler:mail-opened" class="size-12" />
+							</div>
+							<div class="col-span-2 space-y-1">
+								<h2>Discord Notifications</h2>
+								<p class="text-sm">
+									Unnamed Market's Discord Bot notifies you when your listing is sold or you've
+									successfully bought one.
+								</p>
+							</div>
+						</div>
+
+						<Separator />
+
+						<div class="flex items-center gap-1">
+							<div class="w-24 p-3">
+								<Icon icon="tabler:analyze-filled" class="size-12" />
+							</div>
+							<div class="col-span-2 space-y-1">
+								<h2>Watchlisting</h2>
+								<p class="text-sm">
+									Add listings to your watch-list where you are notified of any changes.
+								</p>
+							</div>
+						</div>
+					</Card.Content>
+				</Card.Root>
+			</div>
+		</div>
+	</div>
+
+	<img
+		class="mx-auto -mt-6 w-full rounded-lg opacity-30 md:w-2/3"
+		src="/images/login/banner-2.png"
+		alt="Unnamed Market"
+	/>
+
+	<div class="mx-auto mb-6 flex w-full flex-col justify-start md:w-2/3">
+		<div class="mb-2 flex flex-col gap-0">
+			<h1>SWCombine Integration</h1>
+			<p class="text-primary">
+				By synchronizing with SWCombine we are able to have some advantages over other market
+				platforms.
+			</p>
+		</div>
+		<div class="grid grid-cols-1 gap-2">
+			<Card.Root>
+				<Card.Header>
+					<Card.Title class="text-sm"
+						>Complete SWCombine synchronization is optional & reads the following information:</Card.Title
+					>
+				</Card.Header>
+				<Card.Content class="space-y-3">
+					<div class="flex gap-1">
+						<div class="w-20">
+							<Icon icon="tabler:brand-codesandbox" class="size-12" />
+						</div>
+						<div class="col-span-2">
+							<p>Surface Synchronization</p>
+							<p>
+								Reads basic information such as ID, handle, faction, and avatar. This is required
+								for authentication purposes.
+							</p>
+						</div>
+					</div>
+
+					<Separator />
+
+					<div class="flex gap-1">
+						<div class="w-20">
+							<Icon icon="tabler:package" class="size-12" />
+						</div>
+						<div class="col-span-2">
+							<p>Full Synchronization</p>
+							<p>
+								Reads everything a surface synchronization does but with additional points of data
+								such as entity ID, entity image, entity location.
+							</p>
+						</div>
+					</div>
+				</Card.Content>
+			</Card.Root>
+		</div>
+	</div>
+
+	<div class="mx-auto mb-6 flex w-full flex-col justify-start md:w-2/3">
+		<div class="flex flex-col gap-0">
+			<h1>Integration Security</h1>
+			<span class="text-primary"
+				>We ensure the platform is safe and secure to integrate without risks.</span
+			>
+		</div>
+		<div class="grid grid-cols-2 gap-4">
+			<div class="grid grid-cols-1 gap-2">
 				<Card.Root>
-					<Card.Header>
-						<Card.Title>Real-time Auctions</Card.Title>
-					</Card.Header>
-					<Card.Content></Card.Content>
+					<Card.Content class="space-y-3">
+						<div class="flex items-center gap-1">
+							<div class="w-24 p-3">
+								<Icon icon="tabler:database" class="size-12" />
+							</div>
+							<div class="col-span-2 space-y-1">
+								<h2>Seemless Integration</h2>
+								<p class="text-sm">Our API allows the platform to synchronize with SWCombine.</p>
+							</div>
+						</div>
+
+						<Separator />
+
+						<div class="flex items-center gap-1">
+							<div class="w-24 p-3">
+								<Icon icon="tabler:trending-up" class="size-12" />
+							</div>
+							<div class="col-span-2 space-y-1">
+								<h2>Market Data</h2>
+								<p class="text-sm">
+									Entity sales provides data to better inform your profiting decisions.
+								</p>
+							</div>
+						</div>
+
+						<Separator />
+
+						<div class="flex items-center gap-1">
+							<div class="w-24 p-3">
+								<Icon icon="tabler:packages" class="size-12" />
+							</div>
+							<div class="col-span-2 space-y-1">
+								<h2>Entity Ledger</h2>
+								<p class="text-sm">
+									Entity IDs are tracked in-order to prevent malicious price manipulation.
+								</p>
+							</div>
+						</div>
+
+						<Separator />
+
+						<div class="flex items-center gap-1">
+							<div class="w-28 p-3">
+								<Icon icon="tabler:chart-arcs" class="size-12" />
+							</div>
+							<div class="col-span-2 space-y-1">
+								<h2>All Encompassing Market</h2>
+								<p class="text-sm">
+									Live auctions by Unnamed Market, auctions, buying, and selling is possible on the
+									platform.
+								</p>
+							</div>
+						</div>
+					</Card.Content>
 				</Card.Root>
 			</div>
 		</div>
