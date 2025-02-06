@@ -5,6 +5,8 @@
 	import * as Card from '$lib/components/ui/card/index.js';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
+	import { Separator } from '$lib/components/ui/separator';
+	import Icon from '@iconify/svelte';
 
 	let { data } = $props();
 
@@ -59,80 +61,370 @@
 </svelte:head>
 
 <div>
-	<div class="flex h-screen items-center justify-center border">
-		<div class="flex items-center justify-center p-4">
-			<Card.Root class="sm:w-2/3 md:w-1/2">
+	<div class="relative flex h-screen w-full items-center justify-center bg-cover bg-center">
+		<!-- Background Image -->
+		<div
+			class="absolute inset-0 bg-[url('/images/login/banner-1.png')] bg-cover bg-center"
+			style="mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0) 90%);
+-webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0) 90%);
+"
+		></div>
+
+		<!-- Gradient Overlay to Create the Fade Effect -->
+		<div
+			class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background"
+		></div>
+
+		<!-- Login Card -->
+		<div class="relative z-10 rounded-xl">
+			<div class="flex flex-col items-center justify-center">
+				<img class="mx-auto h-48 w-48 rounded-lg" src="/assets/uim-17.png" alt="Unnamed Market" />
+				<h1 class="text-center text-2xl font-bold tracking-wider">Unnamed Market</h1>
+				<span class="text-primary">Your gateway to the holochain </span>
+			</div>
+			<div class="flex items-center justify-center p-4">
+				<Card.Root class="sm:w-2/3 md:w-3/4">
+					<Card.Content class="text-center text-muted-foreground">
+						<p>
+							Welcome to UM. You must authenticate with the <a
+								href="https://www.swcombine.com"
+								target="_blank">Combine</a
+							> before you can continue.
+						</p>
+					</Card.Content>
+					<Card.Footer class="flex flex-col items-center">
+						{#if banned}
+							<p class="text-red-500">Your account has been banned.</p>
+						{:else}
+							<Button variant="action" href={data.url}>Login with SW Combine</Button>
+
+							<p class="text-xs">New? Scroll down to see the platform features.</p>
+						{/if}
+						{#if dev}
+							<Button
+								class="text-muted-foreground"
+								variant="link"
+								onclick={() => (impersonationDialogOpen = true)}
+							>
+								Impersonate user (developer option)
+							</Button>
+						{/if}
+					</Card.Footer>
+				</Card.Root>
+			</div>
+		</div>
+	</div>
+
+	<div class="mx-auto mb-6 flex w-full flex-col justify-start md:w-2/3">
+		<h1 class="mb-2">Platform Features</h1>
+		<div class="grid grid-cols-2 gap-4">
+			<div class="grid grid-cols-1 gap-2">
+				<Card.Root>
+					<Card.Content class="space-y-3">
+						<div class="flex items-center gap-1">
+							<div class="w-24 p-3">
+								<Icon icon="tabler:database" class="size-12" />
+							</div>
+							<div class="col-span-2 space-y-1">
+								<h2>Seemless Integration</h2>
+								<p class="text-sm">Our API allows the platform to synchronize with SWCombine.</p>
+							</div>
+						</div>
+
+						<Separator />
+
+						<div class="flex items-center gap-1">
+							<div class="w-24 p-3">
+								<Icon icon="tabler:trending-up" class="size-12" />
+							</div>
+							<div class="col-span-2 space-y-1">
+								<h2>Market Data</h2>
+								<p class="text-sm">
+									Entity sales provides data to better inform your profiting decisions.
+								</p>
+							</div>
+						</div>
+
+						<Separator />
+
+						<div class="flex items-center gap-1">
+							<div class="w-24 p-3">
+								<Icon icon="tabler:packages" class="size-12" />
+							</div>
+							<div class="col-span-2 space-y-1">
+								<h2>Entity Ledger</h2>
+								<p class="text-sm">
+									Entity IDs are tracked in-order to prevent malicious price manipulation.
+								</p>
+							</div>
+						</div>
+
+						<Separator />
+
+						<div class="flex items-center gap-1">
+							<div class="w-28 p-3">
+								<Icon icon="tabler:chart-arcs" class="size-12" />
+							</div>
+							<div class="col-span-2 space-y-1">
+								<h2>All Encompassing Market</h2>
+								<p class="text-sm">
+									Live auctions by Unnamed Market, auctions, buying, and selling is possible on the
+									platform.
+								</p>
+							</div>
+						</div>
+
+						<Separator />
+
+						<div class="flex gap-1">
+							<div class="w-28 p-3">
+								<Icon icon="tabler:thumb-up" class="size-12" />
+							</div>
+							<div class="col-span-2 space-y-1">
+								<h2>User Feedback</h2>
+								<p class="text-sm">
+									You are able to leave feedback for each transaction you make, ensuring everyone is
+									trustworthy.
+								</p>
+							</div>
+						</div>
+					</Card.Content>
+				</Card.Root>
+			</div>
+
+			<div class="grid grid-cols-1 gap-2">
+				<Card.Root>
+					<Card.Content class="space-y-3">
+						<div class="flex items-center gap-1">
+							<div class="w-24 p-3">
+								<Icon icon="tabler:building-broadcast-tower" class="size-12" />
+							</div>
+							<div class="col-span-2 space-y-1">
+								<h2>Custom Discord Notifications</h2>
+								<p class="text-sm">New listings automatically notify you upon their creation.</p>
+							</div>
+						</div>
+
+						<Separator />
+
+						<div class="flex items-center gap-1">
+							<div class="w-24 p-3">
+								<Icon icon="tabler:brand-trello" class="size-12" />
+							</div>
+							<div class="col-span-2 space-y-1">
+								<h2>Intuitive Modern UI</h2>
+								<p class="text-sm">
+									The platform is streamlined to be simple, load fast, and be intuitive.
+								</p>
+							</div>
+						</div>
+
+						<Separator />
+
+						<div class="flex items-center gap-1">
+							<div class="w-32 p-3">
+								<Icon icon="tabler:clock-24" class="size-12" />
+							</div>
+							<div class="col-span-2 space-y-1">
+								<h2>Draft Listings</h2>
+								<p class="text-sm">
+									Want to start a listing, but are unsure of the details? You can save it as a draft
+									listing and publish it later!
+								</p>
+							</div>
+						</div>
+
+						<Separator />
+
+						<div class="flex items-center gap-1">
+							<div class="w-32 p-3">
+								<Icon icon="tabler:mail-opened" class="size-12" />
+							</div>
+							<div class="col-span-2 space-y-1">
+								<h2>Discord Notifications</h2>
+								<p class="text-sm">
+									Unnamed Market's Discord Bot notifies you when your listing is sold or you've
+									successfully bought one.
+								</p>
+							</div>
+						</div>
+
+						<Separator />
+
+						<div class="flex items-center gap-1">
+							<div class="w-24 p-3">
+								<Icon icon="tabler:analyze-filled" class="size-12" />
+							</div>
+							<div class="col-span-2 space-y-1">
+								<h2>Watchlisting</h2>
+								<p class="text-sm">
+									Add listings to your watch-list where you are notified of any changes.
+								</p>
+							</div>
+						</div>
+					</Card.Content>
+				</Card.Root>
+			</div>
+		</div>
+	</div>
+
+	<img
+		class="mx-auto -mt-6 w-full rounded-lg opacity-30 md:w-2/3"
+		src="/images/login/banner-2.png"
+		alt="Unnamed Market"
+	/>
+
+	<div class="mx-auto mb-6 flex w-full flex-col justify-start md:w-2/3">
+		<div class="mb-2 flex flex-col gap-0">
+			<h1>SWCombine Integration</h1>
+			<p class="text-primary">
+				By synchronizing with SWCombine we are able to have some advantages over other market
+				platforms.
+			</p>
+		</div>
+		<div class="grid grid-cols-1 gap-2">
+			<Card.Root>
 				<Card.Header>
-					<Card.Title>
-						<img
-							class="mx-auto h-48 w-48 rounded-lg"
-							src="/assets/uim-17.png"
-							alt="Unnamed Market"
-						/>
-					</Card.Title>
-					<Card.Description class="mt-3">
-						<h1 class="text-center text-2xl font-bold">Unnamed Market</h1>
-					</Card.Description>
+					<Card.Title class="text-sm"
+						>Complete SWCombine synchronization is optional & reads the following information:</Card.Title
+					>
 				</Card.Header>
-				<Card.Content class="text-center text-muted-foreground">
-					<p>
-						Welcome to UM. You must authenticate with the <a
-							href="https://www.swcombine.com"
-							target="_blank">Combine</a
-						> before you can continue.
-					</p>
+				<Card.Content class="space-y-3">
+					<div class="flex gap-1">
+						<div class="w-20">
+							<Icon icon="tabler:brand-codesandbox" class="size-12" />
+						</div>
+						<div class="col-span-2">
+							<p>Surface Synchronization</p>
+							<p>
+								Reads basic information such as ID, handle, faction, and avatar. This is required
+								for authentication purposes.
+							</p>
+						</div>
+					</div>
+
+					<Separator />
+
+					<div class="flex gap-1">
+						<div class="w-20">
+							<Icon icon="tabler:package" class="size-12" />
+						</div>
+						<div class="col-span-2">
+							<p>Full Synchronization</p>
+							<p>
+								Reads everything a surface synchronization does but with additional points of data
+								such as entity ID, entity image, entity location.
+							</p>
+						</div>
+					</div>
 				</Card.Content>
-				<Card.Footer class="flex flex-col items-center">
-					{#if banned}
-						<p class="text-red-500">Your account has been banned.</p>
-					{:else}
-						<Button variant="link" href={data.url}>Login with SW Combine</Button>
-					{/if}
-					{#if dev}
-						<Button
-							class="text-muted-foreground"
-							variant="link"
-							onclick={() => (impersonationDialogOpen = true)}
-						>
-							Impersonate user (developer option)
-						</Button>
-					{/if}
-				</Card.Footer>
 			</Card.Root>
 		</div>
 	</div>
-	{#if dev}
-		<Dialog.Root bind:open={impersonationDialogOpen}>
-			<Dialog.Content>
-				<form>
-					<Dialog.Header>
-						<Dialog.Title>Impersonate User (dev)</Dialog.Title>
-						<Dialog.Description
-							>Enter the handle of the user you wish to impersonate.</Dialog.Description
-						>
-					</Dialog.Header>
-					<div class="flex flex-col gap-2 py-4">
-						<Input type="text" bind:value={impersonationHandle} />
-						<p>{handlecheckResultText}</p>
-					</div>
-					<Dialog.Footer>
-						<Button
-							type="submit"
-							variant="default"
-							disabled={impersonationButtonBusy || !impersonationHandle.length}
-							onclick={onImpersonateButtonClicked}
-						>
-							{#if impersonationButtonBusy}
-								Busy...
-							{:else if !!impersonationUid}
-								Impersonate User
-							{:else}
-								Retrieve Info
-							{/if}
-						</Button>
-					</Dialog.Footer>
-				</form>
-			</Dialog.Content>
-		</Dialog.Root>
-	{/if}
+
+	<div class="mx-auto mb-6 flex w-full flex-col justify-start md:w-2/3">
+		<div class="flex flex-col gap-0">
+			<h1>Integration Security</h1>
+			<span class="text-primary"
+				>We ensure the platform is safe and secure to integrate without risks.</span
+			>
+		</div>
+		<div class="grid grid-cols-2 gap-4">
+			<div class="grid grid-cols-1 gap-2">
+				<Card.Root>
+					<Card.Content class="space-y-3">
+						<div class="flex items-center gap-1">
+							<div class="w-24 p-3">
+								<Icon icon="tabler:lock-check" class="size-12" />
+							</div>
+							<div class="col-span-2 space-y-1">
+								<h2>Data Storage</h2>
+								<p class="text-sm">
+									We do not store any data that is read through integration with the platform.
+								</p>
+							</div>
+						</div>
+
+						<Separator />
+
+						<div class="flex items-center gap-1">
+							<div class="w-24 p-3">
+								<Icon icon="tabler:align-justified" class="size-12" />
+							</div>
+							<div class="col-span-2 space-y-1">
+								<h2>Optional Full Integration</h2>
+								<p class="text-sm">
+									Full integration is always optional and you will not be bothered to enable it.
+								</p>
+							</div>
+						</div>
+
+						<Separator />
+
+						<div class="flex items-center gap-1">
+							<div class="w-24 p-3">
+								<Icon icon="tabler:cloud-lock" class="size-12" />
+							</div>
+							<div class="col-span-2 space-y-1">
+								<h2>Encryption</h2>
+								<p class="text-sm">
+									Data that is processed through the API is encrypted to make it difficult to read
+									through a third party.
+								</p>
+							</div>
+						</div>
+
+						<Separator />
+
+						<div class="flex items-center gap-1">
+							<div class="w-28 p-3">
+								<Icon icon="tabler:brand-github" class="size-12" />
+							</div>
+							<div class="col-span-2 space-y-1">
+								<h2>Open Source</h2>
+								<p class="text-sm">
+									We do not hide anything, as such we have detailed the platform on GitHub for
+									anyone to view the source code.
+								</p>
+							</div>
+						</div>
+					</Card.Content>
+				</Card.Root>
+			</div>
+		</div>
+	</div>
 </div>
+{#if dev}
+	<Dialog.Root bind:open={impersonationDialogOpen}>
+		<Dialog.Content>
+			<form>
+				<Dialog.Header>
+					<Dialog.Title>Impersonate User (dev)</Dialog.Title>
+					<Dialog.Description
+						>Enter the handle of the user you wish to impersonate.</Dialog.Description
+					>
+				</Dialog.Header>
+				<div class="flex flex-col gap-2 py-4">
+					<Input type="text" bind:value={impersonationHandle} />
+					<p>{handlecheckResultText}</p>
+				</div>
+				<Dialog.Footer>
+					<Button
+						type="submit"
+						variant="default"
+						disabled={impersonationButtonBusy || !impersonationHandle.length}
+						onclick={onImpersonateButtonClicked}
+					>
+						{#if impersonationButtonBusy}
+							Busy...
+						{:else if !!impersonationUid}
+							Impersonate User
+						{:else}
+							Retrieve Info
+						{/if}
+					</Button>
+				</Dialog.Footer>
+			</form>
+		</Dialog.Content>
+	</Dialog.Root>
+{/if}
