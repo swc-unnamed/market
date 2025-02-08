@@ -8,6 +8,7 @@
 		title?: string;
 		subTitle?: string;
 		displayTitle?: boolean;
+		noHeader?: boolean;
 		children: Snippet;
 		right?: Snippet;
 		left?: Snippet;
@@ -18,6 +19,7 @@
 		title,
 		subTitle,
 		displayTitle = true,
+		noHeader = false,
 		children,
 		right,
 		left,
@@ -34,33 +36,35 @@
 </svelte:head>
 
 <Sidebar.Inset>
-	<header
-		class="transition=[width,height] ease-linear, z-10 flex h-fit flex-col justify-center gap-2 rounded border-b border-b-primary bg-background group-has-[[data-collasibile=icon]]/siebar-wrapper:h-fit md:sticky md:top-0 md:py-2"
-	>
-		<div class="flex w-full items-center justify-between gap-2 px-4 py-2">
-			<div class="flex min-w-fit items-center gap-2">
-				<Button size="icon" variant="outline" onclick={() => sidebar.toggle()}>
-					<Icon icon={sidebar.open ? 'mdi:menu-open' : 'mdi:menu-close'} />
-				</Button>
+	{#if !noHeader}
+		<header
+			class="transition=[width,height] ease-linear, z-10 flex h-fit flex-col justify-center gap-2 rounded border-b border-b-primary bg-background group-has-[[data-collasibile=icon]]/siebar-wrapper:h-fit md:sticky md:top-0 md:py-2"
+		>
+			<div class="flex w-full items-center justify-between gap-2 px-4 py-2">
+				<div class="flex min-w-fit items-center gap-2">
+					<Button size="icon" variant="outline" onclick={() => sidebar.toggle()}>
+						<Icon icon={sidebar.open ? 'mdi:menu-open' : 'mdi:menu-close'} />
+					</Button>
 
-				{#if displayTitle}
-					<div class="grid">
-						<h1>{title}</h1>
-					</div>
-				{/if}
+					{#if displayTitle}
+						<div class="grid">
+							<h1>{title}</h1>
+						</div>
+					{/if}
 
-				{@render left?.()}
+					{@render left?.()}
+				</div>
+				<div class="flex items-center justify-end gap-4">
+					{#if center}
+						{@render center?.()}
+					{/if}
+					{#if right}
+						{@render right?.()}
+					{/if}
+				</div>
 			</div>
-			<div class="flex items-center justify-end gap-4">
-				{#if center}
-					{@render center?.()}
-				{/if}
-				{#if right}
-					{@render right?.()}
-				{/if}
-			</div>
-		</div>
-	</header>
+		</header>
+	{/if}
 	<div class="w-full p-3 md:container">
 		<div class="mb-3 mt-3">
 			{@render children?.()}

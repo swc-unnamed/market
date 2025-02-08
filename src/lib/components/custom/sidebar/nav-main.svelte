@@ -70,6 +70,12 @@
 					allowedRoles: PatronPermissionPolicy
 				},
 				{
+					title: 'Account Ledger',
+					href: '/account/ledger',
+					icon: 'tabler:adjustments-bolt',
+					allowedRoles: PatronPermissionPolicy
+				},
+				{
 					title: 'Account Settings',
 					href: '/account',
 					icon: 'tabler:adjustments-search',
