@@ -41,7 +41,7 @@
 		</Card.Content>
 	</Card.Root>
 
-	<div class="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
+	<div class="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
 		{#if data.record.listings.length > 0}
 			{#each data.record.listings as al (al.id)}
 				<ListingSummaryCard listing={al} />

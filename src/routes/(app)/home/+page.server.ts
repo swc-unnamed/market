@@ -10,7 +10,8 @@ export const load = async ({ locals }) => {
 		with: {
 			items: {
 				with: {
-					asset: true
+					asset: true,
+					entity: true
 				}
 			},
 			listedBy: {

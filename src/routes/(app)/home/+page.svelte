@@ -20,7 +20,7 @@
 	import ListingSummaryCard from '$lib/components/custom/auctions/listing-summary-card.svelte';
 	import { Arc, Axis, Canvas, Chart, Group, LinearGradient, Spline, Svg, Text } from 'layerchart';
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
-	import NumberFlow, { NumberFlowGroup } from '@number-flow/svelte';
+	import { source } from 'sveltekit-sse';
 
 	let { data } = $props();
 	let api = $state<CarouselAPI>();
@@ -38,29 +38,6 @@
 
 	let auctionListings = $derived(data.records);
 	let assetLedger = $derived(data.assetLedger);
-
-	let seconds = $state(2254219);
-	let dd = $state(0);
-	let hh = $state(0);
-	let mm = $state(0);
-	let ss = $state(0);
-	// const days = $derived(Math.floor(seconds / 86400));
-	// const hh = $derived(Math.floor(days / 3600));
-	// const mm = $derived(Math.floor((hh % 3600) / 60));
-	// const ss = $derived(mm % 60);
-
-	$effect(() => {
-		const interval = setInterval(() => {
-			seconds -= 1;
-
-			dd = Math.floor(seconds / 86400);
-			hh = Math.floor((seconds % 86400) / 3600);
-			mm = Math.floor(((seconds % 86400) % 3600) / 60);
-			ss = Math.floor(((seconds % 86400) % 3600) % 60);
-		}, 1000);
-
-		return () => clearInterval(interval);
-	});
 </script>
 
 <PageWrapper title="Home" displayTitle={false}>
@@ -87,7 +64,7 @@
 				</Tabs.List>
 
 				<Tabs.Content value="listings">
-					<div class="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
+					<div class="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
 						{#if auctionListings.length > 0}
 							{#each auctionListings as al (al.id)}
 								<ListingSummaryCard listing={al} />

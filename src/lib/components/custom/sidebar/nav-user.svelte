@@ -19,7 +19,7 @@
 			<Avatar.Image src={user.avatar || '/assets/uim-animated.gif'} alt="Logo" />
 			<Avatar.Fallback class="rounded-lg">UM</Avatar.Fallback>
 		</Avatar.Root>
-		<div class="flex flex-1 items-center justify-between text-left text-sm leading-tight">
+		<div class="flex flex-1 items-center justify-between truncate text-left text-sm leading-tight">
 			<span class="truncate font-semibold">{user.name}</span>
 		</div>
 	</Sidebar.MenuItem>

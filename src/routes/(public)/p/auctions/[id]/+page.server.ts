@@ -11,7 +11,9 @@ export const load = async ({ params }) => {
 					location: true,
 					startingPrice: true,
 					title: true,
-					listingNumber: true
+					listingNumber: true,
+					id: true,
+					status: true
 				},
 				with: {
 					items: {
