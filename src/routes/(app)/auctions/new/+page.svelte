@@ -8,7 +8,7 @@
 	import { Label } from '$lib/components/ui/label';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import { integerToCredit } from '$lib/helpers/currency-conversion.js';
-	import Icon from '@iconify/svelte';
+	import * as Alert from '$lib/components/ui/alert/index.js';
 	import { toast } from 'svelte-sonner';
 	import SuperDebug, { superForm } from 'sveltekit-superforms';
 
@@ -46,7 +46,16 @@
 				</div>
 			</Card.Title>
 			<Card.Description>
-				Give it a title and select the listings you want to include in the auction.
+				<div class="flex flex-col gap-1">
+					<span>Give it a title and select the listings you want to include in the auction.</span>
+					<Alert.Root class="border-danger">
+						<Alert.Title>Important</Alert.Title>
+						<Alert.Description>
+							This type of Auction is for Unnamed proctored Auctions. Meaning, auctions that are ran
+							within Discord or other platforms.
+						</Alert.Description>
+					</Alert.Root>
+				</div>
 			</Card.Description>
 		</Card.Header>
 		<Card.Content>

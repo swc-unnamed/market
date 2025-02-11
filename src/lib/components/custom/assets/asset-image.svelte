@@ -23,7 +23,11 @@
 </script>
 
 {#await fetchImage()}
-	<Skeleton class="h-[100px] w-[100px]" />
+	{#if large}
+		<Skeleton class="w-[350px]" />
+	{:else}
+		<Skeleton class="h-[100px] w-[100px]" />
+	{/if}
 {:then data}
 	{#if large}
 		<img class={cn('rounded-md', className)} src={data.large} alt={data.small} {...restProps} />

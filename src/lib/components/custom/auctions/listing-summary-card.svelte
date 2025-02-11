@@ -9,6 +9,7 @@
 	import AssetImage from '../assets/asset-image.svelte';
 	import { formatAuctionListingStatus } from '$lib/helpers/auctions';
 	import { Badge } from '$lib/components/ui/badge';
+	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
 
 	type ListingSummaryCard = {
 		id: string;
@@ -27,6 +28,10 @@
 			entityId: string | null;
 			customImageUrl: string | null;
 			uniqueItem: boolean | null;
+			entity: {
+				id: string;
+				name: string;
+			} | null;
 		}[];
 	};
 
@@ -35,6 +40,8 @@
 	let api = $state<CarouselAPI>();
 	let current = $state(0);
 	const count = $derived(api ? api.scrollSnapList().length : 0);
+
+	let isUniqueItem = $derived(listing.items?.some((item) => item.uniqueItem));
 
 	$effect(() => {
 		if (api) {
@@ -49,37 +56,29 @@
 <Card.Root class="w-full">
 	<Card.Header>
 		<Card.Title>
-			<div class="flex flex-col gap-1">
+			<div class="flex flex-col">
 				<span class="truncate text-lg">{listing.title}</span>
-				<div class="flex flex-row items-start justify-between gap-1">
-					<span class="text-sm text-muted-foreground">ALID: {listing.listingNumber}</span>
-					<div>
-						<Badge>{formatAuctionListingStatus(listing.status)}</Badge>
-						{#if listing.items?.find((i) => i.uniqueItem)}
-							<Badge variant="outline" class="uppercase">Unique</Badge>
-						{/if}
-					</div>
-				</div>
 			</div>
 		</Card.Title>
 	</Card.Header>
-	<Card.Content class="flex flex-col gap-2">
+	<Card.Content class="-mt-3 flex flex-col gap-2">
 		<div class="flex flex-col justify-center">
 			{#if listing.items}
 				<Carousel.Root setApi={(emblaApi: any) => (api = emblaApi)}>
-					<Carousel.Content class="-ml-2 h-48 md:-ml-4">
+					<Carousel.Content>
 						{#each listing.items as item}
 							{#if item.entityId}
-								<Carousel.Item>
+								<Carousel.Item class="w-full">
+									<span class="ml-1 text-xs text-primary">{item.entity?.name}</span>
 									{#if item.customImageUrl}
 										<img
 											src={item.customImageUrl}
 											alt="custom_image"
-											class="mx-auto h-48 rounded-md border border-secondary shadow-md drop-shadow-md"
+											class="mx-auto block rounded-md border border-secondary shadow-md drop-shadow-md"
 										/>
 									{:else}
 										<AssetImage
-											class="mx-auto h-48 rounded-md border border-secondary shadow-md drop-shadow-md"
+											class="mx-auto block w-[350px] rounded-md border border-secondary shadow-md drop-shadow-md"
 											id={item.entityId}
 											large
 										/>
@@ -88,39 +87,34 @@
 							{/if}
 						{/each}
 					</Carousel.Content>
-					{#if count > 1}
-						<div class="py-2 text-center text-sm text-muted-foreground">
-							Item {current} of {count}
-						</div>
-						<div class="flex justify-between">
-							<Button
-								size="sm"
-								class="text-primary"
-								variant="ghost"
-								onclick={() => {
-									api?.scrollPrev();
-								}}>Previous Asset</Button
-							>
-							<Button
-								size="sm"
-								class="text-primary"
-								variant="ghost"
-								onclick={() => {
-									api?.scrollNext();
-								}}>Next Asset</Button
-							>
-						</div>
-					{/if}
+					<div class="flex items-center justify-between">
+						<Button
+							size="sm"
+							class="text-primary"
+							variant="link"
+							onclick={() => {
+								api?.scrollPrev();
+							}}
+							>Previous
+						</Button>
+
+						<span class="text-xs text-muted-foreground">Item {current} of {count}</span>
+
+						<Button
+							size="sm"
+							class="text-primary"
+							variant="link"
+							onclick={() => {
+								api?.scrollNext();
+							}}>Next</Button
+						>
+					</div>
 				</Carousel.Root>
 			{/if}
 		</div>
 
-		<div class="my-3 flex justify-center">
-			<Separator class="w-full bg-primary" />
-		</div>
-
 		<div class="flex flex-col gap-1">
-			<div class="flex flex-row items-center justify-between">
+			<div class="mb-2 flex items-center justify-between rounded-md bg-black p-3">
 				<span class="text-sm text-primary" style="font-family: 'Galactic Basic'">
 					{#if listing.startingPrice}
 						${integerToCredit(listing.startingPrice)}
@@ -129,26 +123,27 @@
 					{/if}
 				</span>
 			</div>
-			<div class="my-3 flex justify-center">
-				<Separator class="full bg-primary" />
-			</div>
+
 			<span class="text-md font-bold">Location:</span>
-			<span
-				class="h-24 overflow-y-auto whitespace-pre-wrap rounded-md border border-secondary p-2 text-sm"
-			>
+			<span class="h-24 overflow-y-auto whitespace-pre-wrap rounded-md text-sm">
 				{listing.location}
 			</span>
+
+			<div class="flex items-center">
+				{#if isUniqueItem}
+					<Badge variant="outline" class="bg-sidebar px-4 py-1 text-sm">Unique Item</Badge>
+				{/if}
+			</div>
 		</div>
-		<Separator class="-mb-3 mt-3 w-full bg-primary" />
 	</Card.Content>
-	<Card.Footer class="flex items-center justify-between">
-		<div class="flex flex-col gap-1">
+	<Card.Footer class="flex items-start justify-between">
+		<div class="flex flex-col items-start">
 			{#if listing.listerIsAnon}
-				<span class="text-sm">Listed By: Anon</span>
+				<span class="text-xs text-muted-foreground">Listed By: Anon</span>
 			{:else}
-				<span class="text-sm">Listed By:</span>
-				<span class="text-xs">{listing.listedBy?.name}</span>
+				<span class="text-xs text-muted-foreground">Listed By: {listing.listedBy?.name}</span>
 			{/if}
+			<span class="text-xs text-muted-foreground">ALID: {listing.listingNumber}</span>
 		</div>
 		<Button size="sm" variant="link" href={`/auctions/listings/${listing.id}`}>
 			<Icon icon="mdi:arrow-right" />

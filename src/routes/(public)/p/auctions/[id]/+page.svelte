@@ -15,6 +15,7 @@
 	import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
 	import { format } from 'date-fns';
 	import { Badge } from '$lib/components/ui/badge/index.js';
+	import ListingSummaryCard from '$lib/components/custom/auctions/listing-summary-card.svelte';
 
 	let { data } = $props();
 	const record = $derived(data.record);
@@ -64,59 +65,74 @@
 </svelte:head>
 
 <div class="flex flex-col items-center justify-center p-4">
-	<Card.Root class="container">
+	<div
+		style="mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 10%, rgba(0, 0, 0, 0) 90%);
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 1%, rgba(0, 0, 0, 0) 90%);
+  "
+		class="absolute inset-0 z-0 bg-[url('/images/login/banner-1.png')] bg-cover bg-center opacity-25"
+	></div>
+	<div class="z-10 flex w-full items-center pl-12">
+		<img src="/assets/uim-17.png" class="size-12" alt="logo" />
+		<h1 class="ml-2 text-left text-3xl">Unnamed Market</h1>
+	</div>
+	<Card.Root class="z-10 border-none bg-transparent">
 		<Card.Header>
-			<Card.Title>{record.title}</Card.Title>
-			<Card.Description>
+			<Card.Title>
+				<div class="flex flex-col justify-between md:flex-row">
+					<span class="text-3xl">Live Auction - {record.title}</span>
+
+					<div class="flex flex-col">
+						<div>
+							<span class="text-md">Auction Starts in</span>
+							<NumberFlowGroup>
+								<NumberFlow
+									class="text-md"
+									trend={-1}
+									value={dd}
+									suffix="d"
+									format={{ minimumIntegerDigits: 2 }}
+								/>
+								<NumberFlow
+									class="text-md"
+									trend={-1}
+									prefix=" "
+									value={hh}
+									suffix="h"
+									format={{ minimumIntegerDigits: 2 }}
+								/>
+								<NumberFlow
+									class="text-md"
+									prefix=" "
+									suffix="m"
+									trend={-1}
+									value={mm}
+									digits={{ 1: { max: 5 } }}
+									format={{ minimumIntegerDigits: 2 }}
+								/>
+								<NumberFlow
+									class="text-md"
+									prefix=" "
+									suffix="s"
+									trend={-1}
+									value={ss}
+									digits={{ 1: { max: 5 } }}
+									format={{ minimumIntegerDigits: 2 }}
+								/>
+							</NumberFlowGroup>
+						</div>
+
+						<span class="text-sm text-muted-foreground"
+							>Starts: {format(data.record.startAt, 'MMMM d, yyyy HH:mm')}</span
+						>
+					</div>
+				</div>
+			</Card.Title>
+			<!-- <Card.Description>
 				Starts: {format(record.startAt, 'MMMM d, yyyy HH:mm')}
-			</Card.Description>
+			</Card.Description> -->
 		</Card.Header>
 		<Card.Content>
-			{#if secondsUntilStart > 0}
-				<div class="mb-3 flex flex-col gap-1">
-					<p class="text-xl">Auction starting in</p>
-					<NumberFlowGroup>
-						<div
-							style="font-variant-numeric: tabular-nums; --number-flow-char-height: 0.85em"
-							class="~text-3xl/4xl flex items-baseline font-semibold"
-						>
-							<NumberFlow
-								class="text-lg"
-								trend={-1}
-								value={dd}
-								suffix="d"
-								format={{ minimumIntegerDigits: 2 }}
-							/>
-							<NumberFlow
-								class="text-lg"
-								trend={-1}
-								prefix=" "
-								value={hh}
-								suffix="h"
-								format={{ minimumIntegerDigits: 2 }}
-							/>
-							<NumberFlow
-								class="text-lg"
-								prefix=" "
-								suffix="m"
-								trend={-1}
-								value={mm}
-								digits={{ 1: { max: 5 } }}
-								format={{ minimumIntegerDigits: 2 }}
-							/>
-							<NumberFlow
-								class="text-lg"
-								prefix=" "
-								suffix="s"
-								trend={-1}
-								value={ss}
-								digits={{ 1: { max: 5 } }}
-								format={{ minimumIntegerDigits: 2 }}
-							/>
-						</div>
-					</NumberFlowGroup>
-				</div>
-			{:else}
+			{#if secondsUntilStart < 1}
 				<Alert.Root class="mb-3">
 					<Alert.Description class="text-center text-2xl text-primary"
 						>Auction starting soon!</Alert.Description
@@ -124,76 +140,9 @@
 				</Alert.Root>
 			{/if}
 
-			<div class="grid grid-cols-1 gap-3">
+			<div class="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
 				{#each data.record.listings as listing}
-					<Card.Root>
-						<Card.Header>
-							<Card.Title>{listing.title}</Card.Title>
-							<Card.Description class="whitespace-pre-wrap">{listing.description}</Card.Description>
-						</Card.Header>
-						<Card.Content>
-							<div class="mb-2 flex flex-col">
-								<span class="mr-2">Starting Bid</span>
-								<div class="flex items-center gap-1">
-									<span>{integerToCredit(listing.startingPrice!)}</span>
-									<AurebeshText class="text-primary" text={'$'} />
-								</div>
-							</div>
-
-							<div class="flex flex-col">
-								<h3 class="mr-2">Location</h3>
-								<p class="whitespace-pre-wrap">{listing.location}</p>
-							</div>
-
-							<Separator class="mb-3 mt-3" />
-
-							<div class="grid grid-cols-1 gap-3 md:grid-cols-3 lg:grid-cols-4">
-								{#each listing.items as item}
-									<Card.Root>
-										<Card.Header>
-											<Card.Title class="flex flex-col text-lg">
-												<div class="flex items-center justify-between">
-													{#if item.customItemName}
-														{item.customItemName}
-													{:else}
-														{item.entity?.name}
-													{/if}
-												</div>
-
-												<div class="flex flex-wrap gap-1">
-													{#if item.uuu}
-														<Badge variant="outline" class="border-blue-500">U / U / U</Badge>
-													{/if}
-													{#if item.uniqueItem}
-														<Badge variant="outline" class="border-blue-500">Unique</Badge>
-													{/if}
-
-													<Badge variant="outline" class="border-blue-500">
-														QUA: {item.quantity}
-													</Badge>
-												</div>
-											</Card.Title>
-										</Card.Header>
-										<Card.Content class="">
-											{#if item.customImageUrl}
-												<img
-													src={item.customImageUrl}
-													alt={item.customItemName}
-													class="h-32 w-full object-cover"
-												/>
-											{:else if item.entityId}
-												<AssetImage
-													class="mx-auto h-32 border border-primary"
-													large
-													id={item.entityId}
-												/>
-											{/if}
-										</Card.Content>
-									</Card.Root>
-								{/each}
-							</div>
-						</Card.Content>
-					</Card.Root>
+					<ListingSummaryCard {listing} />
 				{/each}
 			</div>
 

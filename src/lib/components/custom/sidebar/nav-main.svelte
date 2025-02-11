@@ -9,7 +9,8 @@
 	import {
 		PatronPermissionPolicy,
 		MagistratePermissionPolicy,
-		AuctioneerPermissionPolicy
+		AuctioneerPermissionPolicy,
+		HolochainArchitectPermissionPolicy
 	} from '$lib/consts/permission-policies';
 	import type { UserContext } from '$lib/stores';
 	import { USER_CONTEXT } from '$lib/stores/contexts';
@@ -83,6 +84,26 @@
 					href: '/entities',
 					icon: 'tabler:sitemap',
 					allowedRoles: PatronPermissionPolicy
+				}
+			]
+		},
+		{
+			title: 'Admin',
+			href: '/settings/system',
+			icon: 'tabler:settings',
+			allowedRoles: MagistratePermissionPolicy,
+			nested: [
+				{
+					title: 'System Settings',
+					href: '/settings/system',
+					icon: 'tabler:settings',
+					allowedRoles: HolochainArchitectPermissionPolicy
+				},
+				{
+					title: 'User Management',
+					href: '/settings/access-control',
+					icon: 'tabler:users',
+					allowedRoles: MagistratePermissionPolicy
 				}
 			]
 		}
