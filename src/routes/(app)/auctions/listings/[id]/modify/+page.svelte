@@ -166,10 +166,6 @@
 </script>
 
 <PageWrapper title={listing?.title}>
-	{#snippet right()}
-		<SnackbarNav links={snackbarNavLinks} />
-	{/snippet}
-
 	<div>
 		{#if listing?.status === 'draft'}
 			<Alert.Root class="mb-3 border-primary">

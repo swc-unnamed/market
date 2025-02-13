@@ -134,9 +134,12 @@ export const POST = async ({ locals, params, request }) => {
 	}
 
 	await db.transaction(async (tx) => {
-		await tx.update(auctionListings).set({
-			status: 'new'
-		});
+		await tx
+			.update(auctionListings)
+			.set({
+				status: 'new'
+			})
+			.where(eq(auctionListings.id, id));
 
 		await tx.insert(auctionListingHistory).values({
 			event: 'status_updated',

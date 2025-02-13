@@ -19,18 +19,22 @@
 	import AurebeshText from '$lib/components/custom/shared/aurebesh-text.svelte';
 
 	let { data } = $props();
-
+	let editable = $derived(
+		data.listing.status !== 'completed' || data.listing.status !== 'completed'
+	);
 	let listing = $derived(data.listing);
 	let isOwnListing = $derived(data.isOwnListing);
 </script>
 
 <PageWrapper title={listing.title || 'Auction Listing'}>
 	{#snippet center()}
-		{#if data.user.role === 'holochain_architect' || data.user.role === 'market_tzar'}
-			<Button size="sm" variant="action">Admin Actions</Button>
-		{/if}
-		{#if isOwnListing}
-			<Button size="sm" variant="action" href={`/auctions/listings/${listing.id}/modify`}>
+		{#if isOwnListing && editable}
+			<Button
+				size="sm"
+				class="text-foreground"
+				variant="outline"
+				href={`/auctions/listings/${listing.id}/modify`}
+			>
 				Modify Listing
 			</Button>
 		{/if}

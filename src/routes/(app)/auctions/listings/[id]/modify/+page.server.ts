@@ -3,7 +3,7 @@ import { addItemAuctionListingSchema } from '$lib/models/zod/auctions/listings/a
 import { modifyAuctionListingSchema } from '$lib/models/zod/auctions/listings/modify-auction-listing.schema.js';
 import { db } from '$lib/server/db/index.js';
 import { assets, auctionListingItems, auctionListings, entities } from '$lib/server/db/schema';
-import { error, json } from '@sveltejs/kit';
+import { error, json, redirect } from '@sveltejs/kit';
 import { asc, eq } from 'drizzle-orm';
 import { fail, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
@@ -31,6 +31,10 @@ export const load = async ({ params, locals, depends }) => {
 
 	if (listingRecord.listedById !== locals.user.id) {
 		return error(403, 'You do not have permission to modify this listing');
+	}
+
+	if (listingRecord.status === 'sold' || listingRecord.status === 'completed') {
+		throw redirect(303, `/auctions/listings/${id}`);
 	}
 
 	const entityRecords = await db.query.entities.findMany({

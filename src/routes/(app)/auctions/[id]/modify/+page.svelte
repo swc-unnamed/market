@@ -18,6 +18,8 @@
 	let { data } = $props();
 	let record = $derived(data.record);
 
+	let editable = !record.completedAt;
+
 	const { form, enhance } = superForm(data.form, {
 		dataType: 'json',
 		onResult: ({ result }) => {
@@ -48,10 +50,14 @@
 
 				<div class="flex justify-between gap-3">
 					<AlertDialog.Root>
-						<AlertDialog.Trigger class={cn(buttonVariants({ variant: 'action' }), 'text-red-500')}>
-							<AurebeshText text="D" />
-							<span>Delete</span>
-						</AlertDialog.Trigger>
+						{#if editable}
+							<AlertDialog.Trigger
+								class={cn(buttonVariants({ variant: 'action' }), 'text-red-500')}
+							>
+								<AurebeshText text="D" />
+								<span>Delete</span>
+							</AlertDialog.Trigger>
+						{/if}
 						<AlertDialog.Content>
 							<AlertDialog.Header>
 								<AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title>
@@ -71,12 +77,14 @@
 						</AlertDialog.Content>
 					</AlertDialog.Root>
 
-					<form method="post" action="?/save" use:enhance>
-						<Button variant="link" size="sm" type="submit">
-							<AurebeshText text="S" />
-							<span>Save</span>
-						</Button>
-					</form>
+					{#if editable}
+						<form method="post" action="?/save" use:enhance>
+							<Button variant="link" size="sm" type="submit">
+								<AurebeshText text="S" />
+								<span>Save</span>
+							</Button>
+						</form>
+					{/if}
 				</div>
 			</div>
 		</Card.Title>
@@ -84,12 +92,12 @@
 	<Card.Content class="flex flex-col gap-3">
 		<div class="flex flex-col gap-1">
 			<Label>Auction Title</Label>
-			<Input bind:value={$form.title} />
+			<Input disabled={!editable} bind:value={$form.title} />
 		</div>
 
 		<div class="flex flex-col gap-1">
 			<Label>Start Time</Label>
-			<Input type="datetime-local" bind:value={$form.startAt} />
+			<Input type="datetime-local" disabled={!editable} bind:value={$form.startAt} />
 		</div>
 
 		<Separator class="bg-primary" />
@@ -103,6 +111,7 @@
 			{#each record.listings as listing, i}
 				<div class="flex flex-row items-center gap-3 rounded-md border p-2">
 					<Checkbox
+						disabled={!editable}
 						checked={$form.listings.some((item) => item === listing.id)}
 						onCheckedChange={(v) => {
 							if (v) {

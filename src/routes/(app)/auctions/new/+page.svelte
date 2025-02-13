@@ -29,6 +29,8 @@
 			}
 		}
 	});
+
+	$inspect(data.listingRecords);
 </script>
 
 <PageWrapper title="New Auction">
@@ -45,20 +47,18 @@
 					</form>
 				</div>
 			</Card.Title>
-			<Card.Description>
-				<div class="flex flex-col gap-1">
-					<span>Give it a title and select the listings you want to include in the auction.</span>
-					<Alert.Root class="border-danger">
-						<Alert.Title>Important</Alert.Title>
-						<Alert.Description>
-							This type of Auction is for Unnamed proctored Auctions. Meaning, auctions that are ran
-							within Discord or other platforms.
-						</Alert.Description>
-					</Alert.Root>
-				</div>
-			</Card.Description>
 		</Card.Header>
-		<Card.Content>
+		<Card.Content class="grid grid-cols-1 gap-3">
+			<div class="flex flex-col gap-1">
+				<span>Give it a title and select the listings you want to include in the auction.</span>
+				<Alert.Root class="border-danger">
+					<Alert.Title>Important</Alert.Title>
+					<Alert.Description>
+						This type of Auction is for Unnamed proctored Auctions. Meaning, auctions that are ran
+						within Discord or other platforms.
+					</Alert.Description>
+				</Alert.Root>
+			</div>
 			<div class="flex flex-col gap-2">
 				<div class="flex flex-col gap-1">
 					<Label>Auction Title</Label>
@@ -77,7 +77,7 @@
 					<p class="text-sm">Select which listings you want to add to this auction.</p>
 				</div>
 				<div class="flex flex-col gap-2">
-					{#each listings as listing, i}
+					{#each listings as listing}
 						<div class="flex flex-row items-center gap-3 rounded-md border p-2">
 							<Checkbox
 								onCheckedChange={(v) => {

@@ -24,7 +24,8 @@ export const load = async ({ locals, params }) => {
 				columns: {
 					id: true,
 					title: true,
-					startingPrice: true
+					startingPrice: true,
+					status: true
 				}
 			}
 		}
@@ -37,7 +38,7 @@ export const load = async ({ locals, params }) => {
 	}
 
 	const listingRecords = await db.query.auctionListings.findMany({
-		where: (r, { eq }) => eq(r.status, 'new')
+		where: (r, { eq, and }) => and(eq(r.status, 'new'), eq(r.isDeleted, false))
 	});
 
 	const form = await superValidate(zod(modifyAuctionSchema));

@@ -18,7 +18,6 @@
 	import { format, formatDate } from 'date-fns';
 	import PageWrapper from '$lib/components/custom/layout/page-wrapper.svelte';
 	import ListingSummaryCard from '$lib/components/custom/auctions/listing-summary-card.svelte';
-	import { Arc, Axis, Canvas, Chart, Group, LinearGradient, Spline, Svg, Text } from 'layerchart';
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
 	import { source } from 'sveltekit-sse';
 
@@ -49,8 +48,8 @@
 				<Alert.Title>No Auction Listings</Alert.Title>
 				<Alert.Description>
 					You have not created any auction listings yet. <a href="/auctions/listings/new"
-						>Create one now!</a
-					>
+				>Create one now!</a
+				>
 				</Alert.Description>
 			</Alert.Root>
 		{/if}
@@ -59,7 +58,6 @@
 			<Tabs.Root value="listings" class="col-span-4 ">
 				<Tabs.List class="w-full md:w-auto">
 					<Tabs.Trigger value="listings">Auction Listings</Tabs.Trigger>
-					<Tabs.Trigger value="stats">Stats</Tabs.Trigger>
 					<Tabs.Trigger value="holochain">Holochain Activities</Tabs.Trigger>
 				</Tabs.List>
 
@@ -70,92 +68,6 @@
 								<ListingSummaryCard listing={al} />
 							{/each}
 						{/if}
-					</div>
-				</Tabs.Content>
-
-				<Tabs.Content value="stats">
-					<Alert.Root>
-						<Alert.Description>
-							The stats displayed below are fake and just a placeholder. Once this alert is removed,
-							the stats will be live stats.
-						</Alert.Description>
-					</Alert.Root>
-					<div class="grid grid-cols-1 md:grid-cols-2">
-						<div class="h-56 w-full rounded p-4">
-							<p>Some Random Stat</p>
-							<Chart
-								data={[
-									{ date: new Date(2021, 0, 1), value: 10 },
-									{ date: new Date(2021, 0, 2), value: 20 },
-									{ date: new Date(2021, 0, 3), value: 14 },
-									{ date: new Date(2021, 0, 4), value: 16 },
-									{ date: new Date(2021, 0, 5), value: 18 },
-									{ date: new Date(2021, 0, 6), value: 60 },
-									{ date: new Date(2021, 0, 7), value: 70 }
-								]}
-								x="date"
-								y="value"
-								yDomain={[0, null]}
-								yNice
-								padding={{ left: 16, bottom: 24 }}
-							>
-								<Svg>
-									<Axis
-										placement="left"
-										grid
-										rule
-										classes={{
-											rule: '',
-											tick: '',
-											tickLabel: 'fill-foreground font-semibold'
-										}}
-									/>
-									<Axis
-										placement="bottom"
-										format={(d) => 'Y26 D261'}
-										rule
-										classes={{
-											rule: '',
-											tick: '',
-											tickLabel: 'fill-foreground font-semibold'
-										}}
-									/>
-									<Spline class="stroke-primary stroke-2" />
-								</Svg>
-							</Chart>
-						</div>
-						<div class="grid grid-cols-1 gap-3 md:grid-cols-2">
-							<div class="h-56 w-full rounded p-4">
-								<p>Your Current Rating</p>
-								<Chart>
-									<Svg center>
-										<Group y={16}>
-											<LinearGradient class="from-red-500 to-primary" let:gradient>
-												<Arc
-													value={78}
-													range={[-120, 120]}
-													outerRadius={60}
-													innerRadius={50}
-													cornerRadius={5}
-													spring
-													let:value
-													fill={gradient}
-													track={{ class: 'fill-none stroke-foreground/10' }}
-												>
-													<Text
-														value={`${Math.round(value) + '%'} Upvotes`}
-														textAnchor="middle"
-														verticalAnchor="middle"
-														fill="white"
-														class="text-sm tabular-nums text-primary"
-													/>
-												</Arc>
-											</LinearGradient>
-										</Group>
-									</Svg>
-								</Chart>
-							</div>
-						</div>
 					</div>
 				</Tabs.Content>
 

@@ -44,6 +44,12 @@
 					allowedRoles: PatronPermissionPolicy
 				},
 				{
+					title: 'Completed Auctions',
+					href: '/auctions/completed',
+					icon: 'tabler:check',
+					allowedRoles: AuctioneerPermissionPolicy
+				},
+				{
 					title: 'New Auction',
 					href: '/auctions/new',
 					icon: 'mdi:invoice-line-items',
@@ -53,11 +59,17 @@
 		},
 		{
 			title: 'Account Terminal',
-			href: '/account',
+			href: '/account/ledger',
 			icon: 'tabler:adjustments-search',
 			allowedRoles: PatronPermissionPolicy,
 			initialOpen: true,
 			nested: [
+				{
+					title: 'Account Ledger',
+					href: '/account/ledger',
+					icon: 'tabler:adjustments-search',
+					allowedRoles: PatronPermissionPolicy
+				},
 				{
 					title: 'AL Drafts',
 					href: '/auctions/draft-listings',
@@ -65,8 +77,8 @@
 					allowedRoles: PatronPermissionPolicy
 				},
 				{
-					title: 'My Account',
-					href: '/account',
+					title: 'Account Settings',
+					href: '/account/settings',
 					icon: 'tabler:adjustments-search',
 					allowedRoles: PatronPermissionPolicy
 				}

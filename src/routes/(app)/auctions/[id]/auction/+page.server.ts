@@ -6,7 +6,7 @@ import { auctions } from '$lib/server/db/schema/auctions.js';
 import { verifyRole } from '$lib/server/utils/verify-role.js';
 import { error } from '@sveltejs/kit';
 import axios from 'axios';
-import { asc } from 'drizzle-orm';
+import { asc, eq } from 'drizzle-orm';
 
 export const load = async ({ locals, params, depends }) => {
 	verifyRole({
@@ -86,9 +86,12 @@ export const actions = {
 			});
 		}
 
-		await db.update(auctions).set({
-			completedAt: new Date()
-		});
+		await db
+			.update(auctions)
+			.set({
+				completedAt: new Date()
+			})
+			.where(eq(auctions.id, params.id));
 
 		return {
 			message: 'Auction has been ended.'

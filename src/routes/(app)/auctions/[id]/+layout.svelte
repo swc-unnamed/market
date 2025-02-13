@@ -12,7 +12,15 @@
 	let user = $derived(data.user);
 	const sidebar = Sidebar.useSidebar();
 
-	let navTabValue = $state<'available' | 'details' | 'live_auction' | 'modify'>('details');
+	let navTabValue = $state<'available' | 'details' | 'live_auction' | 'modify' | 'admin'>(
+		'details'
+	);
+
+	$effect(() => {
+		if (page.url.pathname.includes('admin')) {
+			navTabValue = 'admin';
+		}
+	});
 </script>
 
 <Sidebar.Inset>
@@ -52,6 +60,12 @@
 							onclick={async () => {
 								await goto(`/auctions/${page.params.id}/auction`);
 							}}>Live Auction</Tabs.Trigger
+						>
+						<Tabs.Trigger
+							value="admin"
+							onclick={async () => {
+								await goto(`/auctions/${page.params.id}/admin`);
+							}}>Admin</Tabs.Trigger
 						>
 					{/if}
 				</Tabs.List>
