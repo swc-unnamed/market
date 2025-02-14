@@ -23,9 +23,7 @@ export const users = pgTable('users', {
 	scopes: text('scopes').array().notNull(),
 	role: text('role', { enum: Roles }).default('patron').notNull(),
 	banned: boolean('banned').default(false).notNull(),
-	bannedReason: text('banned_reason'),
-	refreshToken: text('refreshToken'),
-	refreshTokenExpires: bigint('refresh_token_expires', { mode: 'number' })
+	bannedReason: text('banned_reason')
 });
 
 export const userRelations = relations(users, ({ many }) => ({

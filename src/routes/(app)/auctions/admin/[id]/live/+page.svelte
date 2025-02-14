@@ -26,9 +26,9 @@
 	let selectedListingPurchasePrice = $state<string>('');
 	let drawerOpen = $state(false);
 	let recordingSale = $state(false);
-	let auctionIsCompleted = $derived(record.completedAt ? true : false);
+	let auctionIsCompleted = $derived(record.closed);
 
-	async function handleListingSale() {
+	async function handleSale() {
 		recordingSale = true;
 
 		const startPrice = selectedListing?.startingPrice;
@@ -72,9 +72,9 @@
 			<div class="mb-3 flex items-center justify-between">
 				<h1>Live Auction for <span class="text-primary">{record.title}</span></h1>
 				<form action="?/end" method="post" use:enhance>
-					<Button variant="secondary" disabled={auctionIsCompleted} size="sm" type="submit"
-						>End Auction</Button
-					>
+					<Button variant="secondary" disabled={auctionIsCompleted} size="sm" type="submit">
+						End Auction
+					</Button>
 				</form>
 			</div>
 			<p class="text-sm">
@@ -235,7 +235,7 @@
 			<Button
 				disabled={recordingSale}
 				onclick={async () => {
-					await handleListingSale();
+					await handleSale();
 				}}
 			>
 				{#if recordingSale}

@@ -12,8 +12,9 @@ import { eq } from 'drizzle-orm';
 import { fail, message, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
-export const load = async ({ locals, params }) => {
+export const load = async ({ locals, params, depends }) => {
 	guard(locals, AuctioneerPermissionPolicy);
+	depends('auction_details');
 
 	const record = await db.query.auctions.findFirst({
 		where: (r, { eq }) => eq(r.id, params.id),
@@ -67,14 +68,7 @@ export const load = async ({ locals, params }) => {
 
 export const actions = {
 	save: async ({ params, locals, request }) => {
-		const canPerform = verifyRole({
-			userRole: locals.user.role,
-			allowedRoles: AuctioneerPermissionPolicy
-		});
-
-		if (!canPerform) {
-			return fail(403, { message: 'Unauthorized' });
-		}
+		guard(locals, AuctioneerPermissionPolicy);
 
 		const record = await db.query.auctions.findFirst({
 			where: (r, { eq }) => eq(r.id, params.id),
@@ -150,14 +144,7 @@ export const actions = {
 	},
 
 	delete: async ({ params, locals }) => {
-		const canPerform = verifyRole({
-			userRole: locals.user.role,
-			allowedRoles: AuctioneerPermissionPolicy
-		});
-
-		if (!canPerform) {
-			return fail(403, { message: 'Unauthorized' });
-		}
+		guard(locals, AuctioneerPermissionPolicy);
 
 		const record = await db.query.auctions.findFirst({
 			where: (r, { eq }) => eq(r.id, params.id),
@@ -195,5 +182,30 @@ export const actions = {
 		await db.delete(auctions).where(eq(auctions.id, record.id));
 
 		return redirect(303, '/auctions');
+	},
+
+	/**
+	 * Mark a listing record as complete.
+	 */
+	markListingRecordComplete: async ({ params, locals, request }) => {
+		guard(locals, AuctioneerPermissionPolicy);
+		const formData = await request.formData();
+		const auctionId = params.id;
+		const listingId = formData.get('listingId') as string;
+
+		if (!auctionId || !listingId) {
+			return fail(400, { message: 'Missing required parameters.' });
+		}
+
+		try {
+			await db
+				.update(auctionListings)
+				.set({
+					status: 'completed'
+				})
+				.where(eq(auctionListings.id, listingId));
+		} catch (e) {
+			return fail(500, { message: 'Failed to update listing status.' });
+		}
 	}
 };

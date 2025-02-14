@@ -5,6 +5,10 @@
 	<title>Privacy Policy | Terms of Use - Unnamed Market</title>
 </svelte:head>
 
+<div class="mx-auto max-w-3xl">
+	<img src="/assets/unnamed-banner.png" alt="Unnamed Market" class="w-full" />
+</div>
+
 <div class="mx-auto mt-10 max-w-3xl rounded-lg p-6 shadow-lg">
 	<h1 class="mb-4 text-3xl font-bold">Terms of Use</h1>
 
@@ -57,7 +61,9 @@
 	</p>
 
 	<p class="mt-6 text-sm text-gray-600">
-		These terms are subject to change at any time without notice.
+		These terms are subject to change at any time without notice. That being said, we will make an
+		attempt to notify users of changes. After all, we're all in this to have fun and make the galaxy
+		a better place.
 	</p>
 </div>
 
@@ -98,11 +104,50 @@
 		that users follow best security practices when using our platform.
 	</p>
 
-	<h2 class="mb-2 mt-6 text-2xl font-semibold">6. Changes to This Policy</h2>
+	<h2 class="mb-2 mt-6 text-2xl font-semibold">6. Cookies</h2>
+	<div class="mb-4 space-y-3">
+		<div class="grid grid-cols-1 gap-2 rounded-md bg-secondary p-2 md:grid-cols-2">
+			<h3>um_session</h3>
+			<p>Used to identify the user on the platform.</p>
+		</div>
+
+		<div class="grid grid-cols-1 gap-2 rounded-md bg-secondary p-2 md:grid-cols-2">
+			<h3>um_combine_access_token</h3>
+			<p>Server side encrypted SWCombine Access Token. Used to talk with the SWCombine API.</p>
+		</div>
+
+		<div class="grid grid-cols-1 gap-2 rounded-md bg-secondary p-2 md:grid-cols-2">
+			<h3>um_combine_refresh_token</h3>
+			<p>
+				Server side encrypted SWCombine Refresh Token. Used to refresh the access token once it
+				expires.
+			</p>
+		</div>
+
+		<div class="grid grid-cols-1 gap-2 rounded-md bg-secondary p-2 md:grid-cols-2">
+			<h3>sidebar:state</h3>
+			<p>Helps to remember the state of the sidebar (open or closed) between page loads.</p>
+		</div>
+	</div>
+
+	<h2 class="mb-2 mt-6 text-2xl font-semibold">7. Changes to This Policy</h2>
 	<p class="mb-4">
 		We reserve the right to update this privacy policy as needed. Users will be notified of
 		significant changes.
 	</p>
 
 	<p class="mt-6 text-sm text-gray-600">Last updated: 2025.02.14</p>
+</div>
+
+<div class="mx-auto mt-10 max-w-3xl rounded-lg p-6 shadow-lg">
+	<h1 class="mb-4 text-3xl font-bold">NOTICE OF NON-AFFILIATION</h1>
+	<p class="mb-4">
+		WE ARE NOT AFFILIATED, ASSOCIATED, AUTHORIZED, ENDORSED BY, OR IN ANY WAY OFFICIALLY CONNECTED
+		WITH ANY OTHER COMPANY, AGENCY OR GOVERNMENT AGENCY.
+	</p>
+
+	<p>
+		ALL PRODUCT AND COMPANY NAMES ARE TRADEMARKS™️ OR REGISTERED ©️ TRADEMARKS OF THEIR RESPECTIVE
+		HOLDERS. USE OF THEM DOES NOT IMPLY ANY AFFILIATION WITH OR ENDORSEMENT BY THEM.
+	</p>
 </div>

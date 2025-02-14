@@ -28,7 +28,7 @@
 			href: '/auctions',
 			icon: 'tabler:gavel',
 			allowedRoles: PatronPermissionPolicy,
-			initialOpen: true,
+			initialOpen: false,
 			nested: [
 				{
 					title: 'New Auction Listing',
@@ -43,18 +43,6 @@
 					icon: 'tabler:gavel',
 					allowedRoles: PatronPermissionPolicy
 				}
-				// {
-				// 	title: 'Completed Auctions',
-				// 	href: '/auctions/completed',
-				// 	icon: 'tabler:check',
-				// 	allowedRoles: AuctioneerPermissionPolicy
-				// },
-				// {
-				// 	title: 'New Auction',
-				// 	href: '/auctions/new',
-				// 	icon: 'mdi:invoice-line-items',
-				// 	allowedRoles: AuctioneerPermissionPolicy
-				// }
 			]
 		},
 		{
@@ -62,23 +50,14 @@
 			href: '/auctions/admin',
 			icon: 'tabler:settings',
 			allowedRoles: AuctioneerPermissionPolicy,
-			initialOpen: true,
-			nested: [
-				{
-					// See all auctions, edit existing auctions, and create new auctions
-					title: 'Auctions',
-					href: '/auctions/admin',
-					icon: 'tabler:gavel',
-					allowedRoles: AuctioneerPermissionPolicy
-				}
-			]
+			initialOpen: false
 		},
 		{
 			title: 'Account Terminal',
 			href: '/account/ledger',
 			icon: 'tabler:adjustments-search',
 			allowedRoles: PatronPermissionPolicy,
-			initialOpen: true,
+			initialOpen: false,
 			nested: [
 				{
 					title: 'Account Ledger',
@@ -105,7 +84,7 @@
 			href: '/entities',
 			icon: 'tabler:database',
 			allowedRoles: PatronPermissionPolicy,
-			initialOpen: true,
+			initialOpen: false,
 			nested: [
 				{
 					title: 'Entity Database',
@@ -189,7 +168,7 @@
 										{#if route?.nested?.length}
 											<Icon
 												icon="tabler:chevron-right"
-												class="ml-auto h-6 w-6 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
+												class="ml-auto size-6 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
 											/>
 										{/if}
 									</Sidebar.MenuButton>
@@ -215,7 +194,7 @@
 																			{...props}
 																		>
 																			{#if subItem.icon}
-																				<Icon icon={subItem.icon} class="h-6 w-6" />
+																				<Icon icon={subItem.icon} class="size-6" />
 																			{/if}
 																			<span>{subItem.title}</span>
 																		</a>

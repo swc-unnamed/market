@@ -1,67 +1,91 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-	import PageWrapper from '$lib/components/custom/layout/page-wrapper.svelte';
-	import {
-		Card,
-		CardHeader,
-		CardTitle,
-		CardDescription,
-		CardContent
-	} from '$lib/components/ui/card';
-	import { Table, TableHeader, TableRow, TableCell, TableBody } from '$lib/components/ui/table';
-	import { cn } from '$lib/utils.js';
+	import { goto, preloadData } from '$app/navigation';
+	import * as Table from '$lib/components/ui/table/index.js';
+	import * as Card from '$lib/components/ui/card/index.js';
+	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
 	import Icon from '@iconify/svelte';
-	import { format } from 'date-fns';
+	import { SwcTimestamp } from 'swcombine.js';
+	import { cn } from '$lib/utils.js';
 
 	let { data } = $props();
 </script>
 
-<PageWrapper title="Completed Auctions">
-	<Card>
-		<CardHeader>
-			<CardTitle>Completed Auctions</CardTitle>
-			<CardDescription>List of completed auctions.</CardDescription>
-		</CardHeader>
-		<CardContent>
-			<Table>
-				<TableHeader>
-					<TableRow>
-						<TableCell>Title</TableCell>
-						<TableCell>Started</TableCell>
-						<TableCell>Completed</TableCell>
-						<TableCell>Pending Actions</TableCell>
-						<TableCell>Actions</TableCell>
-					</TableRow>
-				</TableHeader>
-				<TableBody>
-					{#each data.auctions as auction}
-						{@const pendingActions = auction.listings.filter(
-							(l) => l.status !== 'completed'
-						).length}
-						<TableRow>
-							<TableCell>{auction.title}</TableCell>
-							<TableCell>{format(auction.startAt, 'yyyy-MM-dd HH:mm')}</TableCell>
-							<TableCell
-								>{auction.completedAt
-									? format(auction.completedAt, 'yyyy-MM-dd HH:mm')
-									: 'N/A'}</TableCell
-							>
-							<TableCell class={cn(pendingActions > 0 ? 'text-danger' : '')}
-								>{pendingActions}</TableCell
-							>
-							<TableCell>
-								<Icon
-									onclick={async () => {
-										await goto(`/auctions/${auction.id}/admin`);
-									}}
-									class="size-6 rounded-md hover:cursor-pointer hover:text-primary"
-									icon="tabler:subtask"
-								/>
-							</TableCell>
-						</TableRow>
-					{/each}
-				</TableBody>
-			</Table>
-		</CardContent>
-	</Card>
-</PageWrapper>
+<Card.Root>
+	<Card.Header>
+		<Card.Title>Completed Auctions</Card.Title>
+	</Card.Header>
+	<Card.Content>
+		<Table.Root>
+			<Table.Caption>
+				Current CGT: {SwcTimestamp.now().toString('Y{y} D{d} {h}:{m}')}
+			</Table.Caption>
+			<Table.Header>
+				<Table.Row>
+					<Table.Head>Title</Table.Head>
+					<Table.Head>Start Date</Table.Head>
+					<Table.Head>Completed</Table.Head>
+					<Table.Head>
+						<div class="grid grid-cols-2 gap-1">
+							<Tooltip.Root>
+								<Tooltip.Trigger>
+									<span>
+										<Icon
+											icon="tabler:circle-dotted-letter-n"
+											class="-ml-2 hidden size-6 md:block"
+										/>
+									</span>
+								</Tooltip.Trigger>
+								<Tooltip.Content>Number of listings in the Auction.</Tooltip.Content>
+							</Tooltip.Root>
+							<Tooltip.Root>
+								<Tooltip.Trigger>
+									<span>
+										<Icon
+											icon="tabler:circle-dotted-letter-p"
+											class="-ml-2 hidden size-6 md:block"
+										/>
+									</span>
+								</Tooltip.Trigger>
+								<Tooltip.Content>
+									Number of listings that have not been marked Complete.
+								</Tooltip.Content>
+							</Tooltip.Root>
+						</div>
+					</Table.Head>
+				</Table.Row>
+			</Table.Header>
+			<Table.Body>
+				{#each data.auctions as auction}
+					{@const numListings = auction.listings.length}
+					{@const openListings = auction.listings
+						.map((x) => x.status !== 'completed')
+						.filter((x) => x).length}
+					<Table.Row
+						class={cn('hover:cursor-pointer', !auction.closed && 'border-l-2 border-l-green-500')}
+						onclick={async () => goto(`/auctions/admin/${auction.id}/details`)}
+						onmouseenter={async () => preloadData(`/auctions/admin/${auction.id}/details`)}
+					>
+						<Table.Cell>{auction.title}</Table.Cell>
+						<Table.Cell>
+							{SwcTimestamp.fromDate(auction.startAt).toString('Y{y} D{d} {h}:{m}')}
+						</Table.Cell>
+						<Table.Cell>
+							{#if auction.completedAt}
+								{SwcTimestamp.fromDate(auction.completedAt).toString('Y{y} D{d} {h}:{m}')}
+							{:else}
+								N/A
+							{/if}
+						</Table.Cell>
+						<Table.Cell>
+							<div class="grid grid-cols-2 gap-1">
+								<span>{numListings}</span>
+
+								<span class={cn(openListings > 0 && 'text-danger')}>{openListings}</span>
+							</div>
+						</Table.Cell>
+					</Table.Row>
+				{/each}
+			</Table.Body>
+		</Table.Root>
+	</Card.Content>
+</Card.Root>

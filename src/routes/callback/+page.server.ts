@@ -24,19 +24,19 @@ async function getUserFromSwc(code: string) {
 		}
 	});
 
-	console.log(data);
-
-	const encryption = new Encryption();
-	const encryptedToken = encryption.encrypt(data.refresh_token);
-	const timeNow = Date.now();
-
-	const expireTime = timeNow + data.expires_in * 1000;
-
 	const { data: user } = await axios.get<Character>('https://www.swcombine.com/ws/v2.0/character', {
 		headers: {
 			Authorization: `OAuth ${data.access_token}`
 		}
 	});
+
+	const encryption = new Encryption();
+	const encryptedRefreshToken = encryption.encrypt(data.refresh_token);
+	const timeNow = Date.now();
+	const expireTime = timeNow + data.expires_in * 1000;
+
+	const encryptedAccessToken = encryption.encrypt(data.access_token);
+	const accessTokenExpireTime = timeNow + data.expires_in * 1000;
 
 	return {
 		name: user.swcapi.character.name,
@@ -44,8 +44,10 @@ async function getUserFromSwc(code: string) {
 		avatar: user.swcapi.character.image,
 		joinDate: new Date(),
 		scopes: data.scope,
-		refreshToken: encryptedToken,
-		refreshTokenExpires: expireTime
+		refreshToken: encryptedRefreshToken,
+		refreshTokenExpires: expireTime,
+		accessToken: encryptedAccessToken,
+		accessTokenExpires: accessTokenExpireTime
 	};
 }
 
@@ -56,7 +58,9 @@ function makeImpersonatedUser(devHandle: string, devUid: string) {
 		avatar: '',
 		scopes: 'character_read',
 		refreshToken: 'fake',
-		refreshTokenExpires: Date.now() + 3960 * 1000
+		refreshTokenExpires: Date.now() + 3960 * 1000,
+		accessToken: 'fake',
+		accessTokenExpires: Date.now() + 3960 * 1000
 	};
 }
 
@@ -87,36 +91,36 @@ export const load = async ({ url, cookies }) => {
 			combineId: user.combineId,
 			avatar: user.avatar,
 			joinDate: new Date(),
-			scopes: formattedScopes,
-			refreshToken: user.refreshToken,
-			refreshTokenExpires: user.refreshTokenExpires
+			scopes: formattedScopes
 		})
 		.onConflictDoUpdate({
 			target: [users.combineId],
 			set: {
 				name: user.name,
 				scopes: formattedScopes,
-				refreshToken: user.refreshToken,
-				refreshTokenExpires: user.refreshTokenExpires,
 				...((user.avatar && { avatar: user.avatar }) || {})
 			}
 		})
 		.returning({ ...getTableColumns(users) });
 
-	const token = jwt.sign(
-		{
-			id: uimUser[0].id
-		},
-		env.UIM_AUTH_KEY,
-		{
-			expiresIn: '2w'
-		}
-	);
+	const token = jwt.sign({ id: uimUser[0].id }, env.UIM_AUTH_KEY, { expiresIn: '2w' });
 
-	cookies.set('uim_session', token, {
+	cookies.set('um_session', token, {
 		path: '/',
 		httpOnly: true,
 		expires: new Date(Date.now() + 12096e5)
+	});
+
+	cookies.set('um_combine_access_token', user.accessToken, {
+		path: '/',
+		httpOnly: true,
+		expires: new Date(user.accessTokenExpires)
+	});
+
+	cookies.set('um_combine_refresh_token', user.refreshToken, {
+		path: '/',
+		httpOnly: true,
+		expires: new Date(user.refreshTokenExpires)
 	});
 
 	redirect(303, '/home');

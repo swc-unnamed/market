@@ -10,7 +10,7 @@
 	let { children } = $props();
 </script>
 
-<PageWrapper title="Auction Admin">
+<PageWrapper title="Auction Administration">
 	{#snippet right()}
 		<Tabs.Root class="hidden md:flex" bind:value={navTabValue}>
 			<Tabs.List>

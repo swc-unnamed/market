@@ -12,18 +12,21 @@
 	import Icon from '@iconify/svelte';
 	import { format } from 'date-fns';
 	import { toast } from 'svelte-sonner';
-	import SuperDebug, { superForm } from 'sveltekit-superforms';
+	import { superForm } from 'sveltekit-superforms';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
 	import AurebeshText from '$lib/components/custom/shared/aurebesh-text.svelte';
 	import { cn } from '$lib/utils.js';
 	import { SwcTimestamp } from 'swcombine.js';
+	import { enhance } from '$app/forms';
+	import { invalidate } from '$app/navigation';
+	import { formatAuctionListingStatus } from '$lib/helpers/auctions.js';
+	import { Badge } from '$lib/components/ui/badge/index.js';
 
 	let { data } = $props();
 	let record = $derived(data.record);
+	const editable = $derived(!record.closed);
 
-	let editable = !record.closed;
-
-	const { form, enhance } = superForm(data.form, {
+	const { form, enhance: formEnhance } = superForm(data.form, {
 		dataType: 'json',
 		onResult: ({ result }) => {
 			console.log(result);
@@ -80,7 +83,7 @@
 							</AlertDialog.Content>
 						</AlertDialog.Root>
 
-						<form method="post" action="?/save" use:enhance>
+						<form method="post" action="?/save" use:formEnhance>
 							<Button variant="action" size="sm" type="submit">
 								<AurebeshText text="S" />
 								<span>Save</span>
@@ -138,20 +141,61 @@
 						/>
 						<div class="flex w-full flex-col items-center gap-3 md:flex-row md:justify-between">
 							<div class="flex flex-col">
-								<span class="-mb-1">{listing.title}</span>
+								<div class="flex items-start gap-1">
+									<span class="mb-0">
+										{listing.title}
+									</span>
+									<Badge class="-mt-1 text-xs" variant="secondary">
+										{formatAuctionListingStatus(listing.status)}
+									</Badge>
+								</div>
 								<span style="font-family: 'Galactic Basic" class="text-xs">
 									${integerToCredit(listing.startingPrice ?? 0)}
 								</span>
 							</div>
 
-							<HoverCard.Root>
-								<HoverCard.Trigger>
-									<Button disabled={!record.closed} size="sm" variant="action">
-										Mark as Complete
-									</Button>
+							<HoverCard.Root disabled>
+								<HoverCard.Trigger class="hover:no-underline">
+									<form
+										action="?/markListingRecordComplete"
+										method="post"
+										use:enhance={() => {
+											return async ({ result }) => {
+												switch (result.type) {
+													case 'success':
+														toast.success('Listing marked as complete!');
+														await invalidate('auction_details');
+														break;
+													case 'failure':
+														toast.error(result.data?.message as string);
+														break;
+													default:
+														toast.error('An error occurred while marking the listing as complete.');
+														break;
+												}
+											};
+										}}
+									>
+										<Button
+											type="submit"
+											name="listingId"
+											value={listing.id}
+											disabled={!record.closed || listing.status === 'completed'}
+											size="sm"
+											variant="action"
+											class="hover:no-underline"
+										>
+											Mark as Complete
+										</Button>
+									</form>
 								</HoverCard.Trigger>
-								<HoverCard.Content class="text-xs">
-									In order to mark this listing as complete, the auction must be closed.
+								<HoverCard.Content draggable class="text-xs">
+									{#if record.closed}
+										Mark this listing as complete. You should only press this once you have sent the
+										credits to the seller and the asset to the buyer.
+									{:else}
+										In order to mark this listing as complete, the auction must be closed.
+									{/if}
 								</HoverCard.Content>
 							</HoverCard.Root>
 						</div>

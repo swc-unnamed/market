@@ -56,9 +56,7 @@
 <Card.Root class="w-full">
 	<Card.Header>
 		<Card.Title>
-			<div class="flex flex-col">
-				<span class="truncate text-lg">{listing.title}</span>
-			</div>
+			{listing.title}
 		</Card.Title>
 	</Card.Header>
 	<Card.Content class="-mt-3 flex flex-col gap-2">
@@ -78,7 +76,7 @@
 										/>
 									{:else}
 										<AssetImage
-											class="mx-auto block w-[350px] rounded-md border border-secondary shadow-md drop-shadow-md"
+											class="mx-auto block h-64 rounded-md border border-secondary shadow-md drop-shadow-md"
 											id={item.entityId}
 											large
 										/>

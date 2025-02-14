@@ -85,7 +85,7 @@
 							<div class="grid grid-cols-2 gap-1">
 								<span>{numListings}</span>
 
-								<span>{openListings}</span>
+								<span class={cn(openListings > 0 && 'text-danger')}>{openListings}</span>
 							</div>
 						</Table.Cell>
 					</Table.Row>

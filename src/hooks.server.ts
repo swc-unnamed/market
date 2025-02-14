@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 
 export const handle: Handle = async ({ event, resolve }) => {
 	// Obtain the session token from the cookies
-	const sessionToken = event.cookies.get('uim_session');
+	const sessionToken = event.cookies.get('um_session');
 
 	// These routes do not require authentication to access
 	const anonRoutes = ['/login', '/callback', '/api/combine/handlecheck'];

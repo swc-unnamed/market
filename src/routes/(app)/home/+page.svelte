@@ -41,15 +41,15 @@
 
 <PageWrapper title="Home" displayTitle={false}>
 	<div class="mb-4 space-y-4">
-		<img class=" w-full rounded-lg" src={'/assets/unnamed-banner.png'} alt="Banner" />
+		<img class="z-10 w-full rounded-lg" src={'/assets/unnamed-banner.png'} alt="Banner" />
 
 		{#if auctionListings.length < 1}
 			<Alert.Root class="border-primary">
 				<Alert.Title>No Auction Listings</Alert.Title>
 				<Alert.Description>
 					You have not created any auction listings yet. <a href="/auctions/listings/new"
-				>Create one now!</a
-				>
+						>Create one now!</a
+					>
 				</Alert.Description>
 			</Alert.Root>
 		{/if}
