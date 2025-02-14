@@ -68,6 +68,9 @@ importers:
       pg:
         specifier: ^8.13.1
         version: 8.13.1
+      swcombine.js:
+        specifier: ^0.0.11
+        version: 0.0.11
     devDependencies:
       '@eslint/compat':
         specifier: ^1.2.3
@@ -2856,6 +2859,9 @@ packages:
       '@sveltejs/kit': 1.x || 2.x
       svelte: 3.x || 4.x || >=5.0.0-next.51
 
+  swcombine.js@0.0.11:
+    resolution: {integrity: sha512-XcpiBYFOo4eXCsxfSuFXXlbIbckLXknKaymzS4IreQHdxnLsWzQFAyNnqihgf/JqX4WvpiGGMaJM2VuaogFCtg==}
+
   tailwind-merge@2.6.0:
     resolution: {integrity: sha512-P+Vu1qXfzediirmHOC3xKGAYeZtPcV9g76X+xg2FD4tYgR71ewMA35Y3sCz3zhiN/dwefRpJX0yBcgwi1fXNQA==}
 
@@ -5492,6 +5498,8 @@ snapshots:
     transitivePeerDependencies:
       - '@types/json-schema'
       - typescript
+
+  swcombine.js@0.0.11: {}
 
   tailwind-merge@2.6.0: {}
 

@@ -1,4 +1,5 @@
 import { AuctioneerPermissionPolicy } from '$lib/consts/permission-policies.js';
+import { guard } from '$lib/helpers/guard.js';
 import { modifyAuctionSchema } from '$lib/models/zod/auctions/modify-auction.schema';
 import { db } from '$lib/server/db';
 import { auctionListingHistory } from '$lib/server/db/schema/auction-listing-history.js';
@@ -12,20 +13,26 @@ import { fail, message, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
 export const load = async ({ locals, params }) => {
-	verifyRole({
-		userRole: locals.user.role,
-		allowedRoles: AuctioneerPermissionPolicy
-	});
+	guard(locals, AuctioneerPermissionPolicy);
 
 	const record = await db.query.auctions.findFirst({
 		where: (r, { eq }) => eq(r.id, params.id),
 		with: {
 			listings: {
-				columns: {
-					id: true,
-					title: true,
-					startingPrice: true,
-					status: true
+				with: {
+					items: {
+						with: {
+							asset: true,
+							entity: true
+						}
+					},
+					listedBy: {
+						columns: {
+							id: true,
+							avatar: true,
+							name: true
+						}
+					}
 				}
 			}
 		}
@@ -37,7 +44,7 @@ export const load = async ({ locals, params }) => {
 		});
 	}
 
-	const listingRecords = await db.query.auctionListings.findMany({
+	const listingRecords = db.query.auctionListings.findMany({
 		where: (r, { eq, and }) => and(eq(r.status, 'new'), eq(r.isDeleted, false))
 	});
 

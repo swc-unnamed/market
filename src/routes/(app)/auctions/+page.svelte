@@ -38,7 +38,7 @@
 						</div>
 					</Card.Content>
 					<Card.Footer class="flex justify-end">
-						<Button variant="link" href={`/auctions/${record.id}/details`}>View Auction</Button>
+						<Button variant="link" href={`/auctions/${record.id}`}>View Auction</Button>
 					</Card.Footer>
 				</Card.Root>
 			{/each}

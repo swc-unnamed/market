@@ -78,6 +78,7 @@
 		"jsonwebtoken": "^9.0.2",
 		"layerchart": "^0.91.1",
 		"nanoid": "^5.0.9",
-		"pg": "^8.13.1"
+		"pg": "^8.13.1",
+		"swcombine.js": "^0.0.11"
 	}
 }

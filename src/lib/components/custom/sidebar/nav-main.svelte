@@ -42,17 +42,33 @@
 					href: '/auctions',
 					icon: 'tabler:gavel',
 					allowedRoles: PatronPermissionPolicy
-				},
+				}
+				// {
+				// 	title: 'Completed Auctions',
+				// 	href: '/auctions/completed',
+				// 	icon: 'tabler:check',
+				// 	allowedRoles: AuctioneerPermissionPolicy
+				// },
+				// {
+				// 	title: 'New Auction',
+				// 	href: '/auctions/new',
+				// 	icon: 'mdi:invoice-line-items',
+				// 	allowedRoles: AuctioneerPermissionPolicy
+				// }
+			]
+		},
+		{
+			title: 'Auction Admin',
+			href: '/auctions/admin',
+			icon: 'tabler:settings',
+			allowedRoles: AuctioneerPermissionPolicy,
+			initialOpen: true,
+			nested: [
 				{
-					title: 'Completed Auctions',
-					href: '/auctions/completed',
-					icon: 'tabler:check',
-					allowedRoles: AuctioneerPermissionPolicy
-				},
-				{
-					title: 'New Auction',
-					href: '/auctions/new',
-					icon: 'mdi:invoice-line-items',
+					// See all auctions, edit existing auctions, and create new auctions
+					title: 'Auctions',
+					href: '/auctions/admin',
+					icon: 'tabler:gavel',
 					allowedRoles: AuctioneerPermissionPolicy
 				}
 			]
@@ -72,12 +88,12 @@
 				},
 				{
 					title: 'AL Drafts',
-					href: '/auctions/draft-listings',
+					href: '/account/draft-listings',
 					icon: 'tabler:git-pull-request-draft',
 					allowedRoles: PatronPermissionPolicy
 				},
 				{
-					title: 'Account Settings',
+					title: 'Settings',
 					href: '/account/settings',
 					icon: 'tabler:adjustments-search',
 					allowedRoles: PatronPermissionPolicy

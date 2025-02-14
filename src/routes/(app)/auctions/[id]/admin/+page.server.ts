@@ -41,7 +41,8 @@ export const actions = {
 		await db
 			.update(auctionListings)
 			.set({
-				status: 'completed'
+				status: 'completed',
+				completedAt: new Date()
 			})
 			.where(eq(auctionListings.id, id));
 

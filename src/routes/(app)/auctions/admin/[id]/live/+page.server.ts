@@ -89,7 +89,8 @@ export const actions = {
 		await db
 			.update(auctions)
 			.set({
-				completedAt: new Date()
+				completedAt: new Date(),
+				closed: true
 			})
 			.where(eq(auctions.id, params.id));
 

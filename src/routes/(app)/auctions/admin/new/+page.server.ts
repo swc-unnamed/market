@@ -7,6 +7,7 @@ import { verifyRole } from '$lib/server/utils/verify-role';
 import { eq } from 'drizzle-orm';
 import { fail, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
+import { SwcTimestamp } from 'swcombine.js';
 
 export const load = async ({ locals }) => {
 	verifyRole({
@@ -19,6 +20,8 @@ export const load = async ({ locals }) => {
 	});
 
 	const form = await superValidate(zod(newAuctionSchema));
+
+	form.data.title = SwcTimestamp.now().toString('Y{y} D{d}');
 
 	return {
 		listingRecords: listingRecords,

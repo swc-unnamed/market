@@ -1,6 +1,6 @@
 import { createId } from '@paralleldrive/cuid2';
 import { relations } from 'drizzle-orm';
-import { pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { boolean, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 import { auctionListings } from './auction-listings';
 import { users } from './users';
 
@@ -14,7 +14,8 @@ export const auctions = pgTable('auctions', {
 		.references(() => users.id),
 	title: text('title').notNull(),
 	startAt: timestamp('start_at').notNull(),
-	completedAt: timestamp('completed_at')
+	completedAt: timestamp('completed_at'),
+	closed: boolean('closed').notNull().default(false)
 });
 
 export const auctionRelations = relations(auctions, ({ many, one }) => ({
