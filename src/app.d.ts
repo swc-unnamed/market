@@ -1,6 +1,7 @@
 // See https://svelte.dev/docs/kit/types#app.d.ts
 // for information about these interfaces
-import type { Role } from '$lib/consts/roles';
+
+import { Role } from '@prisma/client';
 
 declare global {
 	namespace App {

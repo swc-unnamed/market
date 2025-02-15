@@ -1,5 +1,5 @@
 import { env } from '$env/dynamic/private';
-import { db } from '$lib/server/db';
+import { prisma } from '$lib/prisma';
 import { redirect, type Handle } from '@sveltejs/kit';
 import jwt from 'jsonwebtoken';
 
@@ -30,26 +30,25 @@ export const handle: Handle = async ({ event, resolve }) => {
 		// Decode the session token
 		const decoded = jwt.verify(sessionToken, env.UIM_AUTH_KEY) as { id: string };
 
-		// Find the user record in the database
-		const userRecord = await db.query.users.findFirst({
-			where: (q, { eq }) => eq(q.id, decoded.id)
+		const u = await prisma.user.findUnique({
+			where: { id: decoded.id }
 		});
 
-		if (!userRecord) {
+		if (!u) {
 			return redirect(303, '/login');
 		}
 
-		if (userRecord.banned) {
+		if (u.banned) {
 			return redirect(303, `/login?banned=true`);
 		}
 
 		// Attach the user record to the event
 		event.locals.user = {
-			id: userRecord.id,
-			name: userRecord.name,
-			avatar: userRecord.avatar,
-			role: userRecord.role,
-			scopes: userRecord.scopes.join(' ')
+			id: u.id,
+			name: u.name,
+			avatar: u.avatar,
+			role: u.role,
+			scopes: u.scopes.join(' ')
 		};
 
 		return await resolve(event);

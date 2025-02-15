@@ -15,7 +15,11 @@
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "drizzle-kit migrate",
 		"db:studio": "drizzle-kit studio",
-		"db:seed": "tsx ./src/lib/server/db/seed/seed.ts"
+		"db:seed": "tsx ./src/lib/server/db/seed/seed.ts",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:push": "prisma db push",
+    "prisma:studio": "prisma studio",
+    "prisma:generate": "prisma generate"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.2.3",
@@ -42,6 +46,7 @@
 		"prettier": "^3.3.2",
 		"prettier-plugin-svelte": "^3.2.6",
 		"prettier-plugin-tailwindcss": "^0.6.5",
+		"prisma": "^6.3.1",
 		"svelte": "^5.0.0",
 		"svelte-check": "^4.0.0",
 		"svelte-sonner": "^0.3.28",
@@ -62,6 +67,7 @@
 		"@libsql/client": "^0.9.0",
 		"@number-flow/svelte": "^0.3.3",
 		"@paralleldrive/cuid2": "^2.2.2",
+		"@prisma/client": "^6.3.1",
 		"@tailwindcss/container-queries": "^0.1.1",
 		"@tailwindcss/forms": "^0.5.9",
 		"@tailwindcss/typography": "^0.5.15",

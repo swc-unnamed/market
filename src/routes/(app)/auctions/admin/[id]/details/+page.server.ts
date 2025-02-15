@@ -2,7 +2,6 @@ import { AuctioneerPermissionPolicy } from '$lib/consts/permission-policies.js';
 import { guard } from '$lib/helpers/guard.js';
 import { modifyAuctionSchema } from '$lib/models/zod/auctions/modify-auction.schema';
 import { db } from '$lib/server/db';
-import { auctionListingHistory } from '$lib/server/db/schema/auction-listing-history.js';
 import { auctionListings } from '$lib/server/db/schema/auction-listings.js';
 import { auctions } from '$lib/server/db/schema/auctions.js';
 import { verifyRole } from '$lib/server/utils/verify-role.js';
@@ -114,12 +113,6 @@ export const actions = {
 						auctionId: null
 					})
 					.where(eq(auctionListings.id, listing.id));
-
-				await tx.insert(auctionListingHistory).values({
-					event: 'status_updated',
-					listingId: listing.id,
-					message: 'Listing deselected from auction.'
-				});
 			}
 
 			for (const listingId of selectedListings) {
@@ -133,12 +126,6 @@ export const actions = {
 						auctionId: record.id
 					})
 					.where(eq(auctionListings.id, listingId));
-
-				await tx.insert(auctionListingHistory).values({
-					event: 'status_updated',
-					listingId: listingId,
-					message: 'Listing selected for auction.'
-				});
 			}
 		});
 	},
@@ -170,12 +157,6 @@ export const actions = {
 						auctionId: null
 					})
 					.where(eq(auctionListings.id, listing.id));
-
-				await tx.insert(auctionListingHistory).values({
-					event: 'status_updated',
-					listingId: listing.id,
-					message: 'Auction deleted, listing status returned to new.'
-				});
 			});
 		}
 

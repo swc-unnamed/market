@@ -1,10 +1,10 @@
-import { db } from '$lib/server/db/index.js';
-import { assets, entities } from '$lib/server/db/schema';
-import { asc } from 'drizzle-orm';
+import { prisma } from '$lib/prisma';
 
 export const load = async () => {
-	const records = await db.query.entities.findMany({
-		orderBy: asc(entities.name)
+	const records = await prisma.entity.findMany({
+		orderBy: {
+			name: 'asc'
+		}
 	});
 
 	return {

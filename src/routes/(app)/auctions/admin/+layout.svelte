@@ -16,9 +16,6 @@
 			<Tabs.List>
 				<Tabs.Trigger href="/auctions/admin" value="home">Home</Tabs.Trigger>
 				<Tabs.Trigger href="/auctions/admin/new" value="new">New Auction</Tabs.Trigger>
-				<Tabs.Trigger href="/auctions/admin/completed" value="completed">
-					Completed Auctions
-				</Tabs.Trigger>
 			</Tabs.List>
 		</Tabs.Root>
 

@@ -1,10 +1,10 @@
 <script lang="ts">
 	import PageWrapper from '$lib/components/custom/layout/page-wrapper.svelte';
-	import SnackbarActionButton from '$lib/components/custom/layout/snackbar-nav.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Card from '$lib/components/ui/card';
 	import { AuctioneerPermissionPolicy } from '$lib/consts/permission-policies.js';
 	import { format } from 'date-fns';
+	import { SwcTimestamp } from 'swcombine.js';
 
 	let { data } = $props();
 
@@ -33,7 +33,8 @@
 					</Card.Header>
 					<Card.Content>
 						<div class="flex flex-col gap-1">
-							<p>Start: {format(record.startAt, 'yyyy-MM-dd HH:mm')}</p>
+							<p>Starts: {SwcTimestamp.fromDate(record.startAt).toString()}</p>
+							<p class="text-xs text-muted">Start: {format(record.startAt, 'yyyy-MM-dd HH:mm')}</p>
 							<p>This auction has {record.listings.length} listings.</p>
 						</div>
 					</Card.Content>

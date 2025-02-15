@@ -26,7 +26,7 @@
 		} | null;
 		items?: {
 			entityId: string | null;
-			customImageUrl: string | null;
+			customImage: string | null;
 			uniqueItem: boolean | null;
 			entity: {
 				id: string;
@@ -68,9 +68,9 @@
 							{#if item.entityId}
 								<Carousel.Item class="w-full">
 									<span class="ml-1 text-xs text-primary">{item.entity?.name}</span>
-									{#if item.customImageUrl}
+									{#if item.customImage}
 										<img
-											src={item.customImageUrl}
+											src={item.customImage}
 											alt="custom_image"
 											class="mx-auto block rounded-md border border-secondary shadow-md drop-shadow-md"
 										/>

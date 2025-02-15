@@ -9,6 +9,8 @@ import { users } from '$lib/server/db/schema/users.js';
 import { dev } from '$app/environment';
 import { Encryption } from '$lib/server/utils/encryption.js';
 
+import { prisma } from '$lib/prisma';
+
 async function getUserFromSwc(code: string) {
 	const params = new URLSearchParams();
 	params.append('client_id', env.COMBINE_CLIENT_ID);
@@ -84,6 +86,24 @@ export const load = async ({ url, cookies }) => {
 
 	const formattedScopes = user.scopes.split(' ').map((s: string) => s);
 
+	const u = await prisma.user.upsert({
+		where: {
+			combineId: user.combineId
+		},
+		create: {
+			name: user.name,
+			combineId: user.combineId,
+			avatar: user.avatar,
+			joinDate: new Date(),
+			scopes: formattedScopes
+		},
+		update: {
+			name: user.name,
+			avatar: user.avatar,
+			scopes: formattedScopes
+		}
+	});
+
 	const uimUser = await db
 		.insert(users)
 		.values({
@@ -103,7 +123,7 @@ export const load = async ({ url, cookies }) => {
 		})
 		.returning({ ...getTableColumns(users) });
 
-	const token = jwt.sign({ id: uimUser[0].id }, env.UIM_AUTH_KEY, { expiresIn: '2w' });
+	const token = jwt.sign({ id: u.id }, env.UIM_AUTH_KEY, { expiresIn: '2w' });
 
 	cookies.set('um_session', token, {
 		path: '/',

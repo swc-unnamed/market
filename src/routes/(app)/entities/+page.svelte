@@ -1,17 +1,13 @@
 <script lang="ts">
-	import { columns, type Asset } from '$lib/components/custom/assets/column.js';
-	import DataTable from '$lib/components/custom/assets/data-table.svelte';
-	import LayoutWrapper from '$lib/components/custom/layout/layout-wrapper.svelte';
 	import Icon from '$lib/components/custom/shared/icon.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import type { entities } from '$lib/server/db/schema/entities.js';
-	import type { InferSelectModel } from 'drizzle-orm';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
 	import Label from '$lib/components/ui/label/label.svelte';
 	import * as Table from '$lib/components/ui/table/index.js';
 	import { toast } from 'svelte-sonner';
 	import { invalidateAll } from '$app/navigation';
+	import PageWrapper from '$lib/components/custom/layout/page-wrapper.svelte';
 
 	let { data } = $props();
 
@@ -59,7 +55,7 @@
 	});
 </script>
 
-<LayoutWrapper title="Entities">
+<PageWrapper title="Entities">
 	{#snippet right()}
 		{#if ['market_tzar', 'holochain_architect'].includes(data.user.role)}
 			<Button
@@ -147,4 +143,4 @@
 			{/each}
 		</Table.Body>
 	</Table.Root>
-</LayoutWrapper>
+</PageWrapper>

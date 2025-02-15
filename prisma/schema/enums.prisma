@@ -1,0 +1,44 @@
+enum Role {
+  patron
+  auctioneer
+  holochain_architect
+  market_tzar
+}
+
+enum WebhookType {
+  discord
+}
+
+enum EntityType {
+  droids
+  creatures
+  items
+  vehicles
+  weapons
+  facilities
+  ships
+  stations
+  materials
+  npcs
+}
+
+enum AssetLedgerAction {
+  auction_listed
+  auction_sold
+  market_listed
+  market_sold
+}
+
+enum AuctionListingStatus {
+  draft
+  new
+  selected
+  sold
+  completed
+}
+
+enum AuctionStatus {
+  pending
+  started
+  closed
+}

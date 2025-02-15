@@ -1,6 +1,4 @@
 <script lang="ts">
-	import LayoutWrapper from '$lib/components/custom/layout/layout-wrapper.svelte';
-	import { Input } from '$lib/components/ui/input';
 	import * as Table from '$lib/components/ui/table';
 	import * as Avatar from '$lib/components/ui/avatar';
 	import { cn } from '$lib/utils.js';

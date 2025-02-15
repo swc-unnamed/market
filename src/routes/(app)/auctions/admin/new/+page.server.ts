@@ -1,22 +1,18 @@
+import { AuctioneerPermissionPolicy } from '$lib/consts/permission-policies';
+import { guard } from '$lib/helpers/guard.js';
 import { newAuctionSchema } from '$lib/models/zod/auctions';
-import { db } from '$lib/server/db/index.js';
-import { auctionListingHistory } from '$lib/server/db/schema/auction-listing-history.js';
-import { auctionListings } from '$lib/server/db/schema/auction-listings.js';
-import { auctions } from '$lib/server/db/schema/auctions.js';
-import { verifyRole } from '$lib/server/utils/verify-role';
-import { eq } from 'drizzle-orm';
+import { prisma } from '$lib/prisma.js';
 import { fail, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { SwcTimestamp } from 'swcombine.js';
 
 export const load = async ({ locals }) => {
-	verifyRole({
-		userRole: locals.user.role,
-		allowedRoles: ['auctioneer', 'magistrate', 'holochain_architect', 'market_tzar']
-	});
+	guard(locals, AuctioneerPermissionPolicy);
 
-	const listingRecords = await db.query.auctionListings.findMany({
-		where: (r, { and, eq }) => and(eq(r.status, 'new'), eq(r.isDeleted, false))
+	const listingRecords = await prisma.auctionListing.findMany({
+		where: {
+			status: 'new'
+		}
 	});
 
 	const form = await superValidate(zod(newAuctionSchema));
@@ -31,10 +27,7 @@ export const load = async ({ locals }) => {
 
 export const actions = {
 	create: async ({ locals, request }) => {
-		verifyRole({
-			userRole: locals.user.role,
-			allowedRoles: ['auctioneer', 'magistrate', 'holochain_architect', 'market_tzar']
-		});
+		guard(locals, AuctioneerPermissionPolicy);
 
 		const form = await superValidate(request, zod(newAuctionSchema));
 
@@ -45,29 +38,23 @@ export const actions = {
 			});
 		}
 
-		await db.transaction(async (tx) => {
-			const auction = await tx
-				.insert(auctions)
-				.values({
-					createdById: locals.user.id,
-					startAt: new Date(form.data.startAt),
-					title: form.data.title
-				})
-				.returning({ id: auctions.id });
+		await prisma.$transaction(async (tx) => {
+			const auction = await tx.auction.create({
+				data: {
+					title: form.data.title,
+					startAt: new Date(form.data.startAt)
+				}
+			});
 
 			for (const listingId of form.data.listings) {
-				await tx
-					.update(auctionListings)
-					.set({
-						auctionId: auction[0].id,
+				await tx.auctionListing.update({
+					where: {
+						id: listingId
+					},
+					data: {
+						auctionId: auction.id,
 						status: 'selected'
-					})
-					.where(eq(auctionListings.id, listingId));
-
-				await tx.insert(auctionListingHistory).values({
-					event: 'status_updated',
-					listingId: listingId,
-					message: `Listing selected for auction.`
+					}
 				});
 			}
 		});

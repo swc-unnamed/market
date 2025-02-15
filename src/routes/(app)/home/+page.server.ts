@@ -1,21 +1,24 @@
-import { db } from '$lib/server/db/index.js';
-import { auctionListings } from '$lib/server/db/schema/auction-listings.js';
-import { asc } from 'drizzle-orm';
+import { prisma } from '$lib/prisma.js';
 
 export const load = async ({ locals }) => {
-	const records = await db.query.auctionListings.findMany({
-		where: (r, { inArray, and, eq }) =>
-			and(inArray(r.status, ['new', 'selected']), eq(r.isDeleted, false)),
-		orderBy: asc(auctionListings.listingNumber),
-		with: {
+	const records = await prisma.auctionListing.findMany({
+		where: {
+			status: {
+				in: ['new', 'selected']
+			}
+		},
+		orderBy: {
+			listingNumber: 'asc'
+		},
+		include: {
 			items: {
-				with: {
+				include: {
 					asset: true,
 					entity: true
 				}
 			},
 			listedBy: {
-				columns: {
+				select: {
 					id: true,
 					name: true,
 					avatar: true
@@ -24,13 +27,25 @@ export const load = async ({ locals }) => {
 		}
 	});
 
-	const assetLedger = await db.query.assetLedger.findMany({
-		where: (r, { between }) =>
-			between(r.time, new Date(Date.now() - 72 * 60 * 60 * 1000), new Date())
+	const filteredRecords = records.map((record) => {
+		if (record.anonymousListing) {
+			const { listedBy, ...rest } = record;
+			return rest;
+		}
+
+		return record;
+	});
+
+	const assetLedger = await prisma.assetLedger.findMany({
+		where: {
+			time: {
+				gte: new Date(Date.now() - 72 * 60 * 60 * 1000)
+			}
+		}
 	});
 
 	return {
-		records: records,
+		records: filteredRecords,
 		assetLedger: assetLedger
 	};
 };

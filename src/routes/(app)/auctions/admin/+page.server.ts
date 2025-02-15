@@ -1,18 +1,21 @@
 import { AuctioneerPermissionPolicy } from '$lib/consts/permission-policies.js';
 import { guard } from '$lib/helpers/guard.js';
-import { db } from '$lib/server/db/index.js';
-import { auctions } from '$lib/server/db/schema/auctions.js';
-import { desc } from 'drizzle-orm';
+import { prisma } from '$lib/prisma.js';
 
-export const load = async ({ locals }) => {
+export const load = async ({ locals, url }) => {
 	guard(locals, AuctioneerPermissionPolicy);
+	const MAX_PAGE_SIZE = 50;
+	const page = parseInt(url.searchParams.get('page') as string) || 1;
 
-	const records = await db.query.auctions.findMany({
-		limit: 10,
-		orderBy: desc(auctions.completedAt),
-		with: {
+	const records = await prisma.auction.findMany({
+		orderBy: {
+			closedAt: 'desc'
+		},
+		skip: (page - 1) * MAX_PAGE_SIZE,
+		take: MAX_PAGE_SIZE,
+		include: {
 			listings: {
-				columns: {
+				select: {
 					id: true,
 					status: true
 				}
@@ -21,6 +24,13 @@ export const load = async ({ locals }) => {
 	});
 
 	return {
-		auctions: records
+		data: {
+			meta: {
+				page: page,
+				pageSize: MAX_PAGE_SIZE,
+				total: await prisma.auction.count()
+			},
+			auctions: records
+		}
 	};
 };

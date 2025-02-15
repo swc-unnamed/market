@@ -14,9 +14,7 @@
 	<Card.Header>
 		<Card.Title>Auction Administration Terminal</Card.Title>
 		<Card.Description>
-			Welcome to the Auction Administration Terminal. Here you can view and manage auctions. To view
-			auction details, click on a row. We are currently showing the last 10 auctions, but to view
-			more select <span class="text-primary">Completed Auctions</span> up top.
+			Welcome to the Auction Administration Terminal. Here you can view and manage auctions.
 		</Card.Description>
 	</Card.Header>
 	<Card.Content>
@@ -60,7 +58,7 @@
 				</Table.Row>
 			</Table.Header>
 			<Table.Body>
-				{#each data.auctions as auction}
+				{#each data.data.auctions as auction}
 					{@const numListings = auction.listings.length}
 					{@const openListings = auction.listings
 						.map((x) => x.status !== 'completed')
@@ -75,8 +73,8 @@
 							{SwcTimestamp.fromDate(auction.startAt).toString('Y{y} D{d} {h}:{m}')}
 						</Table.Cell>
 						<Table.Cell>
-							{#if auction.completedAt}
-								{SwcTimestamp.fromDate(auction.completedAt).toString('Y{y} D{d} {h}:{m}')}
+							{#if auction.closedAt}
+								{SwcTimestamp.fromDate(auction.closedAt).toString('Y{y} D{d} {h}:{m}')}
 							{:else}
 								N/A
 							{/if}

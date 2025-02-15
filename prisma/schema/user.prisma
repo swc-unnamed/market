@@ -1,0 +1,31 @@
+model User {
+  id                  String           @id @default(cuid())
+  name                String           @unique
+  combineId           String           @unique @map("combine_id")
+  discordId           String?          @unique @map("discord_id")
+  avatar              String?
+  scopes              String[]
+  joinDate            DateTime         @default(now()) @map("join_date")
+  role                Role             @default(patron)
+  upvotes             Int              @default(0)
+  downvotes           Int              @default(0)
+  banned              Boolean          @default(false)
+  bannedReason        String?          @map("banned_reason")
+  webhooks            UserWebhook[]
+  auctionListingsSold AuctionListing[] @relation(name: "auction_listings_sold")
+  auctionListingsWon  AuctionListing[] @relation(name: "auction_listings_won")
+
+  @@map("users")
+}
+
+model UserWebhook {
+  id           String      @id @default(cuid())
+  userId       String      @map("user_id")
+  user         User        @relation(fields: [userId], references: [id])
+  type         WebhookType
+  webhook      String
+  createdAt    DateTime    @default(now()) @map("created_at")
+  lastUsed     DateTime?   @map("last_used")
+  successCount Int         @default(0) @map("success_count")
+  failureCount Int         @default(0) @map("failure_count")
+}

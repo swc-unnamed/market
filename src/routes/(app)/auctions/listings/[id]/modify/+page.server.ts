@@ -1,10 +1,9 @@
 import { creditToInteger, integerToCredit } from '$lib/helpers/currency-conversion.js';
 import { addItemAuctionListingSchema } from '$lib/models/zod/auctions/listings/add-item-auction-listing.schema.js';
 import { modifyAuctionListingSchema } from '$lib/models/zod/auctions/listings/modify-auction-listing.schema.js';
+import { prisma } from '$lib/prisma.js';
 import { db } from '$lib/server/db/index.js';
-import { assets, auctionListingItems, auctionListings, entities } from '$lib/server/db/schema';
 import { error, json, redirect } from '@sveltejs/kit';
-import { asc, eq } from 'drizzle-orm';
 import { fail, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
@@ -13,11 +12,11 @@ export const load = async ({ params, locals, depends }) => {
 
 	depends('auction_listing_modify');
 
-	const listingRecord = await db.query.auctionListings.findFirst({
-		where: (r, { eq }) => eq(r.id, id),
-		with: {
+	const listingRecord = await prisma.auctionListing.findUnique({
+		where: { id: id },
+		include: {
 			items: {
-				with: {
+				include: {
 					entity: true,
 					asset: true
 				}
@@ -37,8 +36,10 @@ export const load = async ({ params, locals, depends }) => {
 		throw redirect(303, `/auctions/listings/${id}`);
 	}
 
-	const entityRecords = await db.query.entities.findMany({
-		orderBy: asc(entities.name)
+	const entities = await prisma.entity.findMany({
+		orderBy: {
+			name: 'asc'
+		}
 	});
 
 	const itemForm = await superValidate(zod(addItemAuctionListingSchema));
@@ -49,16 +50,14 @@ export const load = async ({ params, locals, depends }) => {
 		title: listingRecord.title,
 		details: listingRecord.description,
 		location: listingRecord.location,
-		startingPrice: listingRecord.startingPrice
-			? integerToCredit(listingRecord.startingPrice)
-			: null,
-		listerIsAnon: listingRecord.listerIsAnon,
+		startingBid: listingRecord.startingBid ? integerToCredit(listingRecord.startingBid) : undefined,
+		anonymousListing: listingRecord.anonymousListing,
 		sendCreditsTo: listingRecord.sendCreditsTo
 	};
 
 	return {
 		listingRecord: listingRecord,
-		entityRecords: entityRecords,
+		entityRecords: entities,
 		itemForm: itemForm,
 		listingForm: listingForm
 	};
@@ -72,17 +71,17 @@ export const actions = {
 			return fail(400, { listingForm: form });
 		}
 
-		await db
-			.update(auctionListings)
-			.set({
+		await prisma.auctionListing.update({
+			where: { id: params.id },
+			data: {
 				title: form.data.title,
 				description: form.data.details,
 				location: form.data.location,
-				startingPrice: form.data.startingPrice ? creditToInteger(form.data.startingPrice) : null,
-				listerIsAnon: form.data.listerIsAnon,
+				startingBid: form.data.startingBid ? creditToInteger(form.data.startingBid) : undefined,
+				anonymousListing: form.data.anonymousListing,
 				sendCreditsTo: form.data.sendCreditsTo
-			})
-			.where(eq(auctionListings.id, params.id));
+			}
+		});
 	},
 	addItem: async ({ request, params }) => {
 		const form = await superValidate(request, zod(addItemAuctionListingSchema));
@@ -91,39 +90,34 @@ export const actions = {
 			return fail(400, { itemForm: form });
 		}
 
-		await db.transaction(async (tx) => {
+		await prisma.$transaction(async (tx) => {
 			let assetId: string | null = null;
 
 			if (form.data.combineId) {
-				const asset = await tx
-					.insert(assets)
-					.values({
+				const asset = await tx.asset.create({
+					data: {
 						entityId: form.data.entityId,
-						combineId: Number(form.data.combineId),
-						customImageUrl: form.data.customImageUrl,
+						combineId: form.data.combineId,
+						customImage: form.data.customImageUrl,
 						type: form.data.entityType
-					})
-					.returning({ id: assets.id });
+					}
+				});
 
-				assetId = asset[0].id;
+				assetId = asset.id;
 			}
 
-			await tx
-				.insert(auctionListingItems)
-				.values({
-					listingId: params.id,
+			const item = await tx.auctionListingItem.create({
+				data: {
+					auctionListingId: params.id,
 					entityId: form.data.entityId,
 					assetId: assetId,
 					uuu: form.data.uuu,
 					quantity: form.data.quantity,
-					customImageUrl: form.data.customImageUrl,
-					customItem: form.data.customItem,
-					customItemName: form.data.customItem ? form.data.customItemName : null,
+					isCustomItem: form.data.customItem,
+					customImage: form.data.customImageUrl,
 					uniqueItem: form.data.uniqueItem
-				})
-				.returning({
-					id: auctionListingItems.id
-				});
+				}
+			});
 
 			return {
 				itemForm: form

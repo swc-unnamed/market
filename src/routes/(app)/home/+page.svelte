@@ -1,39 +1,16 @@
 <script lang="ts">
-	import LayoutWrapper from '$lib/components/custom/layout/layout-wrapper.svelte';
-	import SnackbarActionButton from '$lib/components/custom/layout/snackbar-nav.svelte';
 	import { type CarouselAPI } from '$lib/components/ui/carousel/context.js';
 
 	import * as Card from '$lib/components/ui/card';
 	import * as Alert from '$lib/components/ui/alert';
-	import Button from '$lib/components/ui/button/button.svelte';
-	import { Badge } from '$lib/components/ui/badge/index.js';
-	import { formatAuctionListingStatus } from '$lib/helpers/auctions.js';
-	import { goto, preloadData } from '$app/navigation';
-	import AssetImage from '$lib/components/custom/assets/asset-image.svelte';
-	import * as Carousel from '$lib/components/ui/carousel/index.js';
-	import Separator from '$lib/components/ui/separator/separator.svelte';
-	import { integerToCredit } from '$lib/helpers/currency-conversion.js';
-	import Icon from '@iconify/svelte';
 	import * as Table from '$lib/components/ui/table/index.js';
-	import { format, formatDate } from 'date-fns';
+	import { format } from 'date-fns';
 	import PageWrapper from '$lib/components/custom/layout/page-wrapper.svelte';
 	import ListingSummaryCard from '$lib/components/custom/auctions/listing-summary-card.svelte';
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
-	import { source } from 'sveltekit-sse';
+	import { SwcTimestamp } from 'swcombine.js';
 
 	let { data } = $props();
-	let api = $state<CarouselAPI>();
-	let current = $state(0);
-	const count = $derived(api ? api.scrollSnapList().length : 0);
-
-	$effect(() => {
-		if (api) {
-			current = api.selectedScrollSnap() + 1;
-			api.on('select', () => {
-				current = api!.selectedScrollSnap() + 1;
-			});
-		}
-	});
 
 	let auctionListings = $derived(data.records);
 	let assetLedger = $derived(data.assetLedger);
@@ -76,6 +53,10 @@
 						<Card.Root>
 							<Card.Header>
 								<Card.Title>Recent Holochain Activities</Card.Title>
+								<Card.Description>
+									TODO: Add a holochain ledger for when an entity is posted, regardless of the type
+									of entity or asset
+								</Card.Description>
 							</Card.Header>
 
 							<Card.Content class="text-xs">
@@ -90,7 +71,7 @@
 									<Table.Body>
 										{#each assetLedger as al (al.id)}
 											<Table.Row>
-												<Table.Cell>{format(al.time, 'HH:mm')}</Table.Cell>
+												<Table.Cell>{SwcTimestamp.fromDate(al.time).toString()}</Table.Cell>
 												<Table.Cell>{al.id}</Table.Cell>
 												<Table.Cell>{al.action}</Table.Cell>
 											</Table.Row>
