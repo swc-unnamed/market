@@ -1,16 +1,12 @@
 <script lang="ts">
-	import LayoutWrapper from '$lib/components/custom/layout/layout-wrapper.svelte';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
-	import * as Tooltip from '$lib/components/ui/tooltip';
 	import * as HoverCard from '$lib/components/ui/hover-card';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
-	import { Separator } from '$lib/components/ui/separator';
 	import { integerToCredit } from '$lib/helpers/currency-conversion';
 	import Icon from '@iconify/svelte';
-	import { format } from 'date-fns';
 	import { toast } from 'svelte-sonner';
 	import { superForm } from 'sveltekit-superforms';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
@@ -150,7 +146,7 @@
 									</Badge>
 								</div>
 								<span style="font-family: 'Galactic Basic" class="text-xs">
-									${integerToCredit(listing.startingPrice ?? 0)}
+									${integerToCredit(listing.startingBid ?? 0)}
 								</span>
 							</div>
 
@@ -206,13 +202,13 @@
 							<p>Listed By:</p>
 							<p
 								class={cn(
-									listing.listerIsAnon &&
+									listing.anonymousListing &&
 										'text-danger blur-sm transition-all duration-300 hover:blur-none'
 								)}
 							>
 								{listing.listedBy?.name}
 							</p>
-							{#if listing.listerIsAnon}
+							{#if listing.anonymousListing}
 								<HoverCard.Root>
 									<HoverCard.Trigger>
 										<Icon icon="tabler:info-circle" class="text-primary" />
@@ -259,7 +255,7 @@
 							<div class="flex flex-col">
 								<span class="-mb-1">{listing.title}</span>
 								<span style="font-family: 'Galactic Basic" class="text-xs"
-									>${integerToCredit(listing.startingPrice ?? 0)}</span
+									>${integerToCredit(listing.startingBid ?? 0)}</span
 								>
 							</div>
 						</div>
