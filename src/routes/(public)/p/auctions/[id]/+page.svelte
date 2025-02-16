@@ -48,7 +48,7 @@
 	<title>{record.title} | Unnamed Market</title>
 	<meta
 		property="og:description"
-		content={`Unnamed Imperium Market - Your gateway to the holochain. This auction has ${record.listings.length} listings.`}
+		content={`Unnamed Market - Your gateway to the holochain. This auction has ${record.listings.length} listings.`}
 	/>
 </svelte:head>
 

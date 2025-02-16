@@ -10,7 +10,7 @@
 </script>
 
 <svelte:head>
-	<meta property="og:title" content="Unnamed Imperium Market" />
+	<meta property="og:title" content="Unnamed Market" />
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content={data.baseUrl} />
 	<meta property="og:image" content={`${data.baseUrl}/assets/uim-17.png`} />
