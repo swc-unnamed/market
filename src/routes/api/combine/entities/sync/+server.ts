@@ -1,5 +1,4 @@
-import { db } from '$lib/server/db/index.js';
-import { entities } from '$lib/server/db/schema/entities.js';
+import { prisma } from '$lib/prisma.js';
 import axios from 'axios';
 
 export const GET = async ({ locals, setHeaders }) => {
@@ -108,24 +107,21 @@ async function syncShips() {
 			const apiUrl = d.attributes.href;
 			const name = d.value;
 
-			console.log(`name: ${name}, uid: ${uid}`);
-
-			await db
-				.insert(entities)
-				.values({
+			await prisma.entity.upsert({
+				where: { uid: uid },
+				create: {
 					name: name,
-					type: 'ships',
 					uid: uid,
+					type: 'ships',
 					apiLink: apiUrl
-				})
-				.onConflictDoUpdate({
-					target: [entities.uid],
-					set: {
-						name: name,
-						apiLink: apiUrl,
-						type: 'ships'
-					}
-				});
+				},
+				update: {
+					name: name,
+					apiLink: apiUrl,
+					uid: uid,
+					type: 'ships'
+				}
+			});
 		}
 
 		i += 50;
@@ -160,24 +156,21 @@ async function syncVehicles() {
 			const apiUrl = d.attributes.href;
 			const name = d.value;
 
-			console.log(`name: ${name}, uid: ${uid}`);
-
-			await db
-				.insert(entities)
-				.values({
+			await prisma.entity.upsert({
+				where: { uid: uid },
+				create: {
 					name: name,
-					type: 'vehicles',
 					uid: uid,
+					type: 'vehicles',
 					apiLink: apiUrl
-				})
-				.onConflictDoUpdate({
-					target: [entities.uid],
-					set: {
-						name: name,
-						apiLink: apiUrl,
-						type: 'vehicles'
-					}
-				});
+				},
+				update: {
+					name: name,
+					apiLink: apiUrl,
+					uid: uid,
+					type: 'vehicles'
+				}
+			});
 		}
 
 		i += 50;
@@ -214,22 +207,21 @@ async function syncStations() {
 
 			console.log(`name: ${name}, uid: ${uid}`);
 
-			await db
-				.insert(entities)
-				.values({
+			await prisma.entity.upsert({
+				where: { uid: uid },
+				create: {
 					name: name,
-					type: 'stations',
 					uid: uid,
+					type: 'stations',
 					apiLink: apiUrl
-				})
-				.onConflictDoUpdate({
-					target: [entities.uid],
-					set: {
-						name: name,
-						apiLink: apiUrl,
-						type: 'stations'
-					}
-				});
+				},
+				update: {
+					name: name,
+					apiLink: apiUrl,
+					uid: uid,
+					type: 'stations'
+				}
+			});
 		}
 
 		i += 50;
@@ -264,24 +256,21 @@ async function syncFacilities() {
 			const apiUrl = d.attributes.href;
 			const name = d.value;
 
-			console.log(`name: ${name}, uid: ${uid}`);
-
-			await db
-				.insert(entities)
-				.values({
+			await prisma.entity.upsert({
+				where: { uid: uid },
+				create: {
 					name: name,
-					type: 'facilities',
 					uid: uid,
+					type: 'facilities',
 					apiLink: apiUrl
-				})
-				.onConflictDoUpdate({
-					target: [entities.uid],
-					set: {
-						name: name,
-						apiLink: apiUrl,
-						type: 'facilities'
-					}
-				});
+				},
+				update: {
+					name: name,
+					apiLink: apiUrl,
+					uid: uid,
+					type: 'facilities'
+				}
+			});
 		}
 
 		i += 50;
@@ -313,24 +302,21 @@ async function syncItems() {
 			const apiUrl = d.attributes.href;
 			const name = d.value;
 
-			console.log(`name: ${name}, uid: ${uid}`);
-
-			await db
-				.insert(entities)
-				.values({
+			await prisma.entity.upsert({
+				where: { uid: uid },
+				create: {
 					name: name,
-					type: 'facilities',
 					uid: uid,
+					type: 'items',
 					apiLink: apiUrl
-				})
-				.onConflictDoUpdate({
-					target: [entities.uid],
-					set: {
-						name: name,
-						apiLink: apiUrl,
-						type: 'items'
-					}
-				});
+				},
+				update: {
+					name: name,
+					apiLink: apiUrl,
+					uid: uid,
+					type: 'items'
+				}
+			});
 		}
 
 		i += 50;
@@ -362,24 +348,21 @@ async function syncNpcs() {
 			const apiUrl = d.attributes.href;
 			const name = d.value;
 
-			console.log(`name: ${name}, uid: ${uid}`);
-
-			await db
-				.insert(entities)
-				.values({
+			await prisma.entity.upsert({
+				where: { uid: uid },
+				create: {
 					name: name,
-					type: 'npcs',
 					uid: uid,
+					type: 'npcs',
 					apiLink: apiUrl
-				})
-				.onConflictDoUpdate({
-					target: [entities.uid],
-					set: {
-						name: name,
-						apiLink: apiUrl,
-						type: 'npcs'
-					}
-				});
+				},
+				update: {
+					name: name,
+					apiLink: apiUrl,
+					uid: uid,
+					type: 'npcs'
+				}
+			});
 		}
 
 		i += 50;
@@ -411,24 +394,21 @@ async function syncDroids() {
 			const apiUrl = d.attributes.href;
 			const name = d.value;
 
-			console.log(`name: ${name}, uid: ${uid}`);
-
-			await db
-				.insert(entities)
-				.values({
+			await prisma.entity.upsert({
+				where: { uid: uid },
+				create: {
 					name: name,
-					type: 'droids',
 					uid: uid,
+					type: 'droids',
 					apiLink: apiUrl
-				})
-				.onConflictDoUpdate({
-					target: [entities.uid],
-					set: {
-						name: name,
-						apiLink: apiUrl,
-						type: 'droids'
-					}
-				});
+				},
+				update: {
+					name: name,
+					apiLink: apiUrl,
+					uid: uid,
+					type: 'droids'
+				}
+			});
 		}
 
 		i += 50;
@@ -463,24 +443,21 @@ async function syncMaterials() {
 			const apiUrl = d.attributes.href;
 			const name = d.value;
 
-			console.log(`name: ${name}, uid: ${uid}`);
-
-			await db
-				.insert(entities)
-				.values({
+			await prisma.entity.upsert({
+				where: { uid: uid },
+				create: {
 					name: name,
-					type: 'materials',
 					uid: uid,
+					type: 'materials',
 					apiLink: apiUrl
-				})
-				.onConflictDoUpdate({
-					target: [entities.uid],
-					set: {
-						name: name,
-						apiLink: apiUrl,
-						type: 'materials'
-					}
-				});
+				},
+				update: {
+					name: name,
+					apiLink: apiUrl,
+					uid: uid,
+					type: 'materials'
+				}
+			});
 		}
 
 		i += 50;
@@ -515,24 +492,21 @@ async function syncWeapons() {
 			const apiUrl = d.attributes.href;
 			const name = d.value;
 
-			console.log(`name: ${name}, uid: ${uid}`);
-
-			await db
-				.insert(entities)
-				.values({
+			await prisma.entity.upsert({
+				where: { uid: uid },
+				create: {
 					name: name,
-					type: 'weapons',
 					uid: uid,
+					type: 'weapons',
 					apiLink: apiUrl
-				})
-				.onConflictDoUpdate({
-					target: [entities.uid],
-					set: {
-						name: name,
-						apiLink: apiUrl,
-						type: 'weapons'
-					}
-				});
+				},
+				update: {
+					name: name,
+					apiLink: apiUrl,
+					uid: uid,
+					type: 'weapons'
+				}
+			});
 		}
 
 		i += 50;
@@ -567,24 +541,21 @@ async function syncCreatures() {
 			const apiUrl = d.attributes.href;
 			const name = d.value;
 
-			console.log(`name: ${name}, uid: ${uid}`);
-
-			await db
-				.insert(entities)
-				.values({
+			await prisma.entity.upsert({
+				where: { uid: uid },
+				create: {
 					name: name,
-					type: 'creatures',
 					uid: uid,
+					type: 'creatures',
 					apiLink: apiUrl
-				})
-				.onConflictDoUpdate({
-					target: [entities.uid],
-					set: {
-						name: name,
-						apiLink: apiUrl,
-						type: 'creatures'
-					}
-				});
+				},
+				update: {
+					name: name,
+					apiLink: apiUrl,
+					uid: uid,
+					type: 'creatures'
+				}
+			});
 		}
 
 		i += 50;

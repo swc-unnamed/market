@@ -14,6 +14,8 @@ RUN pnpm install
 
 RUN pnpm build
 
+RUN pnpm prisma:generate
+
 USER node:node
 
 EXPOSE 3000:3000

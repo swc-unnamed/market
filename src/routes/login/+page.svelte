@@ -86,8 +86,7 @@
 				<Card.Root class="sm:w-2/3 md:w-3/4">
 					<Card.Content class="text-center text-muted-foreground">
 						<p>
-							Welcome to UM. <br /> You must authenticate with the
-							<a href="https://www.swcombine.com" target="_blank">Combine</a> before you can continue.
+							Welcome to UM. <br /> You must authenticate with the Combine before you can continue.
 						</p>
 					</Card.Content>
 					<Card.Footer class="flex flex-col items-center">
@@ -107,6 +106,12 @@
 								Impersonate user (developer option)
 							</Button>
 						{/if}
+
+						<span class="text-xs text-muted-foreground">
+							By continuing, you agree to our <a href="/privacy-tou"
+								>Privacy Policy and Terms of Use</a
+							>
+						</span>
 					</Card.Footer>
 				</Card.Root>
 			</div>

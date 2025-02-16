@@ -2,12 +2,11 @@ import { redirect } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
 import axios from 'axios';
 import type { Character } from '$lib/models/combine/character';
-import { db } from '$lib/server/db/index.js';
-import { getTableColumns } from 'drizzle-orm';
 import jwt from 'jsonwebtoken';
-import { users } from '$lib/server/db/schema/users.js';
 import { dev } from '$app/environment';
 import { Encryption } from '$lib/server/utils/encryption.js';
+
+import { prisma } from '$lib/prisma';
 
 async function getUserFromSwc(code: string) {
 	const params = new URLSearchParams();
@@ -24,19 +23,19 @@ async function getUserFromSwc(code: string) {
 		}
 	});
 
-	console.log(data);
-
-	const encryption = new Encryption();
-	const encryptedToken = encryption.encrypt(data.refresh_token);
-	const timeNow = Date.now();
-
-	const expireTime = timeNow + data.expires_in * 1000;
-
 	const { data: user } = await axios.get<Character>('https://www.swcombine.com/ws/v2.0/character', {
 		headers: {
 			Authorization: `OAuth ${data.access_token}`
 		}
 	});
+
+	const encryption = new Encryption();
+	const encryptedRefreshToken = encryption.encrypt(data.refresh_token);
+	const timeNow = Date.now();
+	const expireTime = timeNow + data.expires_in * 1000;
+
+	const encryptedAccessToken = encryption.encrypt(data.access_token);
+	const accessTokenExpireTime = timeNow + data.expires_in * 1000;
 
 	return {
 		name: user.swcapi.character.name,
@@ -44,8 +43,10 @@ async function getUserFromSwc(code: string) {
 		avatar: user.swcapi.character.image,
 		joinDate: new Date(),
 		scopes: data.scope,
-		refreshToken: encryptedToken,
-		refreshTokenExpires: expireTime
+		refreshToken: encryptedRefreshToken,
+		refreshTokenExpires: expireTime,
+		accessToken: encryptedAccessToken,
+		accessTokenExpires: accessTokenExpireTime
 	};
 }
 
@@ -56,7 +57,9 @@ function makeImpersonatedUser(devHandle: string, devUid: string) {
 		avatar: '',
 		scopes: 'character_read',
 		refreshToken: 'fake',
-		refreshTokenExpires: Date.now() + 3960 * 1000
+		refreshTokenExpires: Date.now() + 3960 * 1000,
+		accessToken: 'fake',
+		accessTokenExpires: Date.now() + 3960 * 1000
 	};
 }
 
@@ -80,43 +83,42 @@ export const load = async ({ url, cookies }) => {
 
 	const formattedScopes = user.scopes.split(' ').map((s: string) => s);
 
-	const uimUser = await db
-		.insert(users)
-		.values({
+	const u = await prisma.user.upsert({
+		where: {
+			combineId: user.combineId
+		},
+		create: {
 			name: user.name,
 			combineId: user.combineId,
 			avatar: user.avatar,
 			joinDate: new Date(),
-			scopes: formattedScopes,
-			refreshToken: user.refreshToken,
-			refreshTokenExpires: user.refreshTokenExpires
-		})
-		.onConflictDoUpdate({
-			target: [users.combineId],
-			set: {
-				name: user.name,
-				scopes: formattedScopes,
-				refreshToken: user.refreshToken,
-				refreshTokenExpires: user.refreshTokenExpires,
-				...((user.avatar && { avatar: user.avatar }) || {})
-			}
-		})
-		.returning({ ...getTableColumns(users) });
-
-	const token = jwt.sign(
-		{
-			id: uimUser[0].id
+			scopes: formattedScopes
 		},
-		env.UIM_AUTH_KEY,
-		{
-			expiresIn: '2w'
+		update: {
+			name: user.name,
+			avatar: user.avatar,
+			scopes: formattedScopes
 		}
-	);
+	});
 
-	cookies.set('uim_session', token, {
+	const token = jwt.sign({ id: u.id }, env.UIM_AUTH_KEY, { expiresIn: '2w' });
+
+	cookies.set('um_session', token, {
 		path: '/',
 		httpOnly: true,
 		expires: new Date(Date.now() + 12096e5)
+	});
+
+	cookies.set('um_combine_access_token', user.accessToken, {
+		path: '/',
+		httpOnly: true,
+		expires: new Date(user.accessTokenExpires)
+	});
+
+	cookies.set('um_combine_refresh_token', user.refreshToken, {
+		path: '/',
+		httpOnly: true,
+		expires: new Date(user.refreshTokenExpires)
 	});
 
 	redirect(303, '/home');

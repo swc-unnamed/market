@@ -1,9 +1,7 @@
-import { verifyRole } from '$lib/server/utils/verify-role.js';
+import { MagistratePermissionPolicy } from '$lib/consts/permission-policies.js';
+import { guard } from '$lib/helpers/guard.js';
 
 export const load = async ({ locals }) => {
-	verifyRole({
-		userRole: locals.user.role,
-		allowedRoles: ['Magistrate', 'Holochain Architect', 'Market Tzar']
-	});
+	guard(locals, MagistratePermissionPolicy);
 	return {};
 };

@@ -1,5 +1,7 @@
 import { HolochainArchitectPermissionPolicy } from '$lib/consts/permission-policies.js';
+import { guard } from '$lib/helpers/guard.js';
 import { systemSettingsSchema } from '$lib/models/zod/settings/system-settings.schema.js';
+import { prisma } from '$lib/prisma.js';
 import { db } from '$lib/server/db/index.js';
 import { systemSettings } from '$lib/server/db/schema/system-settings.js';
 import { verifyRole } from '$lib/server/utils/verify-role.js';
@@ -9,13 +11,9 @@ import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
 export const load = async ({ locals }) => {
-	verifyRole({
-		userRole: locals.user.role,
-		allowedRoles: HolochainArchitectPermissionPolicy,
-		redirectTo: '/home'
-	});
+	guard(locals, HolochainArchitectPermissionPolicy);
 
-	const settingsRecord = await db.query.systemSettings.findFirst();
+	const settingsRecord = await prisma.systemSetting.findFirst();
 
 	const form = await superValidate(zod(systemSettingsSchema), {
 		defaults: {
@@ -30,15 +28,7 @@ export const load = async ({ locals }) => {
 
 export const actions = {
 	update: async ({ locals, request }) => {
-		const isVerified = verifyRole({
-			userRole: locals.user.role,
-			allowedRoles: HolochainArchitectPermissionPolicy,
-			noRedirect: true
-		});
-
-		if (!isVerified) {
-			return error(403, 'Forbidden');
-		}
+		guard(locals, HolochainArchitectPermissionPolicy);
 
 		const form = await superValidate(request, zod(systemSettingsSchema));
 
@@ -46,19 +36,18 @@ export const actions = {
 			return fail(400, { form });
 		}
 
-		const settingsRecord = await db.query.systemSettings.findFirst();
+		const settingsRecord = await prisma.systemSetting.findFirst();
 
-		if (settingsRecord) {
-			await db
-				.update(systemSettings)
-				.set({
-					auctionWebhookUrl: form.data.auctionWebhookUrl
-				})
-				.where(eq(systemSettings.id, settingsRecord.id));
-		} else {
-			await db.insert(systemSettings).values({
+		await prisma.systemSetting.upsert({
+			where: { id: settingsRecord?.id },
+			create: {
 				auctionWebhookUrl: form.data.auctionWebhookUrl
-			});
-		}
+			},
+			update: {
+				auctionWebhookUrl: form.data.auctionWebhookUrl
+			}
+		});
+
+		return { form };
 	}
 };

@@ -7,6 +7,7 @@
 	import type { UserContext } from '$lib/stores';
 	import { getContext } from 'svelte';
 	import { USER_CONTEXT } from '$lib/stores/contexts';
+	import { goto } from '$app/navigation';
 
 	const user = getContext<UserContext>(USER_CONTEXT);
 
@@ -14,6 +15,12 @@
 </script>
 
 <Sidebar.Menu>
+	<Sidebar.MenuItem class="mb-3">
+		<Sidebar.MenuButton onclick={async () => await goto('/faq')}>
+			<Icon icon="tabler:help" class="size-5" />
+			<span class="text-sm font-semibold">FAQ</span>
+		</Sidebar.MenuButton>
+	</Sidebar.MenuItem>
 	<Sidebar.MenuItem class="flex items-center gap-3">
 		<Avatar.Root class="h-8 w-8 rounded-lg">
 			<Avatar.Image src={user.avatar || '/assets/uim-animated.gif'} alt="Logo" />

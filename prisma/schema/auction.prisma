@@ -1,0 +1,54 @@
+model AuctionListingItem {
+  id               String         @id @default(cuid())
+  assetId          String?        @map("asset_id")
+  asset            Asset?         @relation(fields: [assetId], references: [id])
+  entityId         String         @map("entity_id")
+  entity           Entity         @relation(fields: [entityId], references: [id])
+  uuu              Boolean        @default(true)
+  quantity         Int            @default(1)
+  isCustomItem     Boolean        @default(false) @map("is_custom_item")
+  customName       String?        @map("custom_name")
+  customImage      String?        @map("custom_image")
+  uniqueItem       Boolean        @default(false) @map("unique_item")
+  auctionListing   AuctionListing @relation(fields: [auctionListingId], references: [id])
+  auctionListingId String         @map("auction_listing_id")
+
+  @@map("auction_listing_items")
+}
+
+model AuctionListing {
+  id               String               @id @default(cuid())
+  listingNumber    Int                  @default(autoincrement())
+  listedById       String               @map("listed_by_id")
+  listedBy         User                 @relation(fields: [listedById], references: [id], name: "auction_listings_sold")
+  startingBid      Int                  @map("starting_bid")
+  winningBid       Int?                 @map("winning_bid")
+  winningBidderId  String?              @map("winning_bidder_id")
+  winningBidder    User?                @relation(fields: [winningBidderId], references: [id], name: "auction_listings_won")
+  title            String
+  description      String?
+  location         String
+  sendCreditsTo    String               @map("send_credits_to")
+  anonymousListing Boolean              @default(false) @map("anonymous_listing")
+  status           AuctionListingStatus @default(draft)
+  items            AuctionListingItem[]
+  completedAt      DateTime?            @map("completed_at")
+  auctionId        String?              @map("auction_id")
+  auction          Auction?             @relation(fields: [auctionId], references: [id])
+  createdAt        DateTime             @default(now()) @map("created_at")
+  updatedAt        DateTime             @default(now()) @updatedAt @map("updated_at")
+
+  @@map("auction_listings")
+}
+
+model Auction {
+  id       String           @id @default(cuid())
+  listings AuctionListing[]
+  title    String
+  status   AuctionStatus    @default(pending)
+  startAt  DateTime         @map("start_at")
+  closed   Boolean          @default(false)
+  closedAt DateTime?        @map("closed_at")
+
+  @@map("auctions")
+}

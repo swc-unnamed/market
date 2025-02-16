@@ -3,17 +3,17 @@
 	import { invalidate } from '$app/navigation';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
 	import { Button } from '$lib/components/ui/button';
+	import type { WebhookType } from '@prisma/client';
 	import { toast } from 'svelte-sonner';
 	type Props = {
 		hook: {
 			id: string;
 			name: string;
 			userId: string;
-			type: 'discord';
+			type: WebhookType;
 			webhook: string;
-			events: string[];
 			createdAt: Date;
-			lastUsed: Date;
+			lastUsed: Date | null;
 			successCount: number | null;
 			failureCount: number | null;
 		};
@@ -32,7 +32,6 @@
 				<h4 class="text-primary">{hook.name}</h4>
 				<p class="text-xs text-muted-foreground">{hook.webhook}</p>
 			</div>
-			<p class="text-sm">Events: {hook.events.join(', ')}</p>
 		</div>
 
 		<AlertDialog.Root bind:open={dialogOpen}>

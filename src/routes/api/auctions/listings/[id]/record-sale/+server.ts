@@ -1,29 +1,20 @@
 import { AuctioneerPermissionPolicy } from '$lib/consts/permission-policies.js';
 import { creditToInteger } from '$lib/helpers/currency-conversion.js';
-import { db } from '$lib/server/db/index.js';
+import { guard } from '$lib/helpers/guard.js';
+import { prisma } from '$lib/prisma.js';
 import { assetLedger } from '$lib/server/db/schema/asset-ledger.js';
-import { auctionListingHistory } from '$lib/server/db/schema/auction-listing-history.js';
-import { auctionListings } from '$lib/server/db/schema/auction-listings.js';
 import { verifyRole } from '$lib/server/utils/verify-role.js';
 import { json } from '@sveltejs/kit';
-import { eq } from 'drizzle-orm';
 
 export const POST = async ({ params, locals, request }) => {
-	verifyRole({
-		userRole: locals.user.role,
-		allowedRoles: AuctioneerPermissionPolicy
-	});
-	console.log(params.id);
-
+	guard(locals, AuctioneerPermissionPolicy, 'You do not have permission to record a sale.');
 	const body = await request.json();
 
-	console.log(body);
-
-	const listingRecord = await db.query.auctionListings.findFirst({
-		where: (r, { eq }) => eq(r.id, params.id),
-		with: {
+	const listingRecord = await prisma.auctionListing.findUnique({
+		where: { id: params.id },
+		include: {
 			items: {
-				with: {
+				include: {
 					asset: true
 				}
 			}
@@ -34,27 +25,22 @@ export const POST = async ({ params, locals, request }) => {
 		return new Response(JSON.stringify({ message: 'Listing not found' }), { status: 404 });
 	}
 
-	await db
-		.update(auctionListings)
-		.set({
+	await prisma.auctionListing.recordSale({
+		where: { id: listingRecord.id },
+		data: {
 			status: 'sold',
-			purchasedById: body.purchasedById,
-			purchasedPrice: creditToInteger(body.purchasedPrice)
-		})
-		.where(eq(auctionListings.id, listingRecord.id));
-
-	await db.insert(auctionListingHistory).values({
-		listingId: listingRecord.id,
-		event: 'status_updated',
-		message: 'Listing purchased and pending delivery.'
+			winningBidderId: body.purchasedById,
+			winningBid: creditToInteger(body.purchasedPrice)
+		}
 	});
 
 	for (const item of listingRecord.items) {
 		if (item.assetId) {
-			await db.insert(assetLedger).values({
-				action: 'sold_auction',
-				assetId: item.assetId,
-				ownerId: body.purchasedById
+			await prisma.assetLedger.create({
+				data: {
+					action: 'auction_sold',
+					assetId: item.assetId
+				}
 			});
 		}
 	}

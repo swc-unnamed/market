@@ -1,0 +1,23 @@
+model Asset {
+  id                  String               @id @default(cuid())
+  entityId            String               @map("entity_id")
+  entity              Entity               @relation(fields: [entityId], references: [id])
+  combineId           String               @map("combine_id")
+  type                EntityType
+  customImage         String?              @map("custom_image")
+  ledger              AssetLedger[]
+  auctionListingItems AuctionListingItem[]
+
+  @@map("assets")
+}
+
+model AssetLedger {
+  id      String            @id @default(cuid())
+  assetId String            @map("asset_id")
+  asset   Asset             @relation(fields: [assetId], references: [id])
+  action  AssetLedgerAction
+  value   Int?
+  time    DateTime          @default(now())
+
+  @@map("asset_ledger")
+}

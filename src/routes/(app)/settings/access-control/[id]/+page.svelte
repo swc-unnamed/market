@@ -1,5 +1,4 @@
 <script lang="ts">
-	import LayoutWrapper from '$lib/components/custom/layout/layout-wrapper.svelte';
 	import * as Card from '$lib/components/ui/card';
 	import * as Avatar from '$lib/components/ui/avatar';
 	import { format } from 'date-fns';
@@ -9,7 +8,6 @@
 	import { formatRole } from '$lib/helpers/format-role.js';
 	import { superForm } from 'sveltekit-superforms';
 	import { RoleSelectOptions } from '$lib/consts/roles.js';
-	import { updateUserRoleSchema } from '$lib/models/zod/users/update-user.js';
 	import { toast } from 'svelte-sonner';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { Switch } from '$lib/components/ui/switch/index.js';

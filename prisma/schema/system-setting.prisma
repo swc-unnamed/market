@@ -1,0 +1,4 @@
+model SystemSetting {
+  id                String  @id @default(cuid())
+  auctionWebhookUrl String? @map("auction_webhook_url")
+}

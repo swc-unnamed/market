@@ -2,7 +2,6 @@ import { createId } from '@paralleldrive/cuid2';
 import { is, relations } from 'drizzle-orm';
 import { users } from './users';
 import { auctionListingItems } from './auction-listing-items';
-import { auctionListingHistory } from './auction-listing-history';
 import { AuctionListingStatus } from '../../../consts/auction-listing-status';
 import { pgTable, text, integer, serial, boolean, timestamp, pgEnum } from 'drizzle-orm/pg-core';
 import { auctions } from './auctions';
@@ -29,6 +28,7 @@ export const auctionListings = pgTable('auction_listings', {
 		.$defaultFn(() => new Date())
 		.notNull(),
 	status: text('status', { enum: AuctionListingStatus }).default('draft').notNull(),
+	completedAt: timestamp('completed_at'),
 	auctionId: text('auction_id').references(() => auctions.id),
 	isDeleted: boolean('is_deleted').default(false),
 	deletedAt: timestamp('deleted_at')
@@ -36,7 +36,6 @@ export const auctionListings = pgTable('auction_listings', {
 
 export const auctionListingsRelations = relations(auctionListings, ({ many, one }) => ({
 	items: many(auctionListingItems),
-	history: many(auctionListingHistory),
 	listedBy: one(users, {
 		fields: [auctionListings.listedById],
 		references: [users.id]

@@ -1,9 +1,9 @@
-import { Roles } from '$lib/consts/roles';
+import { Role } from '@prisma/client';
 import { z } from 'zod';
 
 export const updateUserRoleSchema = z.object({
 	id: z.string().min(1),
-	role: z.enum(Roles)
+	role: z.nativeEnum(Role)
 });
 
 export const banUserSchema = z.object({

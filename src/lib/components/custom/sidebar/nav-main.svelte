@@ -28,10 +28,10 @@
 			href: '/auctions',
 			icon: 'tabler:gavel',
 			allowedRoles: PatronPermissionPolicy,
-			initialOpen: true,
+			initialOpen: false,
 			nested: [
 				{
-					title: 'New Auction Listing',
+					title: 'New Listing',
 					href: '/auctions/listings/new',
 					icon: 'tabler:circle-plus',
 					allowedRoles: PatronPermissionPolicy,
@@ -42,31 +42,38 @@
 					href: '/auctions',
 					icon: 'tabler:gavel',
 					allowedRoles: PatronPermissionPolicy
-				},
-				{
-					title: 'New Auction',
-					href: '/auctions/new',
-					icon: 'mdi:invoice-line-items',
-					allowedRoles: AuctioneerPermissionPolicy
 				}
 			]
 		},
 		{
+			title: 'Auction Admin',
+			href: '/auctions/admin',
+			icon: 'tabler:settings',
+			allowedRoles: AuctioneerPermissionPolicy,
+			initialOpen: false
+		},
+		{
 			title: 'Account Terminal',
-			href: '/account',
+			href: '/account/ledger',
 			icon: 'tabler:adjustments-search',
 			allowedRoles: PatronPermissionPolicy,
-			initialOpen: true,
+			initialOpen: false,
 			nested: [
 				{
+					title: 'Account Ledger',
+					href: '/account/ledger',
+					icon: 'tabler:adjustments-search',
+					allowedRoles: PatronPermissionPolicy
+				},
+				{
 					title: 'AL Drafts',
-					href: '/auctions/draft-listings',
+					href: '/account/draft-listings',
 					icon: 'tabler:git-pull-request-draft',
 					allowedRoles: PatronPermissionPolicy
 				},
 				{
-					title: 'My Account',
-					href: '/account',
+					title: 'Settings',
+					href: '/account/settings',
 					icon: 'tabler:adjustments-search',
 					allowedRoles: PatronPermissionPolicy
 				}
@@ -77,7 +84,7 @@
 			href: '/entities',
 			icon: 'tabler:database',
 			allowedRoles: PatronPermissionPolicy,
-			initialOpen: true,
+			initialOpen: false,
 			nested: [
 				{
 					title: 'Entity Database',
@@ -161,7 +168,7 @@
 										{#if route?.nested?.length}
 											<Icon
 												icon="tabler:chevron-right"
-												class="ml-auto h-6 w-6 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
+												class="ml-auto size-6 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
 											/>
 										{/if}
 									</Sidebar.MenuButton>
@@ -187,7 +194,7 @@
 																			{...props}
 																		>
 																			{#if subItem.icon}
-																				<Icon icon={subItem.icon} class="h-6 w-6" />
+																				<Icon icon={subItem.icon} class="size-6" />
 																			{/if}
 																			<span>{subItem.title}</span>
 																		</a>

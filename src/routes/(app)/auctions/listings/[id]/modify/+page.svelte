@@ -9,7 +9,7 @@
 	import { Label } from '$lib/components/ui/label';
 	import { Textarea } from '$lib/components/ui/textarea';
 	import { Switch } from '$lib/components/ui/switch';
-	import { Button } from '$lib/components/ui/button';
+	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import PageWrapper from '$lib/components/custom/layout/page-wrapper.svelte';
 	import CreditInput from '$lib/components/custom/inputs/credit-input.svelte';
 	import EntityLookup from '$lib/components/custom/shared/entity-lookup.svelte';
@@ -24,6 +24,7 @@
 	import { z } from 'zod';
 	import { formatAuctionListingStatus } from '$lib/helpers/auctions.js';
 	import SnackbarNav from '$lib/components/custom/layout/snackbar-nav.svelte';
+	import { cn } from '$lib/utils';
 
 	let { data } = $props();
 	let listing = $derived(data.listingRecord);
@@ -74,13 +75,6 @@
 			}
 		}
 	});
-
-	const snackbarNavLinks = [
-		{
-			href: '/auctions/draft-listings',
-			label: 'Draft Listings'
-		}
-	];
 
 	async function handleItemDelete({ listingId, itemId }: { listingId: string; itemId: string }) {
 		const res = await fetch(`/api/auctions/listings/${listingId}/items/${itemId}`, {
@@ -166,16 +160,12 @@
 </script>
 
 <PageWrapper title={listing?.title}>
-	{#snippet right()}
-		<SnackbarNav links={snackbarNavLinks} />
-	{/snippet}
-
 	<div>
 		{#if listing?.status === 'draft'}
 			<Alert.Root class="mb-3 border-primary">
 				<Alert.AlertDescription>
 					This listing is currently a draft. It will not be visible to other users until you set it
-					to a status of New. You can view your draft listings <a href="/auctions/draft-listings"
+					to a status of New. You can view your draft listings <a href="/account/draft-listings"
 						>here</a
 					>.
 				</Alert.AlertDescription>
@@ -188,7 +178,7 @@
 					<Card.Title>
 						<div class="flex items-center justify-between">
 							<div>
-								Modify: <span class="text-primary">{listing?.title}</span>
+								Modify: <span class="text-primary">{listing.title}</span>
 							</div>
 
 							<div class="flex gap-2">
@@ -224,12 +214,12 @@
 
 						<div class="col-span-2 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
 							<div>
-								<CreditInput label="Starting Bid" bind:value={$listingForm.startingPrice} />
+								<CreditInput label="Starting Bid" bind:value={$listingForm.startingBid} />
 							</div>
 
 							<div class="flex flex-col gap-1">
 								<Label>Remain Anonymous</Label>
-								<Switch bind:checked={$listingForm.listerIsAnon} />
+								<Switch bind:checked={$listingForm.anonymousListing} />
 								<p class="text-xs text-muted-foreground">
 									We won't pubically display your name as the seller and will use a Unnamed Market
 									approved Middle.
@@ -246,11 +236,13 @@
 				<Card.Footer class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
 					<div class="flex w-full items-center gap-3">
 						<AlertDialog.Root bind:open={deleteListingDialogOpen}>
-							<AlertDialog.Trigger class="w-full md:w-auto">
-								<Button size="sm" variant="action" class="w-full text-red-500 md:w-auto">
+							<AlertDialog.Trigger
+								class={cn('w-full md:w-auto', buttonVariants({ variant: 'action' }))}
+							>
+								<div class="w-full text-red-500 md:w-auto">
 									<AurebeshText text="D" />
 									Delete Listing
-								</Button>
+								</div>
 							</AlertDialog.Trigger>
 							<AlertDialog.Content>
 								<AlertDialog.Header>
@@ -358,10 +350,10 @@
 										{#each listing?.items as item}
 											<Table.Row>
 												<Table.Cell class="w-48">
-													{#if item.customImageUrl}
+													{#if item.customImage}
 														<img
-															src={item.customImageUrl}
-															alt={item.customItemName}
+															src={item.customImage}
+															alt="custom"
 															class="h-[100px] w-[100px] rounded-md drop-shadow-md"
 														/>
 													{:else if item.entityId}
@@ -372,7 +364,7 @@
 													{/if}
 												</Table.Cell>
 												<Table.Cell class="w-64">
-													{item.customItemName ? item.customItemName : item.entity?.name}
+													{item.entity.name}
 												</Table.Cell>
 												<Table.Cell class="w-32">
 													{item.quantity}
@@ -442,12 +434,8 @@
 										<div class="flex items-start justify-between">
 											<div class="flex gap-1">
 												<div>
-													{#if item.customImageUrl}
-														<img
-															src={item.customImageUrl}
-															alt={item.customItemName}
-															class="h-8 w-8"
-														/>
+													{#if item.customImage}
+														<img src={item.customImage} alt="custom" class="h-8 w-8" />
 													{:else if item.entityId}
 														<AssetImage
 															class="h-[100px] w-[100px] drop-shadow-md"
@@ -458,17 +446,11 @@
 
 												<div class="flex flex-col gap-1">
 													<div>
-														<span
-															>{item.customItemName ? item.customItemName : item.entity?.name}</span
-														>
+														{item.entity.name}
 													</div>
 
 													<div>
-														{#if item.uuu}
-															<Badge>U / U / U: Yes</Badge>
-														{:else}
-															<Badge>U / U / U: No</Badge>
-														{/if}
+														<Badge>U / U / U: {item.uuu ? 'Yes' : 'No'}</Badge>
 													</div>
 
 													<div>

@@ -81,50 +81,52 @@
 				<div class="flex flex-col justify-between md:flex-row">
 					<span class="text-3xl">Live Auction - {record.title}</span>
 
-					<div class="flex flex-col">
-						<div>
-							<span class="text-md">Auction Starts in</span>
-							<NumberFlowGroup>
-								<NumberFlow
-									class="text-md"
-									trend={-1}
-									value={dd}
-									suffix="d"
-									format={{ minimumIntegerDigits: 2 }}
-								/>
-								<NumberFlow
-									class="text-md"
-									trend={-1}
-									prefix=" "
-									value={hh}
-									suffix="h"
-									format={{ minimumIntegerDigits: 2 }}
-								/>
-								<NumberFlow
-									class="text-md"
-									prefix=" "
-									suffix="m"
-									trend={-1}
-									value={mm}
-									digits={{ 1: { max: 5 } }}
-									format={{ minimumIntegerDigits: 2 }}
-								/>
-								<NumberFlow
-									class="text-md"
-									prefix=" "
-									suffix="s"
-									trend={-1}
-									value={ss}
-									digits={{ 1: { max: 5 } }}
-									format={{ minimumIntegerDigits: 2 }}
-								/>
-							</NumberFlowGroup>
-						</div>
+					{#if secondsUntilStart > 0}
+						<div class="flex flex-col">
+							<div>
+								<span class="text-md">Auction Starts in</span>
+								<NumberFlowGroup>
+									<NumberFlow
+										class="text-md"
+										trend={-1}
+										value={dd}
+										suffix="d"
+										format={{ minimumIntegerDigits: 2 }}
+									/>
+									<NumberFlow
+										class="text-md"
+										trend={-1}
+										prefix=" "
+										value={hh}
+										suffix="h"
+										format={{ minimumIntegerDigits: 2 }}
+									/>
+									<NumberFlow
+										class="text-md"
+										prefix=" "
+										suffix="m"
+										trend={-1}
+										value={mm}
+										digits={{ 1: { max: 5 } }}
+										format={{ minimumIntegerDigits: 2 }}
+									/>
+									<NumberFlow
+										class="text-md"
+										prefix=" "
+										suffix="s"
+										trend={-1}
+										value={ss}
+										digits={{ 1: { max: 5 } }}
+										format={{ minimumIntegerDigits: 2 }}
+									/>
+								</NumberFlowGroup>
+							</div>
 
-						<span class="text-sm text-muted-foreground"
-							>Starts: {format(data.record.startAt, 'MMMM d, yyyy HH:mm')}</span
-						>
-					</div>
+							<span class="text-sm text-muted-foreground"
+								>Starts: {format(data.record.startAt, 'MMMM d, yyyy HH:mm')}</span
+							>
+						</div>
+					{/if}
 				</div>
 			</Card.Title>
 			<!-- <Card.Description>

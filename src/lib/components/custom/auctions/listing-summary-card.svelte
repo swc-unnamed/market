@@ -15,9 +15,9 @@
 		id: string;
 		title: string;
 		status: string;
-		startingPrice?: number | null;
+		startingBid?: number | null;
 		location?: string | null;
-		listerIsAnon?: boolean | null;
+		anonymousListing?: boolean | null;
 		listingNumber: number;
 		listedBy?: {
 			id: string;
@@ -26,7 +26,7 @@
 		} | null;
 		items?: {
 			entityId: string | null;
-			customImageUrl: string | null;
+			customImage: string | null;
 			uniqueItem: boolean | null;
 			entity: {
 				id: string;
@@ -56,9 +56,7 @@
 <Card.Root class="w-full">
 	<Card.Header>
 		<Card.Title>
-			<div class="flex flex-col">
-				<span class="truncate text-lg">{listing.title}</span>
-			</div>
+			{listing.title}
 		</Card.Title>
 	</Card.Header>
 	<Card.Content class="-mt-3 flex flex-col gap-2">
@@ -70,15 +68,15 @@
 							{#if item.entityId}
 								<Carousel.Item class="w-full">
 									<span class="ml-1 text-xs text-primary">{item.entity?.name}</span>
-									{#if item.customImageUrl}
+									{#if item.customImage}
 										<img
-											src={item.customImageUrl}
+											src={item.customImage}
 											alt="custom_image"
 											class="mx-auto block rounded-md border border-secondary shadow-md drop-shadow-md"
 										/>
 									{:else}
 										<AssetImage
-											class="mx-auto block w-[350px] rounded-md border border-secondary shadow-md drop-shadow-md"
+											class="mx-auto block h-64 rounded-md border border-secondary shadow-md drop-shadow-md"
 											id={item.entityId}
 											large
 										/>
@@ -116,8 +114,8 @@
 		<div class="flex flex-col gap-1">
 			<div class="mb-2 flex items-center justify-between rounded-md bg-black p-3">
 				<span class="text-sm text-primary" style="font-family: 'Galactic Basic'">
-					{#if listing.startingPrice}
-						${integerToCredit(listing.startingPrice)}
+					{#if listing.startingBid}
+						${integerToCredit(listing.startingBid)}
 					{:else}
 						$ N/A
 					{/if}
@@ -138,7 +136,7 @@
 	</Card.Content>
 	<Card.Footer class="flex items-start justify-between">
 		<div class="flex flex-col items-start">
-			{#if listing.listerIsAnon}
+			{#if listing.anonymousListing}
 				<span class="text-xs text-muted-foreground">Listed By: Anon</span>
 			{:else}
 				<span class="text-xs text-muted-foreground">Listed By: {listing.listedBy?.name}</span>

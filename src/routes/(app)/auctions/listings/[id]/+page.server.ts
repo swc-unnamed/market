@@ -1,23 +1,42 @@
-import { db } from '$lib/server/db/index.js';
-import { error, fail } from '@sveltejs/kit';
+import { prisma } from '$lib/prisma.js';
+import { error } from '@sveltejs/kit';
 
 export const load = async ({ locals, params }) => {
-	const listing = await db.query.auctionListings.findFirst({
-		where: (l, { and, eq }) => and(eq(l.id, params.id), eq(l.isDeleted, false)),
-		with: {
+	const isAnonymousListing = await prisma.auctionListing.findUnique({
+		where: {
+			id: params.id
+		},
+		select: {
+			anonymousListing: true
+		}
+	});
+
+	if (!isAnonymousListing) {
+		return error(404, {
+			message: 'Auction Listing Not Found'
+		});
+	}
+
+	const listing = await prisma.auctionListing.findUnique({
+		where: {
+			id: params.id
+		},
+		include: {
 			items: {
-				with: {
+				include: {
 					entity: true,
 					asset: true
 				}
 			},
-			listedBy: {
-				columns: {
-					name: true,
-					avatar: true
-				}
-			},
-			history: true
+			listedBy: isAnonymousListing.anonymousListing
+				? undefined
+				: {
+						select: {
+							id: true,
+							name: true,
+							avatar: true
+						}
+					}
 		}
 	});
 
@@ -25,12 +44,6 @@ export const load = async ({ locals, params }) => {
 		return error(404, {
 			message: 'Auction Listing Not Found'
 		});
-	}
-
-	if (listing.listedById !== locals.user.id) {
-		if (listing.listerIsAnon) {
-			listing.listedBy = null;
-		}
 	}
 
 	return {
