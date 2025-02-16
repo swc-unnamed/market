@@ -2,10 +2,7 @@ import { redirect } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
 import axios from 'axios';
 import type { Character } from '$lib/models/combine/character';
-import { db } from '$lib/server/db/index.js';
-import { getTableColumns } from 'drizzle-orm';
 import jwt from 'jsonwebtoken';
-import { users } from '$lib/server/db/schema/users.js';
 import { dev } from '$app/environment';
 import { Encryption } from '$lib/server/utils/encryption.js';
 
@@ -103,25 +100,6 @@ export const load = async ({ url, cookies }) => {
 			scopes: formattedScopes
 		}
 	});
-
-	const uimUser = await db
-		.insert(users)
-		.values({
-			name: user.name,
-			combineId: user.combineId,
-			avatar: user.avatar,
-			joinDate: new Date(),
-			scopes: formattedScopes
-		})
-		.onConflictDoUpdate({
-			target: [users.combineId],
-			set: {
-				name: user.name,
-				scopes: formattedScopes,
-				...((user.avatar && { avatar: user.avatar }) || {})
-			}
-		})
-		.returning({ ...getTableColumns(users) });
 
 	const token = jwt.sign({ id: u.id }, env.UIM_AUTH_KEY, { expiresIn: '2w' });
 
