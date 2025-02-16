@@ -13,9 +13,7 @@ export const load = async ({ params }) => {
 					title: true,
 					listingNumber: true,
 					id: true,
-					status: true
-				},
-				include: {
+					status: true,
 					items: {
 						include: {
 							asset: true,
