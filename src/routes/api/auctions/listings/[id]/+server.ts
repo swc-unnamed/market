@@ -1,12 +1,8 @@
 import { MagistratePermissionPolicy } from '$lib/consts/permission-policies.js';
-import { onNewAuctionListingHook } from '$lib/hooks/server/auctions/new-listing.hook.js';
+import { guard } from '$lib/helpers/guard.js';
 import type { PublishListingRequest } from '$lib/models/auctions/publish-listing.req.js';
 import { publishListingSchema } from '$lib/models/zod/auctions/listings/publish-listing.schema.js';
-import { db } from '$lib/server/db/index.js';
-import { assetLedger } from '$lib/server/db/schema/asset-ledger.js';
-import { auctionListingHistory } from '$lib/server/db/schema/auction-listing-history.js';
-import { auctionListingItems } from '$lib/server/db/schema/auction-listing-items.js';
-import { auctionListings } from '$lib/server/db/schema/auction-listings.js';
+import { prisma } from '$lib/prisma.js';
 import { verifyRole } from '$lib/server/utils/verify-role.js';
 import { error, json } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
@@ -15,11 +11,11 @@ import { z } from 'zod';
 export const DELETE = async ({ locals, params }) => {
 	const { id } = params;
 
-	const record = await db.query.auctionListings.findFirst({
-		where: (r, { eq }) => eq(r.id, id),
-		with: {
+	const record = await prisma.auctionListing.findUnique({
+		where: { id: id },
+		include: {
 			items: {
-				with: {
+				include: {
 					asset: true
 				}
 			},
@@ -32,15 +28,7 @@ export const DELETE = async ({ locals, params }) => {
 	}
 
 	if (record.listedById !== locals.user.id) {
-		const roleAllowsAction = verifyRole({
-			userRole: locals.user.role,
-			allowedRoles: MagistratePermissionPolicy,
-			noRedirect: true
-		});
-
-		if (!roleAllowsAction) {
-			return error(403, 'You do not have permission to modify this listing');
-		}
+		guard(locals, MagistratePermissionPolicy, 'You do not have permission to modify this listing');
 	}
 
 	if (record.auctionId) {
@@ -56,29 +44,27 @@ export const DELETE = async ({ locals, params }) => {
 		message: 'Unable to process your request on the holochain.'
 	};
 
-	await db.transaction(async (tx) => {
-		await tx.insert(auctionListingHistory).values({
-			event: 'deleted',
-			listingId: record.id,
-			message: `Listing delete by ${locals.user.name}. Will be available in the lister's history.`
-		});
-
+	await prisma.$transaction(async (tx) => {
 		for (const item of record.items) {
 			if (item.assetId) {
-				await tx.insert(assetLedger).values({
-					action: 'delisted',
-					assetId: item.assetId
+				await tx.asset.update({
+					where: { id: item.assetId },
+					data: {
+						auctionListingItems: {
+							disconnect: {
+								id: item.auctionListingId
+							}
+						}
+					}
 				});
 			}
 		}
 
-		await tx
-			.update(auctionListings)
-			.set({
-				deletedAt: new Date(),
-				isDeleted: true
-			})
-			.where(eq(auctionListings.id, id));
+		await tx.auctionListing.delete({
+			where: {
+				id: id
+			}
+		});
 
 		response = {
 			status: 200,
@@ -98,9 +84,9 @@ export const POST = async ({ locals, params, request }) => {
 		return error(400, 'Bad Request');
 	}
 
-	const record = await db.query.auctionListings.findFirst({
-		where: (r, { eq }) => eq(r.id, id),
-		with: {
+	const record = await prisma.auctionListing.findUnique({
+		where: { id: id },
+		include: {
 			items: true
 		}
 	});
@@ -120,8 +106,6 @@ export const POST = async ({ locals, params, request }) => {
 		return error(400, 'Listing is already published or in a state that cannot be published.');
 	}
 
-	// Verify that the listing has all the fields required to be published
-
 	try {
 		const parsed = publishListingSchema.parse(record);
 
@@ -133,31 +117,25 @@ export const POST = async ({ locals, params, request }) => {
 		}
 	}
 
-	await db.transaction(async (tx) => {
-		await tx
-			.update(auctionListings)
-			.set({
+	await prisma.$transaction(async (tx) => {
+		await tx.auctionListing.update({
+			where: { id: id },
+			data: {
 				status: 'new'
-			})
-			.where(eq(auctionListings.id, id));
-
-		await tx.insert(auctionListingHistory).values({
-			event: 'status_updated',
-			listingId: record.id,
-			message: `Listing published by ${locals.user.name}.`
+			}
 		});
 
 		for (const item of record.items) {
 			if (item.assetId) {
-				await tx.insert(assetLedger).values({
-					action: 'listed_auction',
-					assetId: item.assetId
+				await tx.assetLedger.create({
+					data: {
+						action: 'auction_listed',
+						assetId: item.assetId
+					}
 				});
 			}
 		}
 	});
-
-	await onNewAuctionListingHook(record.id);
 
 	return json({
 		status: 200,

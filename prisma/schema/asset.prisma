@@ -16,7 +16,7 @@ model AssetLedger {
   assetId String            @map("asset_id")
   asset   Asset             @relation(fields: [assetId], references: [id])
   action  AssetLedgerAction
-  value   BigInt
+  value   Int?
   time    DateTime          @default(now())
 
   @@map("asset_ledger")

@@ -1,9 +1,9 @@
-import { db } from '$lib/server/db/index.js';
+import { prisma } from '$lib/prisma.js';
 
 export const load = async ({ locals, params }) => {
-	const record = await db.query.assets.findFirst({
-		where: (r, { eq }) => eq(r.id, params.id),
-		with: {
+	const record = await prisma.asset.findFirst({
+		where: { id: params.id },
+		include: {
 			ledger: true,
 			entity: true
 		}

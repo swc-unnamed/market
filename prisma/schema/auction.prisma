@@ -30,7 +30,7 @@ model AuctionListing {
   location         String
   sendCreditsTo    String               @map("send_credits_to")
   anonymousListing Boolean              @default(false) @map("anonymous_listing")
-  status           AuctionListingStatus @default(new)
+  status           AuctionListingStatus @default(draft)
   items            AuctionListingItem[]
   completedAt      DateTime?            @map("completed_at")
   auctionId        String?              @map("auction_id")

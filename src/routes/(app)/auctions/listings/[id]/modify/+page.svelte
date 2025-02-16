@@ -9,7 +9,7 @@
 	import { Label } from '$lib/components/ui/label';
 	import { Textarea } from '$lib/components/ui/textarea';
 	import { Switch } from '$lib/components/ui/switch';
-	import { Button } from '$lib/components/ui/button';
+	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import PageWrapper from '$lib/components/custom/layout/page-wrapper.svelte';
 	import CreditInput from '$lib/components/custom/inputs/credit-input.svelte';
 	import EntityLookup from '$lib/components/custom/shared/entity-lookup.svelte';
@@ -24,6 +24,7 @@
 	import { z } from 'zod';
 	import { formatAuctionListingStatus } from '$lib/helpers/auctions.js';
 	import SnackbarNav from '$lib/components/custom/layout/snackbar-nav.svelte';
+	import { cn } from '$lib/utils';
 
 	let { data } = $props();
 	let listing = $derived(data.listingRecord);
@@ -235,11 +236,13 @@
 				<Card.Footer class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
 					<div class="flex w-full items-center gap-3">
 						<AlertDialog.Root bind:open={deleteListingDialogOpen}>
-							<AlertDialog.Trigger class="w-full md:w-auto">
-								<Button size="sm" variant="action" class="w-full text-red-500 md:w-auto">
+							<AlertDialog.Trigger
+								class={cn('w-full md:w-auto', buttonVariants({ variant: 'action' }))}
+							>
+								<div class="w-full text-red-500 md:w-auto">
 									<AurebeshText text="D" />
 									Delete Listing
-								</Button>
+								</div>
 							</AlertDialog.Trigger>
 							<AlertDialog.Content>
 								<AlertDialog.Header>

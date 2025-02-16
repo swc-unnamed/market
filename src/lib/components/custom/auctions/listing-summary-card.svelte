@@ -15,9 +15,9 @@
 		id: string;
 		title: string;
 		status: string;
-		startingPrice?: number | null;
+		startingBid?: number | null;
 		location?: string | null;
-		listerIsAnon?: boolean | null;
+		anonymousListing?: boolean | null;
 		listingNumber: number;
 		listedBy?: {
 			id: string;
@@ -114,8 +114,8 @@
 		<div class="flex flex-col gap-1">
 			<div class="mb-2 flex items-center justify-between rounded-md bg-black p-3">
 				<span class="text-sm text-primary" style="font-family: 'Galactic Basic'">
-					{#if listing.startingPrice}
-						${integerToCredit(listing.startingPrice)}
+					{#if listing.startingBid}
+						${integerToCredit(listing.startingBid)}
 					{:else}
 						$ N/A
 					{/if}
@@ -136,7 +136,7 @@
 	</Card.Content>
 	<Card.Footer class="flex items-start justify-between">
 		<div class="flex flex-col items-start">
-			{#if listing.listerIsAnon}
+			{#if listing.anonymousListing}
 				<span class="text-xs text-muted-foreground">Listed By: Anon</span>
 			{:else}
 				<span class="text-xs text-muted-foreground">Listed By: {listing.listedBy?.name}</span>

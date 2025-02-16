@@ -1,11 +1,11 @@
 import type { CombineAssetResponse } from '$lib/models/combine/asset-response.js';
-import { db } from '$lib/server/db/index.js';
+import { prisma } from '$lib/prisma.js';
 import { json } from '@sveltejs/kit';
 import axios from 'axios';
 
 export const GET = async ({ params }) => {
-	const entity = await db.query.entities.findFirst({
-		where: (r, { eq }) => eq(r.id, params.entityId)
+	const entity = await prisma.entity.findUnique({
+		where: { id: params.entityId }
 	});
 
 	if (!entity) {

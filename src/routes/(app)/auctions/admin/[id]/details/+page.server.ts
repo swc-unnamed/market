@@ -2,10 +2,8 @@ import { AuctioneerPermissionPolicy } from '$lib/consts/permission-policies.js';
 import { guard } from '$lib/helpers/guard.js';
 import { modifyAuctionSchema } from '$lib/models/zod/auctions/modify-auction.schema';
 import { prisma } from '$lib/prisma.js';
-import { auctions } from '$lib/server/db/schema/auctions.js';
 import { error, redirect } from '@sveltejs/kit';
 import { format } from 'date-fns/format';
-import { eq } from 'drizzle-orm';
 import { fail, message, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 

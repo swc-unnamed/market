@@ -31,7 +31,7 @@
 			initialOpen: false,
 			nested: [
 				{
-					title: 'New Auction Listing',
+					title: 'New Listing',
 					href: '/auctions/listings/new',
 					icon: 'tabler:circle-plus',
 					allowedRoles: PatronPermissionPolicy,

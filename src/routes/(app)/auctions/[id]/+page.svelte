@@ -6,6 +6,7 @@
 	import { toast } from 'svelte-sonner';
 	import Icon from '@iconify/svelte';
 	import PageWrapper from '$lib/components/custom/layout/page-wrapper.svelte';
+	import { SwcTimestamp } from 'swcombine.js';
 
 	let { data } = $props();
 
@@ -21,11 +22,16 @@
 		<Card.Root class="w-full">
 			<Card.Content class="flex flex-col items-start justify-between md:flex-row">
 				<div class="flex flex-col gap-1">
-					<h1>{data.record?.title}</h1>
+					<h1>{data.record.title}</h1>
 
 					<div class="flex flex-row items-center gap-2">
 						<h3>Start Time:</h3>
-						<p>{format(data.record.startAt, 'yyyy-MM-dd HH:mm')}</p>
+						<p>
+							Starts: {SwcTimestamp.fromDate(data.record.startAt)}
+							<span class="text-xs text-muted">
+								({format(data.record.startAt, 'yyyy-MM-dd HH:mm')})
+							</span>
+						</p>
 					</div>
 				</div>
 

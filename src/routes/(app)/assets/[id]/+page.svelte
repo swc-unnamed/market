@@ -16,8 +16,8 @@
 				Asset: {data.record?.combineId}
 			</Card.Title>
 			<Card.Description>
-				{#if data.record?.customImageUrl}
-					<img src={data.record?.customImageUrl} alt="entity_image" />
+				{#if data.record?.customImage}
+					<img src={data.record?.customImage} alt="entity_image" />
 				{:else if data.record?.entityId}
 					<AssetImage id={data.record?.entityId} />
 				{/if}
@@ -35,7 +35,6 @@
 						<Table.Cell class="w-36 uppercase">ID</Table.Cell>
 						<Table.Cell class="w-36 uppercase">Time</Table.Cell>
 						<Table.Cell class="w-36 uppercase">Action</Table.Cell>
-						<Table.Cell class="w-36 uppercase">Owner</Table.Cell>
 						<Table.Cell class="w-36 uppercase">Value</Table.Cell>
 					</Table.Row>
 				</Table.Header>
@@ -46,7 +45,6 @@
 								<Table.Cell class="w-[50px]">{ledger.id}</Table.Cell>
 								<Table.Cell class="w-[50px]">{format(ledger.time, 'yyyy-MM-dd HH:mm')}</Table.Cell>
 								<Table.Cell class="w-[50px] uppercase">{ledger.action}</Table.Cell>
-								<Table.Cell class="">{ledger.ownerId}</Table.Cell>
 								<Table.Cell>{ledger.value}</Table.Cell>
 							</Table.Row>
 						{/each}

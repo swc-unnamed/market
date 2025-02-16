@@ -23,9 +23,9 @@
 	});
 </script>
 
-<div class="flex justify-between items-center">
+<div class="flex items-center justify-between">
 	<div>
-		<Pagination.Root count={data.auctions.length} perPage={perPage} bind:page={currentPage}>
+		<Pagination.Root count={data.auctions.length} {perPage} bind:page={currentPage}>
 			{#snippet children({ pages, currentPage })}
 				<Pagination.Content>
 					<Pagination.Item>
@@ -65,20 +65,19 @@
 			</Button>
 		</DropdownMenu.Trigger>
 		<DropdownMenu.Content>
-			<DropdownMenu.Item onclick={async () => goto('/account/ledger/auctions')}>View All</DropdownMenu.Item>
+			<DropdownMenu.Item onclick={async () => goto('/account/ledger/auctions')}
+				>View All</DropdownMenu.Item
+			>
 			<DropdownMenu.Item onclick={async () => goto('/account/ledger/auctions?filter=purchased')}
-			>View Purchased
-			</DropdownMenu.Item
-			>
+				>View Purchased
+			</DropdownMenu.Item>
 			<DropdownMenu.Item onclick={async () => goto('/account/ledger/auctions?filter=sold')}
-			>View Sold
-			</DropdownMenu.Item
-			>
+				>View Sold
+			</DropdownMenu.Item>
 		</DropdownMenu.Content>
 	</DropdownMenu.Root>
 </div>
 <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
-
 	<div class="col-span-2">
 		<Table.Root>
 			<Table.Header>
@@ -103,7 +102,7 @@
 						<Table.Cell>{al.title}</Table.Cell>
 						<Table.Cell>
 							<AurebeshText class="text-primary" text="$" />
-							{integerToCredit(al.purchasedPrice || 0)}
+							{integerToCredit(al.startingBid || 0)}
 						</Table.Cell>
 						<Table.Cell>
 							<Button size="sm" variant="outline" href={`/auctions/listings/${al.id}`}>View</Button>

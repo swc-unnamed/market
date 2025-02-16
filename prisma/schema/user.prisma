@@ -22,6 +22,7 @@ model UserWebhook {
   id           String      @id @default(cuid())
   userId       String      @map("user_id")
   user         User        @relation(fields: [userId], references: [id])
+  name         String
   type         WebhookType
   webhook      String
   createdAt    DateTime    @default(now()) @map("created_at")

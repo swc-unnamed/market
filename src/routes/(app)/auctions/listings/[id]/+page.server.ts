@@ -1,6 +1,5 @@
 import { prisma } from '$lib/prisma.js';
-import { db } from '$lib/server/db/index.js';
-import { error, fail } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 
 export const load = async ({ locals, params }) => {
 	const isAnonymousListing = await prisma.auctionListing.findUnique({

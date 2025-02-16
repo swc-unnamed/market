@@ -4,7 +4,6 @@ import { guard } from '$lib/helpers/guard.js';
 import { prisma } from '$lib/prisma.js';
 import { error } from '@sveltejs/kit';
 import axios from 'axios';
-import { asc, eq } from 'drizzle-orm';
 
 export const load = async ({ locals, params, depends }) => {
 	guard(locals, AuctioneerPermissionPolicy);

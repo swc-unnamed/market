@@ -26,8 +26,8 @@
 	<Alert>
 		<AlertTitle>Instructions</AlertTitle>
 		<AlertDescription>
-			When the Credits and Assets have been made-over to the respective parties, click the
-			"Complete" button to finalize the Auction Listings.
+			When the Credits and Assets have been made-over to the respective parties, click the "Mark as
+			Complete" button to finalize the Auction Listings.
 		</AlertDescription>
 	</Alert>
 

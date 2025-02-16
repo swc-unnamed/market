@@ -1,16 +1,17 @@
 import { userHooksSchema } from '$lib/models/zod/users/user-hooks.schema.js';
-import { db } from '$lib/server/db/index.js';
-import { userWebhooks } from '$lib/server/db/schema/user-webhooks.js';
+import { prisma } from '$lib/prisma.js';
 import { error } from '@sveltejs/kit';
-import { and, eq, getTableColumns } from 'drizzle-orm';
 import { fail, message, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
 export const load = async ({ locals, depends }) => {
 	depends('account');
-	const record = await db.query.users.findFirst({
-		where: (r, { eq }) => eq(r.id, locals.user.id),
-		with: {
+
+	const record = await prisma.user.findFirst({
+		where: {
+			id: locals.user.id
+		},
+		include: {
 			webhooks: true
 		}
 	});
@@ -39,34 +40,34 @@ export const actions = {
 			return fail(400, { form, message: 'Webhook must be a Discord URL' });
 		}
 
-		const hook = await db
-			.insert(userWebhooks)
-			.values({
+		const hook = await prisma.userWebhook.create({
+			data: {
 				userId: locals.user.id,
-				events: form.data.events,
 				type: form.data.type,
-				webhook: form.data.webhook,
-				name: form.data.name
-			})
-			.returning({ ...getTableColumns(userWebhooks) });
+				name: form.data.name,
+				webhook: form.data.webhook
+			}
+		});
 
-		return { form, message: `Hook ${hook[0].id} registered` };
+		return { form, message: `Hook ${hook.id} registered` };
 	},
 
 	deleteHook: async ({ locals, request }) => {
 		const formData = await request.formData();
 
-		const record = await db.query.userWebhooks.findFirst({
-			where: (r, { eq, and }) =>
-				and(eq(r.id, formData.get('id') as string), eq(r.userId, locals.user.id))
+		const record = await prisma.userWebhook.findUnique({
+			where: { id: formData.get('id') as string }
 		});
 
 		if (!record) {
 			return fail(404, { message: 'Hook not found' });
 		}
 
-		await db
-			.delete(userWebhooks)
-			.where(and(eq(userWebhooks.id, record.id), eq(userWebhooks.userId, locals.user.id)));
+		await prisma.userWebhook.delete({
+			where: {
+				id: record.id,
+				userId: locals.user.id
+			}
+		});
 	}
 };
