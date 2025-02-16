@@ -29,4 +29,6 @@ model UserWebhook {
   lastUsed     DateTime?   @map("last_used")
   successCount Int         @default(0) @map("success_count")
   failureCount Int         @default(0) @map("failure_count")
+
+  @@map("user_webhooks")
 }

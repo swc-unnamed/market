@@ -100,11 +100,11 @@ CREATE TABLE "entities" (
 );
 
 -- CreateTable
-CREATE TABLE "SystemSetting" (
+CREATE TABLE "system_settings" (
     "id" TEXT NOT NULL,
     "auction_webhook_url" TEXT,
 
-    CONSTRAINT "SystemSetting_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "system_settings_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -126,7 +126,7 @@ CREATE TABLE "users" (
 );
 
 -- CreateTable
-CREATE TABLE "UserWebhook" (
+CREATE TABLE "user_webhooks" (
     "id" TEXT NOT NULL,
     "user_id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
@@ -137,7 +137,7 @@ CREATE TABLE "UserWebhook" (
     "success_count" INTEGER NOT NULL DEFAULT 0,
     "failure_count" INTEGER NOT NULL DEFAULT 0,
 
-    CONSTRAINT "UserWebhook_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "user_webhooks_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -177,4 +177,4 @@ ALTER TABLE "auction_listings" ADD CONSTRAINT "auction_listings_winning_bidder_i
 ALTER TABLE "auction_listings" ADD CONSTRAINT "auction_listings_auction_id_fkey" FOREIGN KEY ("auction_id") REFERENCES "auctions"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "UserWebhook" ADD CONSTRAINT "UserWebhook_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "user_webhooks" ADD CONSTRAINT "user_webhooks_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
