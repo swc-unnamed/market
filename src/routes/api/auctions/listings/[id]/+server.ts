@@ -3,9 +3,7 @@ import { guard } from '$lib/helpers/guard.js';
 import type { PublishListingRequest } from '$lib/models/auctions/publish-listing.req.js';
 import { publishListingSchema } from '$lib/models/zod/auctions/listings/publish-listing.schema.js';
 import { prisma } from '$lib/prisma.js';
-import { verifyRole } from '$lib/server/utils/verify-role.js';
 import { error, json } from '@sveltejs/kit';
-import { eq } from 'drizzle-orm';
 import { z } from 'zod';
 
 export const DELETE = async ({ locals, params }) => {
