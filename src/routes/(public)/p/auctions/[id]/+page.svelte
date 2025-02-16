@@ -1,20 +1,9 @@
 <script lang="ts">
-	import AurebeshText from '$lib/components/custom/shared/aurebesh-text.svelte';
-	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card/index.js';
 	import * as Alert from '$lib/components/ui/alert/index.js';
-	import * as Carousel from '$lib/components/ui/carousel';
-	import * as Table from '$lib/components/ui/table';
 	import type { CarouselAPI } from '$lib/components/ui/carousel/context';
-	import { Separator } from '$lib/components/ui/separator';
-	import { integerToCredit } from '$lib/helpers/currency-conversion';
-	import AssetImage from '$lib/components/custom/assets/asset-image.svelte';
-	import * as Avatar from '$lib/components/ui/avatar/index.js';
 	import NumberFlow, { NumberFlowGroup } from '@number-flow/svelte';
-	import ListingPreviewCard from '$lib/components/custom/auctions/listing-preview-card.svelte';
-	import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
 	import { format } from 'date-fns';
-	import { Badge } from '$lib/components/ui/badge/index.js';
 	import ListingSummaryCard from '$lib/components/custom/auctions/listing-summary-card.svelte';
 
 	let { data } = $props();
@@ -22,7 +11,6 @@
 
 	let api = $state<CarouselAPI>();
 	let current = $state(0);
-	const count = $derived(api ? api.scrollSnapList().length : 0);
 
 	let secondsUntilStart = $state(
 		Math.floor((new Date(record.startAt).getTime() - Date.now()) / 1000)

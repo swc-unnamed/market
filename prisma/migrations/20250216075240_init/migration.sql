@@ -11,7 +11,7 @@ CREATE TYPE "EntityType" AS ENUM ('droids', 'creatures', 'items', 'vehicles', 'w
 CREATE TYPE "AssetLedgerAction" AS ENUM ('auction_listed', 'auction_sold', 'market_listed', 'market_sold');
 
 -- CreateEnum
-CREATE TYPE "AuctionListingStatus" AS ENUM ('new', 'selected', 'sold', 'completed');
+CREATE TYPE "AuctionListingStatus" AS ENUM ('draft', 'new', 'selected', 'sold', 'completed');
 
 -- CreateEnum
 CREATE TYPE "AuctionStatus" AS ENUM ('pending', 'started', 'closed');
@@ -22,7 +22,7 @@ CREATE TABLE "assets" (
     "entity_id" TEXT NOT NULL,
     "combine_id" TEXT NOT NULL,
     "type" "EntityType" NOT NULL,
-    "custom_image_url" TEXT,
+    "custom_image" TEXT,
 
     CONSTRAINT "assets_pkey" PRIMARY KEY ("id")
 );
@@ -32,7 +32,7 @@ CREATE TABLE "asset_ledger" (
     "id" TEXT NOT NULL,
     "asset_id" TEXT NOT NULL,
     "action" "AssetLedgerAction" NOT NULL,
-    "value" BIGINT NOT NULL,
+    "value" INTEGER,
     "time" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "asset_ledger_pkey" PRIMARY KEY ("id")
@@ -59,15 +59,15 @@ CREATE TABLE "auction_listings" (
     "id" TEXT NOT NULL,
     "listingNumber" SERIAL NOT NULL,
     "listed_by_id" TEXT NOT NULL,
-    "starting_bid" BIGINT NOT NULL,
-    "winning_bid" BIGINT NOT NULL,
+    "starting_bid" INTEGER NOT NULL,
+    "winning_bid" INTEGER,
     "winning_bidder_id" TEXT,
     "title" TEXT NOT NULL,
     "description" TEXT,
     "location" TEXT NOT NULL,
     "send_credits_to" TEXT NOT NULL,
     "anonymous_listing" BOOLEAN NOT NULL DEFAULT false,
-    "status" "AuctionListingStatus" NOT NULL DEFAULT 'new',
+    "status" "AuctionListingStatus" NOT NULL DEFAULT 'draft',
     "completed_at" TIMESTAMP(3),
     "auction_id" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -129,6 +129,7 @@ CREATE TABLE "users" (
 CREATE TABLE "UserWebhook" (
     "id" TEXT NOT NULL,
     "user_id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
     "type" "WebhookType" NOT NULL,
     "webhook" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
