@@ -2,8 +2,7 @@ import { creditToInteger, integerToCredit } from '$lib/helpers/currency-conversi
 import { addItemAuctionListingSchema } from '$lib/models/zod/auctions/listings/add-item-auction-listing.schema.js';
 import { modifyAuctionListingSchema } from '$lib/models/zod/auctions/listings/modify-auction-listing.schema.js';
 import { prisma } from '$lib/prisma.js';
-import { db } from '$lib/server/db/index.js';
-import { error, json, redirect } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import { fail, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 

@@ -1,4 +1,3 @@
-import { users } from '$lib/server/db/schema/users.js';
 import type { PaginatedMeta } from '$lib/models/general/paginated-meta.js';
 import { MagistratePermissionPolicy } from '$lib/consts/permission-policies.js';
 import { guard } from '$lib/helpers/guard.js';
@@ -13,11 +12,6 @@ export const load = async ({ locals, url }) => {
 	const page = parseInt(url.searchParams.get('page') || '1');
 
 	const count = await prisma.user.count();
-
-	// const recordCount = await db
-	// 	.select({ count: count() })
-	// 	.from(users)
-	// 	.where(ilike(users.name, `%${searchTerm}%`));
 
 	const totalPages = Math.ceil(count / MAX_PAGE_SIZE);
 

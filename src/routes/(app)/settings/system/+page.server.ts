@@ -2,11 +2,7 @@ import { HolochainArchitectPermissionPolicy } from '$lib/consts/permission-polic
 import { guard } from '$lib/helpers/guard.js';
 import { systemSettingsSchema } from '$lib/models/zod/settings/system-settings.schema.js';
 import { prisma } from '$lib/prisma.js';
-import { db } from '$lib/server/db/index.js';
-import { systemSettings } from '$lib/server/db/schema/system-settings.js';
-import { verifyRole } from '$lib/server/utils/verify-role.js';
 import { error, fail } from '@sveltejs/kit';
-import { eq } from 'drizzle-orm';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 

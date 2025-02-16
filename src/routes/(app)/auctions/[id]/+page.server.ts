@@ -1,6 +1,5 @@
 import { prisma } from '$lib/prisma.js';
 import { error } from '@sveltejs/kit';
-import { asc } from 'drizzle-orm';
 
 export const load = async ({ locals, params }) => {
 	const record = await prisma.auction.findUnique({

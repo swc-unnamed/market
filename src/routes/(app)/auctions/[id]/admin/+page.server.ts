@@ -1,7 +1,6 @@
 import { AuctioneerPermissionPolicy } from '$lib/consts/permission-policies';
 import { guard } from '$lib/helpers/guard.js';
 import { prisma } from '$lib/prisma.js';
-import { eq } from 'drizzle-orm';
 
 export const load = async ({ locals, params, depends }) => {
 	guard(locals, AuctioneerPermissionPolicy);

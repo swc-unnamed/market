@@ -2,8 +2,6 @@ import { AuctioneerPermissionPolicy } from '$lib/consts/permission-policies.js';
 import { creditToInteger } from '$lib/helpers/currency-conversion.js';
 import { guard } from '$lib/helpers/guard.js';
 import { prisma } from '$lib/prisma.js';
-import { assetLedger } from '$lib/server/db/schema/asset-ledger.js';
-import { verifyRole } from '$lib/server/utils/verify-role.js';
 import { json } from '@sveltejs/kit';
 
 export const POST = async ({ params, locals, request }) => {

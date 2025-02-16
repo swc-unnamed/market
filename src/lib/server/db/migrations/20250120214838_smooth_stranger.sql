@@ -1,1 +1,0 @@
-ALTER TABLE "auctions" ADD COLUMN "title" text NOT NULL;
