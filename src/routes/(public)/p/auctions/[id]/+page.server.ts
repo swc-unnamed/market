@@ -1,23 +1,23 @@
-import { db } from '$lib/server/db/index.js';
 import { error } from '@sveltejs/kit';
+import { prisma } from '$lib/prisma.js';
 
 export const load = async ({ params }) => {
-	const record = await db.query.auctions.findFirst({
-		where: (r, { eq }) => eq(r.id, params.id),
-		with: {
+	const record = await prisma.auction.findFirst({
+		where: { id: params.id },
+		include: {
 			listings: {
-				columns: {
+				select: {
 					description: true,
 					location: true,
-					startingPrice: true,
+					startingBid: true,
 					title: true,
 					listingNumber: true,
 					id: true,
 					status: true
 				},
-				with: {
+				include: {
 					items: {
-						with: {
+						include: {
 							asset: true,
 							entity: true
 						}
@@ -28,7 +28,7 @@ export const load = async ({ params }) => {
 	});
 
 	if (!record) {
-		return error(404, 'Auction not found');
+		throw error(404, 'Auction not found');
 	}
 	return {
 		record: record
