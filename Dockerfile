@@ -12,9 +12,9 @@ COPY . .
 
 RUN pnpm install
 
-RUN pnpm build
-
 RUN pnpm prisma:generate
+
+RUN pnpm build
 
 USER node:node
 
