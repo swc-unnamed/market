@@ -18,6 +18,7 @@
 	import { enhance } from '$app/forms';
 	import { formatAuctionListingStatus } from '$lib/helpers/auctions.js';
 	import { cn } from '$lib/utils.js';
+	import { SwcTimestamp } from 'swcombine.js';
 
 	let { data } = $props();
 	const record = $derived(data.record);
@@ -31,7 +32,7 @@
 	async function handleSale() {
 		recordingSale = true;
 
-		const startPrice = selectedListing?.startingPrice;
+		const startPrice = selectedListing?.startingBid;
 		const purchasePrice = creditToInteger(selectedListingPurchasePrice);
 
 		if (!startPrice) {
@@ -78,8 +79,9 @@
 				</form>
 			</div>
 			<p class="text-sm">
-				{#if record.completedAt}
-					Completed At: {format(record.completedAt, 'yyyy-MM-dd HH:mm')}
+				{#if record.closedAt}
+					Closed At: {SwcTimestamp.fromDate(record.closedAt).toString()}
+					<span class="text-xs text-muted">{format(record.closedAt, 'yyyy-MM-dd HH:mm')}</span>
 				{:else}
 					To send the listing to discord, press the <span>Send to Discord</span> button. This will
 					notify the channel of the current listing being auctioned. To record a sale, press the
@@ -153,11 +155,13 @@
 
 							<p>
 								Starting Bid: <AurebeshText text="$" />
-								{integerToCredit(listing.startingPrice!)}
+								{integerToCredit(listing.startingBid!)}
 							</p>
 
 							<p>
-								Purchased By: {listing.purchasedById ? listing.purchasedBy?.name : 'Not Sold Yet'}
+								Purchased By: {listing.winningBidderId
+									? listing.winningBidder?.name
+									: 'Not Sold Yet'}
 							</p>
 							<p>
 								Status: {formatAuctionListingStatus(listing.status)}
@@ -168,9 +172,9 @@
 							<div class="flex flex-col gap-0">
 								<Separator />
 								<div class="mt-2 flex flex-col gap-1">
-									<p>Sold To: {listing.purchasedBy?.name}</p>
+									<p>Sold To: {listing.winningBidder?.name}</p>
 									<p>
-										Sold For: <AurebeshText text="$" />{integerToCredit(listing.purchasedPrice!)}
+										Sold For: <AurebeshText text="$" />{integerToCredit(listing.winningBid!)}
 									</p>
 								</div>
 							</div>

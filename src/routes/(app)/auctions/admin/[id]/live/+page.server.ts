@@ -1,43 +1,38 @@
 import { env } from '$env/dynamic/private';
 import { AuctioneerPermissionPolicy } from '$lib/consts/permission-policies.js';
-import { db } from '$lib/server/db';
-import { auctionListings } from '$lib/server/db/schema/auction-listings.js';
-import { auctions } from '$lib/server/db/schema/auctions.js';
-import { verifyRole } from '$lib/server/utils/verify-role.js';
+import { guard } from '$lib/helpers/guard.js';
+import { prisma } from '$lib/prisma.js';
 import { error } from '@sveltejs/kit';
 import axios from 'axios';
 import { asc, eq } from 'drizzle-orm';
 
 export const load = async ({ locals, params, depends }) => {
-	verifyRole({
-		userRole: locals.user.role,
-		allowedRoles: AuctioneerPermissionPolicy,
-		redirectTo: '/auctions'
-	});
+	guard(locals, AuctioneerPermissionPolicy);
 
 	depends('auction:live');
 
-	const record = await db.query.auctions.findFirst({
-		where: (r, { eq }) => eq(r.id, params.id),
-		with: {
+	const record = await prisma.auction.findUnique({
+		where: {
+			id: params.id
+		},
+		include: {
 			listings: {
-				orderBy: asc(auctionListings.listingNumber),
-				with: {
+				include: {
 					items: {
-						with: {
+						include: {
 							asset: true,
 							entity: true
 						}
 					},
 					listedBy: {
-						columns: {
+						select: {
 							id: true,
 							name: true,
 							avatar: true
 						}
 					},
-					purchasedBy: {
-						columns: {
+					winningBidder: {
+						select: {
 							id: true,
 							name: true,
 							avatar: true
@@ -54,15 +49,18 @@ export const load = async ({ locals, params, depends }) => {
 		});
 	}
 
-	const users = await db.query.users.findMany({
-		where: (r, { eq }) => eq(r.banned, false),
-		columns: {
+	const users = await prisma.user.findMany({
+		where: {
+			banned: false
+		},
+		select: {
 			id: true,
 			name: true
 		}
 	});
 
-	const settingsRecord = await db.query.systemSettings.findFirst();
+	const settingsRecord = await prisma.systemSetting.findFirst();
+
 	const canSendToDiscord = settingsRecord?.auctionWebhookUrl ? true : false;
 
 	return {
@@ -74,57 +72,39 @@ export const load = async ({ locals, params, depends }) => {
 
 export const actions = {
 	end: async ({ params, locals }) => {
-		const canEndAuction = verifyRole({
-			userRole: locals.user.role,
-			allowedRoles: AuctioneerPermissionPolicy,
-			noRedirect: true
-		});
+		guard(locals, AuctioneerPermissionPolicy);
 
-		if (!canEndAuction) {
-			return error(403, {
-				message: 'You do not have permission to end an auction.'
-			});
-		}
-
-		await db
-			.update(auctions)
-			.set({
-				completedAt: new Date(),
+		await prisma.auction.update({
+			where: {
+				id: params.id
+			},
+			data: {
+				closedAt: new Date(),
 				closed: true
-			})
-			.where(eq(auctions.id, params.id));
+			}
+		});
 
 		return {
 			message: 'Auction has been ended.'
 		};
 	},
 	sendToDiscord: async ({ locals, request }) => {
-		const canEndAuction = verifyRole({
-			userRole: locals.user.role,
-			allowedRoles: AuctioneerPermissionPolicy,
-			noRedirect: true
-		});
-
-		if (!canEndAuction) {
-			return error(403, {
-				message: 'You do not have permission to end an auction.'
-			});
-		}
+		guard(locals, AuctioneerPermissionPolicy);
 
 		// read the body of the request
 		const body = await request.formData();
 
-		const settings = await db.query.systemSettings.findFirst();
+		const settings = await prisma.systemSetting.findFirst();
 
 		if (!settings?.auctionWebhookUrl) {
 			return error(400, { message: 'No webhook URL set in the system settings.' });
 		}
 
-		const listing = await db.query.auctionListings.findFirst({
-			where: (r, { eq }) => eq(r.id, body.get('listingId') as string),
-			with: {
+		const listing = await prisma.auctionListing.findUnique({
+			where: { id: body.get('listingId') as string },
+			include: {
 				items: {
-					with: {
+					include: {
 						asset: true,
 						entity: true
 					}
@@ -138,7 +118,7 @@ export const actions = {
 					title: listing?.title,
 					description: `
              **Starting Bid**: 
-            ${listing?.startingPrice}
+            ${listing?.startingBid}
 
             **Location**:
             ${listing?.location}
@@ -151,7 +131,7 @@ export const actions = {
 					fields: listing?.items.map((item) => {
 						return {
 							name: 'Item',
-							value: item.customItemName ? item.customItemName : item.entity?.name,
+							value: item.entity.name,
 							inline: true
 						};
 					}),
