@@ -6,7 +6,6 @@
 	import * as Tabs from '$lib/components/ui/tabs';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import * as Form from '$lib/components/ui/form/index.js';
-	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
 	import { format } from 'date-fns';
 	import { Separator } from '$lib/components/ui/separator/index.js';
@@ -14,7 +13,7 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
 	import PageWrapper from '$lib/components/custom/layout/page-wrapper.svelte';
-	import SuperDebug, { superForm } from 'sveltekit-superforms';
+	import { superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { userHooksSchema } from '$lib/models/zod/users/user-hooks.schema.js';
 	import { WebhookEvent } from '$lib/consts/webhook-event.js';
@@ -46,7 +45,7 @@
 
 	const { form: formData, enhance } = form;
 
-	onMount(() => {
+	onMount(async () => {
 		const tab = page.url.searchParams.get('tab');
 
 		if (tab) {
@@ -107,32 +106,31 @@
 								<Separator class="bg-primary" />
 								<h3>Granted Scopes</h3>
 
-								<div class="flex flex-row items-center justify-between rounded-md border p-2">
-									<div class="flex flex-col">
-										<div class="mb-3 flex flex-col">
-											<h4 class="text-primary">Character - Read</h4>
-											<p class="text-xs text-muted-foreground">character_read</p>
-										</div>
-										<p class="text-sm">This is required to be able to login.</p>
-									</div>
-
-									<Switch checked class="data-[state=checked]:bg-green-600" disabled />
-								</div>
-
-								<div class="flex flex-row items-center justify-between rounded-md border p-2">
-									<div class="flex flex-col">
-										<div class="mb-3 flex flex-col">
-											<h4 class="text-primary">Personal Inventory Overview</h4>
-											<p class="text-xs text-muted-foreground">personal_inv_ships</p>
-										</div>
-										<p class="text-sm">
-											We use this to help you list assets from your inventory to sell on the market.
-											We do not store your inventory data and is pulled on demand.
-										</p>
-										<p class="text-red-500">Not Implemented Yet</p>
-									</div>
-
-									<Switch class="data-[state=checked]:bg-green-600" disabled />
+								<div class="grid grid-cols-1 gap-2">
+									{#if data.scopes}
+										{#each data.scopes as scope}
+											{#if scope != undefined}
+												<div
+													class="flex flex-row items-center justify-between rounded-md border p-2"
+												>
+													<div class="flex w-full flex-col">
+														<div class="mb-3 flex items-center gap-2">
+															<Checkbox checked={scope.allowed} />
+															<h4 class="text-primary">{scope?.scope.name}</h4>
+															<!-- <Switch
+																checked={scope.allowed}
+																class="data-[state=checked]:bg-green-600"
+																disabled
+															/> -->
+														</div>
+														<p class="text-sm">
+															{@html scope?.scope.description}
+														</p>
+													</div>
+												</div>
+											{/if}
+										{/each}
+									{/if}
 								</div>
 							</div>
 						</div>

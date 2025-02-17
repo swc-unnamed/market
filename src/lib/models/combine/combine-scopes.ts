@@ -1,6 +1,5 @@
-import { SwcClient } from 'swcombine.js';
-
 type CombineScope =
+	| 'character_read'
 	| 'personal_inv_overview'
 	| 'personal_inv_creatures_read'
 	| 'personal_inv_droids_read'
