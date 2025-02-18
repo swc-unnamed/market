@@ -47,6 +47,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 		// Attach the user record to the event
 		event.locals.user = {
 			id: u.id,
+			combineId: u.combineId,
 			name: u.name,
 			avatar: u.avatar,
 			role: u.role,
@@ -77,7 +78,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 						Accept: 'application/json'
 					}
 				});
-				console.log(tokenData.data);
 
 				await prisma.user.update({
 					where: { id: u.id },
@@ -88,9 +88,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 				const encryptedRefreshToken = encryption.encrypt(tokenData.data.refresh_token);
 				const encryptedAccessToken = encryption.encrypt(tokenData.data.access_token);
-
-				console.log(tokenData.data.access_token);
-				console.log(tokenData.data.refresh_token);
 
 				event.cookies.set('um_combine_access_token', encryptedAccessToken, {
 					expires: new Date(Date.now() + tokenData.data.expires_in * 1000),

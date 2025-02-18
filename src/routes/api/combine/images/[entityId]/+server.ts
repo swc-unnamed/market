@@ -1,4 +1,4 @@
-import type { CombineAssetResponse } from '$lib/models/combine/asset-response.js';
+import type { CombineResponse } from '$lib/models/combine/combine-response.js';
 import { prisma } from '$lib/prisma.js';
 import { json } from '@sveltejs/kit';
 import axios from 'axios';
@@ -16,7 +16,7 @@ export const GET = async ({ params }) => {
 	}
 
 	try {
-		const { data } = await axios.get<CombineAssetResponse>(entity.apiLink, {
+		const { data } = await axios.get<CombineResponse>(entity.apiLink, {
 			headers: {
 				Accept: 'application/json'
 			}

@@ -1,11 +1,22 @@
 model Entity {
-  id                  String               @id @default(cuid())
+  id                  String                @id @default(cuid())
   name                String
   type                EntityType
-  uid                 String               @unique
-  apiLink             String               @map("api_link")
+  uid                 String                @unique
+  apiLink             String                @map("api_link")
+  imageLarge          String?               @map("image_large")
+  imageSmall          String?               @map("image_small")
   assets              Asset[]
   auctionListingItems AuctionListingItem[]
+  auctionLedger       EntityAuctionLedger[]
 
   @@map("entities")
+}
+
+model EntityAuctionLedger {
+  id        String   @id @default(cuid())
+  entityId  String   @map("entity_id")
+  entity    Entity   @relation(fields: [entityId], references: [id])
+  soldValue Int      @map("sold_value")
+  createdAt DateTime @default(now()) @map("created_at")
 }

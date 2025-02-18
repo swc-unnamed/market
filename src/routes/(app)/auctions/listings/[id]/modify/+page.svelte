@@ -25,6 +25,7 @@
 	import { formatAuctionListingStatus } from '$lib/helpers/auctions.js';
 	import SnackbarNav from '$lib/components/custom/layout/snackbar-nav.svelte';
 	import { cn } from '$lib/utils';
+	import CombineImportDialog from '$lib/components/custom/shared/combine-import-dialog.svelte';
 
 	let { data } = $props();
 	let listing = $derived(data.listingRecord);
@@ -319,13 +320,9 @@
 									<div class="mt-3 flex flex-col gap-1 md:mt-0 md:flex-row">
 										<Button
 											size="sm"
-											variant="outline"
-											class="border-primary"
-											onclick={() => {
-												toast(
-													"Not implemented yet, but hey, we are working on it. Just want to make sure it's right before we release it to you all. -M"
-												);
-											}}>Import From Combine</Button
+											variant="action"
+											href={`/auctions/listings/${listing.id}/modify/import`}
+											class="border-primary">Import From Combine</Button
 										>
 									</div>
 								</div>

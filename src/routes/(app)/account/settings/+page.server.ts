@@ -109,7 +109,6 @@ export const actions = {
 		params.append('redirect_uri', `${env.UIM_BASE_URL}/callback`);
 		params.append('scope', scopes.join(' '));
 		params.append('access_type', 'offline');
-		params.append('renew_previously_granted', 'yes');
 		params.append('state', 'profile');
 
 		const url = `https://www.swcombine.com/ws/oauth2/auth/?${params.toString()}`;
