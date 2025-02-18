@@ -32,7 +32,8 @@ async function getUserFromSwc(code: string) {
 	const encryption = new Encryption();
 	const encryptedRefreshToken = encryption.encrypt(data.refresh_token);
 	const timeNow = Date.now();
-	const expireTime = timeNow + data.expires_in * 1000;
+
+	const refreshExpireTime = timeNow + data.expires_in * 1000 + 2592000 * 1000;
 
 	const encryptedAccessToken = encryption.encrypt(data.access_token);
 	const accessTokenExpireTime = timeNow + data.expires_in * 1000;
@@ -44,7 +45,7 @@ async function getUserFromSwc(code: string) {
 		joinDate: new Date(),
 		scopes: data.scope,
 		refreshToken: encryptedRefreshToken,
-		refreshTokenExpires: expireTime,
+		refreshTokenExpires: refreshExpireTime,
 		accessToken: encryptedAccessToken,
 		accessTokenExpires: accessTokenExpireTime
 	};
@@ -120,6 +121,11 @@ export const load = async ({ url, cookies }) => {
 		httpOnly: true,
 		expires: new Date(user.refreshTokenExpires)
 	});
+
+	const state = url.searchParams.get('state') as string;
+	if (state === 'profile') {
+		redirect(303, '/account/settings');
+	}
 
 	redirect(303, '/home');
 };

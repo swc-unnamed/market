@@ -1,6 +1,3 @@
-// See https://svelte.dev/docs/kit/types#app.d.ts
-// for information about these interfaces
-
 import { Role } from '@prisma/client';
 
 declare global {
@@ -12,7 +9,7 @@ declare global {
 				name: string;
 				avatar: string | null;
 				role: Role;
-				scopes: string;
+				scopes: string[];
 			};
 		}
 		// interface PageData {}

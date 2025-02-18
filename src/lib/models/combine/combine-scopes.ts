@@ -1,4 +1,4 @@
-type CombineScope =
+export type CombineScope =
 	| 'character_read'
 	| 'personal_inv_overview'
 	| 'personal_inv_creatures_read'
