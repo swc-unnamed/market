@@ -32,6 +32,12 @@ export interface CombinedInventoryResponse {
 	tags: {
 		tag: string[];
 	};
+	cargo?: {
+		name: string;
+		uid: string;
+		maxUses: number;
+		remainingUses: number;
+	};
 }
 
 export interface CombinedInventoryHullMeta {

@@ -50,8 +50,6 @@ export const GET = async ({ locals, cookies, params }) => {
 		}
 	);
 
-	console.log(JSON.stringify(data, null, 2));
-
 	data.swcapi.entities?.entity.forEach((entity) => {
 		combinedInventory.push({
 			uid: entity.value.uid,
@@ -106,6 +104,12 @@ export const GET = async ({ locals, cookies, params }) => {
 			},
 			tags: {
 				tag: entity.value.tags.tag
+			},
+			cargo: entity.value.cargo && {
+				uid: entity.value.cargo.entitytype.attributes.uid,
+				name: entity.value.cargo.entitytype.value,
+				maxUses: entity.value.cargo.maxuses,
+				remainingUses: entity.value.cargo.remaininguses
 			}
 		});
 	});

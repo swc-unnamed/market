@@ -7,9 +7,8 @@
 	import axios from 'axios';
 	import Icon from '@iconify/svelte';
 	import type { CombinedInventoryResponse } from '$lib/models/general/combined-inventory.response.js';
-	import { Checkbox } from '$lib/components/ui/checkbox';
-	import DataTable from './data-table.svelte';
-	import { columns } from './columns.js';
+	import DataTable from './data-table/data-table.svelte';
+	import { columns } from './data-table/columns.js';
 	import { toast } from 'svelte-sonner';
 
 	let { data } = $props();
@@ -68,15 +67,9 @@
 	}
 
 	async function handleSave() {
-		const response = await axios.post(
-			`/api/auctions/listings/${data.listingId}/import`,
-			selectedEntities.map((entity) => {
-				return {
-					uid: entity.entity.uid,
-					combineId: entity.uid
-				};
-			})
-		);
+		const response = await axios.post(`/api/auctions/listings/${data.listingId}/import`, {
+			data: selectedEntities
+		});
 
 		if (response.data.success) {
 			toast.success('Entities have been imported successfully.');
@@ -164,7 +157,10 @@
 					{/await}
 				{/if}
 			</div>
-			<DataTable {columns} bind:data={availableEntities} bind:selectedRows={selectedEntities} />
+
+			{#if selectedEntityType !== 'none' && availableEntities.length > 0}
+				<DataTable {columns} bind:data={availableEntities} bind:selectedRows={selectedEntities} />
+			{/if}
 		</Card.Content>
 	</Card.Root>
 </PageWrapper>

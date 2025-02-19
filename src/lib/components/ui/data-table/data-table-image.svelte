@@ -2,4 +2,4 @@
 	let { imageUrl } = $props();
 </script>
 
-<img src={imageUrl} alt="" class="size-12" />
+<img src={imageUrl} alt="" class="h-[100px] w-[100px]" />

@@ -12,6 +12,7 @@ model AuctionListingItem {
   uniqueItem       Boolean        @default(false) @map("unique_item")
   auctionListing   AuctionListing @relation(fields: [auctionListingId], references: [id])
   auctionListingId String         @map("auction_listing_id")
+  combineImported  Boolean        @default(false) @map("combine_imported")
 
   @@map("auction_listing_items")
 }

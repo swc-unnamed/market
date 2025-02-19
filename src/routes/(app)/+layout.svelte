@@ -5,7 +5,6 @@
 	import { setContext } from 'svelte';
 	import type { UserContext } from '$lib/stores';
 	import { USER_CONTEXT } from '$lib/stores/contexts';
-	import Icon from '@iconify/svelte';
 	let { children, data } = $props();
 
 	setContext<UserContext>(USER_CONTEXT, data.user);

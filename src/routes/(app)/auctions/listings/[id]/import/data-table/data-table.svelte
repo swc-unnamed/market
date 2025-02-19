@@ -28,10 +28,15 @@
 	let columnFilters = $state<ColumnFiltersState>([]);
 	let columnVisibility = $state<VisibilityState>({
 		protected: false,
-		quantity: false,
 		container: false,
-		system: false,
-		'Entity Name': false
+		system: true,
+		sector: true,
+		'Entity Name': false,
+		Cargo: false,
+		Uses: false,
+		hull: false,
+		shield: false,
+		ionic: false
 	});
 	let rowSelection = $state<RowSelectionState>({});
 

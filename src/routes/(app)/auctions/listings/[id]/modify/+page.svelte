@@ -16,16 +16,15 @@
 	import { toast } from 'svelte-sonner';
 	import { superForm } from 'sveltekit-superforms';
 	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
-	import AssetImage from '$lib/components/custom/assets/asset-image.svelte';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import AurebeshText from '$lib/components/custom/shared/aurebesh-text.svelte';
 	import { goto, invalidate } from '$app/navigation';
 	import { publishListingSchema } from '$lib/models/zod/auctions/listings/publish-listing.schema.js';
 	import { z } from 'zod';
 	import { formatAuctionListingStatus } from '$lib/helpers/auctions.js';
-	import SnackbarNav from '$lib/components/custom/layout/snackbar-nav.svelte';
 	import { cn } from '$lib/utils';
-	import CombineImportDialog from '$lib/components/custom/shared/combine-import-dialog.svelte';
+	import DataTable from './data-table/data-table.svelte';
+	import { columns } from './data-table/columns.js';
 
 	let { data } = $props();
 	let listing = $derived(data.listingRecord);
@@ -321,7 +320,7 @@
 										<Button
 											size="sm"
 											variant="action"
-											href={`/auctions/listings/${listing.id}/modify/import`}
+											href={`/auctions/listings/${listing.id}/import`}
 											class="border-primary">Import From Combine</Button
 										>
 									</div>
@@ -330,153 +329,8 @@
 						</Card.Header>
 
 						<Card.Content>
-							<div class="hidden md:flex">
-								<Table.Root>
-									<Table.Header>
-										<Table.Row>
-											<Table.Cell>Image</Table.Cell>
-											<Table.Cell>Name</Table.Cell>
-											<Table.Cell>Quantity</Table.Cell>
-											<Table.Cell>U / U / U</Table.Cell>
-											<Table.Cell>Unique</Table.Cell>
-											<Table.Cell>Asset Hash</Table.Cell>
-											<Table.Cell></Table.Cell>
-										</Table.Row>
-									</Table.Header>
-									<Table.Body>
-										{#each listing?.items as item}
-											<Table.Row>
-												<Table.Cell class="w-48">
-													{#if item.customImage}
-														<img
-															src={item.customImage}
-															alt="custom"
-															class="h-[100px] w-[100px] rounded-md drop-shadow-md"
-														/>
-													{:else if item.entityId}
-														<AssetImage
-															class="h-[100px] w-[100px] rounded-md drop-shadow-md"
-															id={item.entityId}
-														/>
-													{/if}
-												</Table.Cell>
-												<Table.Cell class="w-64">
-													{item.entity.name}
-												</Table.Cell>
-												<Table.Cell class="w-32">
-													{item.quantity}
-												</Table.Cell>
-												<Table.Cell>
-													{#if item.uuu}
-														<Badge>Yes</Badge>
-													{:else}
-														No
-													{/if}
-												</Table.Cell>
-												<Table.Cell>
-													<span class="uppercase">
-														{#if item.uniqueItem}
-															<Badge>Yes</Badge>
-														{:else}
-															No
-														{/if}
-													</span>
-												</Table.Cell>
-												<Table.Cell class="w-32 truncate">
-													{#if item.assetId}
-														{item.assetId}
-													{:else}
-														N/A
-													{/if}
-												</Table.Cell>
-												<Table.Cell class="w-56">
-													<AlertDialog.Root bind:open={deleteItemDialogOpen}>
-														<AlertDialog.Trigger class="w-full md:w-auto">
-															<Button size="sm" variant="action" class="text-red-500">
-																<AurebeshText text="D" />
-																Delete
-															</Button>
-														</AlertDialog.Trigger>
-														<AlertDialog.Content>
-															<AlertDialog.Header>
-																<AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title>
-																<AlertDialog.Description>
-																	We wil delete this item from the listing. We won't be able to add
-																	it back, but you can always add a new item.
-																</AlertDialog.Description>
-															</AlertDialog.Header>
-															<AlertDialog.Footer>
-																<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
-																<AlertDialog.Action
-																	onclick={async () => {
-																		await handleItemDelete({
-																			listingId: listing?.id,
-																			itemId: item.id
-																		});
-																	}}>Continue</AlertDialog.Action
-																>
-															</AlertDialog.Footer>
-														</AlertDialog.Content>
-													</AlertDialog.Root>
-												</Table.Cell>
-											</Table.Row>
-										{/each}
-									</Table.Body>
-								</Table.Root>
-							</div>
-
-							<div class="grid grid-cols-1 gap-3 md:hidden">
-								{#each listing?.items as item}
-									<div class="rounded-md bg-sidebar p-3">
-										<div class="flex items-start justify-between">
-											<div class="flex gap-1">
-												<div>
-													{#if item.customImage}
-														<img src={item.customImage} alt="custom" class="h-8 w-8" />
-													{:else if item.entityId}
-														<AssetImage
-															class="h-[100px] w-[100px] drop-shadow-md"
-															id={item.entityId}
-														/>
-													{/if}
-												</div>
-
-												<div class="flex flex-col gap-1">
-													<div>
-														{item.entity.name}
-													</div>
-
-													<div>
-														<Badge>U / U / U: {item.uuu ? 'Yes' : 'No'}</Badge>
-													</div>
-
-													<div>
-														<span class="uppercase">{item.entity?.type}</span>
-													</div>
-
-													<div>
-														<span
-															>{#if item.assetId}
-																{item.assetId}
-															{:else}
-																N/A
-															{/if}</span
-														>
-													</div>
-												</div>
-											</div>
-
-											<div class="flex items-center">
-												<Button size="icon" variant="action">
-													<AurebeshText text="E" class="text-primary" />
-												</Button>
-												<Button size="icon" variant="action">
-													<AurebeshText text="D" class="text-red-500" />
-												</Button>
-											</div>
-										</div>
-									</div>
-								{/each}
+							<div class="">
+								<DataTable {columns} data={listing?.items} />
 							</div>
 						</Card.Content>
 					</Card.Root>

@@ -37,6 +37,21 @@ export interface EntityValue {
 	tags: Tags;
 	pilot?: Attribute;
 	quantity?: number;
+	cargo?: CargoValue;
+}
+
+export interface CargoValue {
+	maxuses: number;
+	remaininguses: number;
+	entitytype: CargoTypeValue;
+}
+
+export interface CargoTypeValue {
+	value: string;
+	attributes: {
+		uid: string;
+		href: string;
+	};
 }
 
 export interface HullMeta {
@@ -70,7 +85,7 @@ export interface Attribute {
 
 export interface StandardAttribute {
 	uid: string;
-	type: string;
+	type?: string;
 	href: string;
 }
 

@@ -2,9 +2,11 @@ model Asset {
   id                  String               @id @default(cuid())
   entityId            String               @map("entity_id")
   entity              Entity               @relation(fields: [entityId], references: [id])
-  combineId           String               @map("combine_id")
+  combineId           String               @unique @map("combine_id")
   type                EntityType
   customImage         String?              @map("custom_image")
+  customImageLarge    String?              @map("custom_image_large")
+  customImageSmall    String?              @map("custom_image_small")
   ledger              AssetLedger[]
   auctionListingItems AuctionListingItem[]
 
