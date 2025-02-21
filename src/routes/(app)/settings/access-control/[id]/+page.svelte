@@ -82,6 +82,9 @@
 						<span class="text-sm text-primary">
 							{formatRole(data.record?.role)}
 						</span>
+						<span class="text-xs text-muted-foreground">
+							{data.record.combineId}
+						</span>
 					</div>
 				</div>
 			</Card.Title>
@@ -153,13 +156,13 @@
 
 			{#if ['holochain_architect', 'market_tzar'].includes(data.user.role)}
 				<h3 class="mt-3">SW Combine Grants</h3>
-				<div class="grid grid-cols-2 gap-3">
-					<div>
-						<Label>Granted Scopes</Label>
-						<ul>
-							<li class="text-xs">{data.record.scopes}</li>
-						</ul>
-					</div>
+				<div class="grid grid-cols-1 gap-3">
+					<Label>Granted Scopes</Label>
+					<ul>
+						{#each data.record.scopes as scope}
+							<li class="text-xs">{scope}</li>
+						{/each}
+					</ul>
 				</div>
 			{/if}
 		</Card.Content>

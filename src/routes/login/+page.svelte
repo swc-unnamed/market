@@ -17,6 +17,7 @@
 	let impersonationButtonBusy = $state(false);
 
 	let banned = $state(page.url.searchParams.has('banned'));
+	const bannedMessage = $state(page.url.searchParams.get('bannedMessage') as string);
 
 	async function retrieveHandleInfo(handle: string) {
 		impersonationButtonBusy = true;
@@ -91,7 +92,13 @@
 					</Card.Content>
 					<Card.Footer class="flex flex-col items-center">
 						{#if banned}
-							<p class="text-red-500">Your account has been banned.</p>
+							<p class="text-red-500">
+								{#if bannedMessage}
+									{bannedMessage}
+								{:else}
+									You have been banned from the platform.
+								{/if}
+							</p>
 						{:else}
 							<Button variant="action" href={data.url}>Login with SW Combine</Button>
 
