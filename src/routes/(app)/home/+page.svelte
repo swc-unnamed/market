@@ -39,7 +39,7 @@
 				</Tabs.List>
 
 				<Tabs.Content value="listings">
-					<div class="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
+					<div class="grid grid-cols-1 gap-3 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
 						{#if auctionListings.length > 0}
 							{#each auctionListings as al (al.id)}
 								<ListingSummaryCard listing={al} />

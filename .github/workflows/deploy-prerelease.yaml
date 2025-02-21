@@ -1,0 +1,14 @@
+name: Deploy Pre-Release
+
+on: 
+  release:
+    types: [prereleased]
+
+jobs: 
+  notify-webhook:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Webhook Notification
+        run: |
+          curl -G ${{ secrets.COOLIFY_MARKET_DEV_WEBHOOK }} \
+            -H "Authorization: Bearer ${{ secrets.COOLIFY_API_TOKEN }}"

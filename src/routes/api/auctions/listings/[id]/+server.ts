@@ -56,6 +56,10 @@ export const DELETE = async ({ locals, params }) => {
 					}
 				});
 			}
+
+			await tx.auctionListingItem.delete({
+				where: { id: item.id }
+			});
 		}
 
 		await tx.auctionListing.delete({

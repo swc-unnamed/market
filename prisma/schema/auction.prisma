@@ -12,6 +12,7 @@ model AuctionListingItem {
   uniqueItem       Boolean        @default(false) @map("unique_item")
   auctionListing   AuctionListing @relation(fields: [auctionListingId], references: [id])
   auctionListingId String         @map("auction_listing_id")
+  combineImported  Boolean        @default(false) @map("combine_imported")
 
   @@map("auction_listing_items")
 }
@@ -35,6 +36,7 @@ model AuctionListing {
   completedAt      DateTime?            @map("completed_at")
   auctionId        String?              @map("auction_id")
   auction          Auction?             @relation(fields: [auctionId], references: [id])
+  apiImported      Boolean              @default(false) @map("api_imported")
   createdAt        DateTime             @default(now()) @map("created_at")
   updatedAt        DateTime             @default(now()) @updatedAt @map("updated_at")
 

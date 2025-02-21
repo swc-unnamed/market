@@ -66,20 +66,12 @@
 					<Carousel.Content>
 						{#each listing.items as item}
 							{#if item.entityId}
-								<Carousel.Item class="w-full">
+								<Carousel.Item class="w-full rounded-md bg-black">
 									<span class="ml-1 text-xs text-primary">{item.entity?.name}</span>
 									{#if item.customImage}
-										<img
-											src={item.customImage}
-											alt="custom_image"
-											class="mx-auto block rounded-md border border-secondary shadow-md drop-shadow-md"
-										/>
+										<img src={item.customImage} alt="custom_image" class="mx-auto block" />
 									{:else}
-										<AssetImage
-											class="mx-auto block h-64 rounded-md border border-secondary shadow-md drop-shadow-md"
-											id={item.entityId}
-											large
-										/>
+										<AssetImage class="mx-auto block h-64" id={item.entityId} large />
 									{/if}
 								</Carousel.Item>
 							{/if}
@@ -112,7 +104,9 @@
 		</div>
 
 		<div class="flex flex-col gap-1">
-			<div class="mb-2 flex items-center justify-between rounded-md bg-black p-3">
+			<div
+				class="mb-2 flex items-center justify-between rounded-md border border-secondary bg-black p-3"
+			>
 				<span class="text-sm text-primary" style="font-family: 'Galactic Basic'">
 					{#if listing.startingBid}
 						${integerToCredit(listing.startingBid)}

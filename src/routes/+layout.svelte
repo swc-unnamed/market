@@ -1,6 +1,4 @@
 <script lang="ts">
-	import Icon from '$lib/components/custom/shared/icon.svelte';
-	import { Button } from '$lib/components/ui/button';
 	import { Toaster } from '$lib/components/ui/sonner/index.js';
 	import '../app.css';
 

@@ -1,1 +1,0 @@
-ALTER TABLE "auction_listings" ADD COLUMN "completed_at" timestamp;

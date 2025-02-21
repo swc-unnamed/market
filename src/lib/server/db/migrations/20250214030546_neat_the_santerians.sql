@@ -1,1 +1,0 @@
-ALTER TABLE "auctions" ADD COLUMN "closed" boolean DEFAULT false NOT NULL;
