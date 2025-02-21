@@ -6,6 +6,7 @@ export class CombineScopeCheck {
 	constructor(scopes: string[]) {
 		this.userScopes = {
 			character_read: scopes.includes('character_read'),
+			character_privileges: scopes.includes('character_privileges'),
 			personal_inv_overview: scopes.includes('personal_inv_overview'),
 			personal_inv_creatures_read: scopes.includes('personal_inv_creatures_read'),
 			personal_inv_droids_read: scopes.includes('personal_inv_droids_read'),

@@ -4,6 +4,7 @@ import type { FacilityType } from './facility-type';
 import type { Entities } from './inventory-response';
 import type { ItemType } from './item-type';
 import type { NpcType } from './npc-type';
+import type { CharacterPrivilege } from './character-privilege';
 import type { ShipType } from './ship-type';
 import type { StationType } from './station-type';
 import type { VehicleType } from './vehicle-type';
@@ -28,4 +29,5 @@ export interface Swcapi {
 	creaturetype?: CreatureType;
 	npctype?: NpcType;
 	entities?: Entities;
+	privilege?: CharacterPrivilege;
 }

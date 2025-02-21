@@ -5,12 +5,17 @@ import { error } from '@sveltejs/kit';
 import { json, redirect } from '@sveltejs/kit';
 import axios from 'axios';
 
-export const GET = async ({ locals, cookies, params }) => {
+export const GET = async ({ locals, cookies, params, url }) => {
 	const combineId = locals.user.combineId;
 	const accessToken = cookies.get('um_combine_access_token');
 
 	if (!accessToken) {
 		throw redirect(302, '/login');
+	}
+
+	const tags = url.searchParams.get('tags') as string;
+	if (!tags) {
+		throw error(400, 'Tags are required!');
 	}
 
 	const decryptedToken = new Encryption().descrypt(accessToken);
@@ -40,15 +45,23 @@ export const GET = async ({ locals, cookies, params }) => {
 
 	const combinedInventory: CombinedInventoryResponse[] = [];
 
-	const { data } = await axios.get<CombineResponse>(
-		`https://www.swcombine.com/ws/v2.0/inventory/${combineId}/${params.type}/owner`,
-		{
-			headers: {
-				Authorization: `OAuth ${decryptedToken}`,
-				Accept: 'application/json'
-			}
+	const baseUrl = `https://www.swcombine.com/ws/v2.0/inventory/${combineId}/${params.type}/owner`;
+	const tagsArray = tags.split(',').map((tag) => tag.trim());
+	const sp = new URLSearchParams();
+	sp.append('filter_type[]', 'tags');
+	sp.append('filter_inclusion[tags]', 'includes');
+	tagsArray.forEach((tag) => {
+		sp.append('filter_value[tags][]', tag);
+	});
+
+	const requestUrl = `${baseUrl}?${sp.toString()}`;
+
+	const { data } = await axios.get<CombineResponse>(`${requestUrl}`, {
+		headers: {
+			Authorization: `OAuth ${decryptedToken}`,
+			Accept: 'application/json'
 		}
-	);
+	});
 
 	data.swcapi.entities?.entity.forEach((entity) => {
 		combinedInventory.push({

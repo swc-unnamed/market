@@ -1,5 +1,6 @@
 export type CombineScope =
 	| 'character_read'
+	| 'character_privileges'
 	| 'personal_inv_overview'
 	| 'personal_inv_creatures_read'
 	| 'personal_inv_droids_read'

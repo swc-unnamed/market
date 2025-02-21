@@ -83,6 +83,33 @@
 						</div>
 					</Accordion.Content>
 				</Accordion.Item>
+
+				<Accordion.Item id="combine-permissions" value="combine-permissions" class="border-none">
+					<Accordion.Trigger name="combine-permissions">
+						How does Unnamed use Combine permissions?
+					</Accordion.Trigger>
+					<Accordion.Content class="roundedmd bg-secondary shadow-md">
+						<div class="grid grid-cols-1 gap-2 p-4">
+							<p>
+								We use the permissions that you grant us to access your Combine account to list your
+								assets for sale or auction. We do not have access to your assets or any other
+								information about your account without you performing an action on our platform.
+							</p>
+							<p>
+								We do not store your access token or your refresh token, we save them directly to
+								your browser as a cookie.
+							</p>
+							<p>
+								While most of the permissions are self explanitory, we wanted to bring a special
+								note to the
+								<code class="text-muted-foreground">character_privileges</code> permission. This is used
+								when you check your factions assets. If you do not have the ability to make over the
+								entity type, we will not pull the faction inventory even if you can see them. The reason
+								for this is you can't list them for sale or auction, if you can't makeover the asset.
+							</p>
+						</div>
+					</Accordion.Content>
+				</Accordion.Item>
 			</Accordion.Root>
 		</Card.Content>
 	</Card.Root>
