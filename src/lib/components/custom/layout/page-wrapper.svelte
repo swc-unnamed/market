@@ -3,6 +3,7 @@
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Icon from '$lib/components/custom/shared/icon.svelte';
+	import Notifications from '../shared/notifications.svelte';
 
 	interface LayoutWrapperProps {
 		title?: string;
@@ -55,6 +56,9 @@
 				{#if center}
 					{@render center?.()}
 				{/if}
+
+				<Notifications />
+
 				{#if right}
 					{@render right?.()}
 				{/if}

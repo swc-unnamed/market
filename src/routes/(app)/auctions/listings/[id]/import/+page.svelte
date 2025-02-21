@@ -22,7 +22,6 @@
 		scope: string | null;
 	}
 
-	// TODO: Move to seperate file
 	const personalSelectOptions: SelectOption[] = [
 		{
 			value: 'none',
@@ -120,7 +119,7 @@
 
 	let selectedPersonalEntityType = $state<string>('none');
 	let selectedFactionEntityType = $state<string>('none');
-	let tags = $state<string[]>(['unnamed']);
+	let tags = $state<string[]>(['unnamed-market']);
 	let selectedEntities = $state<CombinedInventoryResponse[]>([]);
 	let availablePersonalEntities = $state<CombinedInventoryResponse[]>([]);
 	let availableFactionEntities = $state<CombinedInventoryResponse[]>([]);
