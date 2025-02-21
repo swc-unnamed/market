@@ -17,6 +17,11 @@ export const handle: Handle = async ({ event, resolve }) => {
 		return resolve(event);
 	}
 
+	// Api routes
+	if (event.url.pathname.startsWith('/api/v1')) {
+		return resolve(event);
+	}
+
 	// Routes with /p which stands for public, do not require authentication
 	if (event.url.pathname.startsWith('/p')) {
 		return resolve(event);

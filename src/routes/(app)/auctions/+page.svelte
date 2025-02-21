@@ -17,10 +17,6 @@
 			<Card.Content>
 				<div class="flex flex-col gap-1">
 					<p>There are currently {data.records.length} auctions available.</p>
-
-					{#if canCreateAuction}
-						<p>You can <a href={'/auctions/new'}>create</a> a new Auction.</p>
-					{/if}
 				</div>
 			</Card.Content>
 		</Card.Root>

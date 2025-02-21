@@ -42,3 +42,8 @@ enum AuctionStatus {
   started
   closed
 }
+
+enum IntegrationScope {
+  user_read
+  user_create
+}

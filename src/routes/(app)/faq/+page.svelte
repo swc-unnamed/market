@@ -50,16 +50,16 @@
 					<Accordion.Content class="rounded-md bg-secondary shadow-md">
 						<div class="flex flex-col gap-2 p-4">
 							<p>
-								Glad you asked. The Holochain is what we call the ledger system that we created.
-								This ledger system is used to track the history of an asset as it moves through our
-								platform. Think of it as a chain of custody for your assets. You never know, that
-								random piece of junk you just bought might have been a part of a larger story. Or it
-								could just be a piece of junk, we don't judge.
+								The Holochain keeps track of when an item is sold or auctioned on the Unnamed
+								Market. It's a way to see an item's journey through the marketplace—where it's been
+								and how many times it's changed hands. Maybe that weird little trinket you just
+								bought has a surprising history, or maybe it's just a weird little trinket—we're not
+								here to judge.
 							</p>
 							<p>
-								We don't track who the asset is assigned to or anything like that, and we only
-								update the ledger when a Patron lists it for sale or auction. This way, you can see
-								where the asset has been. We are trying to put a different spin on things here.
+								Beyond this market, we don't track who owns what, and the Holochain only updates
+								when an item is listed for sale or auction on our marketplace. But, within it, you
+								can get a glimpse of a little piece of history.
 							</p>
 						</div>
 					</Accordion.Content>

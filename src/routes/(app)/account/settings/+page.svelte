@@ -22,6 +22,7 @@
 	import UserWebhookCard from '$lib/components/custom/account/user-webhook-card.svelte';
 	import { updateUserScopesSchema } from '$lib/models/zod/users/update-user-scopes.schema.js';
 	import Icon from '@iconify/svelte';
+	import { goto } from '$app/navigation';
 
 	let { data } = $props();
 	let record = $derived(data.record);
@@ -104,10 +105,16 @@
 
 			<div class="mt-3">
 				<Tabs.Root bind:value={selectedTab}>
-					<Tabs.TabsList>
-						<Tabs.Trigger value="combine">Combine Sync</Tabs.Trigger>
-						<Tabs.Trigger value="hooks">Webhooks</Tabs.Trigger>
-					</Tabs.TabsList>
+					<div class="flex items-center justify-between">
+						<Tabs.TabsList>
+							<Tabs.Trigger value="combine">Combine Sync</Tabs.Trigger>
+							<Tabs.Trigger value="hooks">Webhooks</Tabs.Trigger>
+						</Tabs.TabsList>
+
+						<Button size="sm" variant="action" href="/account/settings/integrations">
+							My Integrations
+						</Button>
+					</div>
 
 					<Tabs.Content value="combine">
 						<div class="mt-4">
