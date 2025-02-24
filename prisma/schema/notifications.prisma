@@ -1,0 +1,12 @@
+model Notification {
+  id        String               @id @default(cuid())
+  userId    String               @map("user_id")
+  user      User                 @relation(fields: [userId], references: [id])
+  category  NotificationCategory
+  message   String
+  href      String?
+  read      Boolean              @default(false)
+  createdAt DateTime             @default(now()) @map("created_at")
+
+  @@map("notifications")
+}

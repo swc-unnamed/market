@@ -29,7 +29,7 @@ export const POST = async ({ locals, request, params }) => {
 
 	const body: { data: CombinedInventoryResponse[] } = await request.json();
 
-	console.log(body);
+	const assetIds: string[] = [];
 
 	for (const entity of body.data) {
 		if (listing.items.some((item) => item.asset?.combineId === entity.uid)) {
@@ -60,6 +60,8 @@ export const POST = async ({ locals, request, params }) => {
 			}
 		});
 
+		assetIds.push(asset.id);
+
 		await prisma.entity.update({
 			where: { id: entityRecord.id },
 			data: {
@@ -85,6 +87,14 @@ export const POST = async ({ locals, request, params }) => {
 			}
 		});
 	}
+
+	await prisma.notification.create({
+		data: {
+			category: 'auction',
+			userId: listing.listedById,
+			message: `Imported ${assetIds.length} assets to ALID ${listing.listingNumber}. These assets are now in the holochain.`
+		}
+	});
 
 	return json({ success: true, message: `Holochain updated for ALID ${listing.listingNumber}` });
 };

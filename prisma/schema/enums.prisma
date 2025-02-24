@@ -47,3 +47,8 @@ enum IntegrationScope {
   user_read
   user_create
 }
+
+enum NotificationCategory {
+  auction
+  market
+}

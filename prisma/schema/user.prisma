@@ -16,6 +16,7 @@ model User {
   auctionListingsWon   AuctionListing[] @relation(name: "auction_listings_won")
   itegrationRegistered Integration[]    @relation(name: "integrations_registered")
   integrationsApproved Integration[]    @relation(name: "integrations_approved")
+  notifications        Notification[]
 
   @@map("users")
 }
