@@ -82,6 +82,21 @@ export const load = async ({ url, cookies }) => {
 		redirect(303, '/login');
 	}
 
+	if (env.NODE_ENV !== 'production') {
+		const betaUser = await prisma.betaAccess.findUnique({
+			where: {
+				uid: user.combineId
+			}
+		});
+
+		if (!betaUser) {
+			throw redirect(
+				303,
+				`/login?banned=true&bannedMessage=You do not have access to this build. Contact Unnamed Market Staff for more information on how to get access.`
+			);
+		}
+	}
+
 	const formattedScopes = user.scopes.split(' ').map((s: string) => s);
 
 	const u = await prisma.user.upsert({

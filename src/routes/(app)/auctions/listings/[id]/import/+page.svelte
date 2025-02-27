@@ -22,7 +22,6 @@
 		scope: string | null;
 	}
 
-	// TODO: Move to seperate file
 	const personalSelectOptions: SelectOption[] = [
 		{
 			value: 'none',
@@ -120,7 +119,7 @@
 
 	let selectedPersonalEntityType = $state<string>('none');
 	let selectedFactionEntityType = $state<string>('none');
-	let tags = $state<string[]>(['unnamed']);
+	let tags = $state<string[]>(['unnamed-market']);
 	let selectedEntities = $state<CombinedInventoryResponse[]>([]);
 	let availablePersonalEntities = $state<CombinedInventoryResponse[]>([]);
 	let availableFactionEntities = $state<CombinedInventoryResponse[]>([]);
@@ -151,13 +150,24 @@
 	}
 
 	async function handleSave() {
-		const response = await axios.post(`/api/auctions/listings/${data.listingId}/import`, {
-			data: selectedEntities
+		const res = await fetch(`/api/auctions/listings/${data.listingId}/import`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				data: selectedEntities
+			})
 		});
 
-		if (response.data.success) {
+		if (res.ok) {
 			toast.success('Entities have been imported successfully.');
+			return;
 		}
+
+		const errmsg = await res.json();
+
+		toast.error(errmsg.message);
 	}
 </script>
 

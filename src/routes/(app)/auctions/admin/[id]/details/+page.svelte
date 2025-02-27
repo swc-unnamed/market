@@ -226,6 +226,10 @@
 							<p>Credits To:</p>
 							<p>{listing.sendCreditsTo}</p>
 						</div>
+						<div class="flex items-center gap-2">
+							<p>Winning User:</p>
+							<p>{listing.winningBidder?.name}</p>
+						</div>
 					</div>
 				</div>
 			{/each}

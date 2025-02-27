@@ -68,6 +68,14 @@ export const DELETE = async ({ locals, params }) => {
 			}
 		});
 
+		await tx.notification.create({
+			data: {
+				userId: record.listedById,
+				category: 'auction',
+				message: `Auction Listing ALID ${record.listingNumber} has been deleted per your request.`
+			}
+		});
+
 		response = {
 			status: 200,
 			message: "Listing item deleted successfully. It will be available in the lister's history."
@@ -136,6 +144,15 @@ export const POST = async ({ locals, params, request }) => {
 					}
 				});
 			}
+		}
+	});
+
+	await prisma.notification.create({
+		data: {
+			userId: record.listedById,
+			category: 'auction',
+			href: `/auctions/listings/${record.id}`,
+			message: `Auction Listing ALID ${record.listingNumber} has been published.`
 		}
 	});
 

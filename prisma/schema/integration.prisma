@@ -1,0 +1,18 @@
+model Integration {
+  id             String             @id @default(cuid())
+  name           String
+  description    String?
+  scopes         IntegrationScope[]
+  approved       Boolean            @default(false)
+  approvedById   String?            @map("approved_by")
+  approvedBy     User?              @relation(fields: [approvedById], references: [id], name: "integrations_approved")
+  accessToken    String             @unique @default(cuid()) @map("access_token")
+  registeredById String             @map("registered_by")
+  registeredBy   User               @relation(fields: [registeredById], references: [id], name: "integrations_registered")
+  lastUsed       DateTime?          @map("last_used")
+  successCount   Int                @default(0) @map("success_count")
+  failureCount   Int                @default(0) @map("failure_count")
+  createdAt      DateTime           @default(now()) @map("created_at")
+
+  @@map("integrations")
+}

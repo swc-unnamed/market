@@ -29,7 +29,7 @@ export const POST = async ({ locals, request, params }) => {
 
 	const body: { data: CombinedInventoryResponse[] } = await request.json();
 
-	console.log(body);
+	const assetIds: string[] = [];
 
 	for (const entity of body.data) {
 		if (listing.items.some((item) => item.asset?.combineId === entity.uid)) {
@@ -44,21 +44,87 @@ export const POST = async ({ locals, request, params }) => {
 			throw error(500, { message: 'Entity not found on the holochain. Contact Unnamed Support.' });
 		}
 
-		const asset = await prisma.asset.upsert({
+		const assetRecord = await prisma.asset.findUnique({
 			where: { combineId: entity.uid },
-			create: {
-				combineId: entity.uid,
-				type: entityRecord.type,
-				entityId: entityRecord.id,
-				customImageSmall: entity.images.customSmall,
-				customImageLarge: entity.images.customLarge,
-				customImage: entity.images.customLarge
-			},
-			update: {
-				customImageSmall: entity.images.customSmall,
-				customImageLarge: entity.images.customLarge
+			include: {
+				auctionListingItems: {
+					include: {
+						auctionListing: true
+					}
+				}
 			}
 		});
+
+		if (assetRecord) {
+			for (const item of assetRecord.auctionListingItems) {
+				if (
+					item.auctionListing.status === 'new' ||
+					item.auctionListing.status === 'draft' ||
+					item.auctionListing.status === 'selected'
+				) {
+					throw error(400, {
+						message: `Asset is listed in ALID ${item.auctionListing.listingNumber} and is not in a state where you can import it into this listing.`
+					});
+				}
+			}
+
+			await prisma.asset.update({
+				where: { combineId: entity.uid },
+				data: {
+					customImageSmall: entity.images.customSmall,
+					customImageLarge: entity.images.customLarge
+				}
+			});
+
+			let isUUU = entity.wrecked === 'no';
+
+			if (entity.protected) {
+				isUUU = entity.protected === 'no';
+			}
+
+			await prisma.auctionListingItem.create({
+				data: {
+					assetId: assetRecord.id,
+					entityId: entityRecord.id,
+					auctionListingId: listing.id,
+					combineImported: true,
+					quantity: entity.quantity,
+					uuu: isUUU
+				}
+			});
+
+			assetIds.push(assetRecord.id);
+		} else {
+			const newAssetRecord = await prisma.asset.create({
+				data: {
+					combineId: entity.uid,
+					type: entityRecord.type,
+					entityId: entityRecord.id,
+					customImageSmall: entity.images.customSmall,
+					customImageLarge: entity.images.customLarge,
+					customImage: entity.images.customLarge
+				}
+			});
+
+			let isUUU = entity.wrecked === 'no';
+
+			if (entity.protected) {
+				isUUU = entity.protected === 'no';
+			}
+
+			await prisma.auctionListingItem.create({
+				data: {
+					assetId: newAssetRecord.id,
+					entityId: entityRecord.id,
+					auctionListingId: listing.id,
+					combineImported: true,
+					quantity: entity.quantity,
+					uuu: isUUU
+				}
+			});
+
+			assetIds.push(newAssetRecord.id);
+		}
 
 		await prisma.entity.update({
 			where: { id: entityRecord.id },
@@ -67,24 +133,16 @@ export const POST = async ({ locals, request, params }) => {
 				imageLarge: entity.images.large
 			}
 		});
-
-		let isUUU = entity.wrecked === 'no';
-
-		if (entity.protected) {
-			isUUU = entity.protected === 'no';
-		}
-
-		await prisma.auctionListingItem.create({
-			data: {
-				assetId: asset.id,
-				entityId: entityRecord.id,
-				auctionListingId: listing.id,
-				combineImported: true,
-				quantity: entity.quantity,
-				uuu: isUUU
-			}
-		});
 	}
+
+	await prisma.notification.create({
+		data: {
+			category: 'auction',
+			userId: listing.listedById,
+			message: `Imported ${assetIds.length} assets to ALID ${listing.listingNumber}. These assets are now in the holochain.`,
+			href: `/auctions/listings/${listing.id}`
+		}
+	});
 
 	return json({ success: true, message: `Holochain updated for ALID ${listing.listingNumber}` });
 };

@@ -21,21 +21,16 @@
 		from using this platform.
 	</p>
 
-	<h2 class="mt-6 text-xl font-semibold">2. No Personal Identifiable Information (PII)</h2>
-	<p class="mb-4">
-		As stated in our Privacy Policy, users should never enter PII on this platform. If a user enters
-		PII, we are not responsible for any consequences, but we will attempt to remove the data and ban
-		the user.
-	</p>
-
-	<h2 class="mt-6 text-xl font-semibold">2.1. Doxxing</h2>
+	<h2 class="mt-6 text-xl font-semibold">2. Doxxing</h2>
 	<p class="mb-4">
 		We have a zero-tolerance policy for doxxing. Any user found to be sharing personal information
 		of others will be banned from the platform, and reported to the SWCombine ASims team for further
 		action.
 	</p>
 
-	<h2 class="mt-6 text-xl font-semibold">3. GDPR & Compliance</h2>
+	<h2 class="mt-6 text-xl font-semibold">
+		3. General Data Protection Regulation (GDPR) & Compliance
+	</h2>
 	<p class="mb-4">
 		We are not required to adhere to GDPR, but we make reasonable efforts to align with its
 		principles where possible.
@@ -95,7 +90,9 @@
 	<h2 class="mb-2 mt-6 text-2xl font-semibold">4. No Personal Identifiable Information (PII)</h2>
 	<p class="mb-4">
 		Users should never enter personal identifiable information (PII) into our platform. We are not
-		responsible for any sensitive information submitted by users.
+		responsible for any sensitive information submitted by users. Users should never enter PII on
+		this platform. If a user enters PII, we are not responsible for any consequences, but we will
+		attempt to remove the data and ban the user.
 	</p>
 
 	<h2 class="mb-2 mt-6 text-2xl font-semibold">5. Security Measures</h2>

@@ -366,7 +366,7 @@
 									<span class="text-sm text-muted-foreground">
 										We use the Combine ID to track the asset on the holochain. While not required,
 										it is a staple of the Unnamed Market. Review our
-										<a href="/help#combine-id" target="_blank">help</a> entry for more.
+										<a href="/faq#combine-id" target="_blank">help</a> entry for more.
 									</span>
 								</div>
 

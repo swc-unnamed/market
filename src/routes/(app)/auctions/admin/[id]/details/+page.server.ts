@@ -28,6 +28,13 @@ export const load = async ({ locals, params, depends }) => {
 							name: true,
 							avatar: true
 						}
+					},
+					winningBidder: {
+						select: {
+							id: true,
+							name: true,
+							avatar: true
+						}
 					}
 				}
 			}
