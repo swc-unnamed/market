@@ -150,13 +150,24 @@
 	}
 
 	async function handleSave() {
-		const response = await axios.post(`/api/auctions/listings/${data.listingId}/import`, {
-			data: selectedEntities
+		const res = await fetch(`/api/auctions/listings/${data.listingId}/import`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				data: selectedEntities
+			})
 		});
 
-		if (response.data.success) {
+		if (res.ok) {
 			toast.success('Entities have been imported successfully.');
+			return;
 		}
+
+		const errmsg = await res.json();
+
+		toast.error(errmsg.message);
 	}
 </script>
 
