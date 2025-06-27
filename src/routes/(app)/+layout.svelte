@@ -1,0 +1,15 @@
+<script lang="ts">
+	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
+	import AppSidebar from '$lib/components/layout/app-sidebar.svelte';
+	import { type UserContext, UserContextKey } from '$lib/context/user.context';
+	import { setContext } from 'svelte';
+
+	let { children, data } = $props();
+
+	setContext<UserContext>(UserContextKey, data.user);
+</script>
+
+<Sidebar.Provider>
+	<AppSidebar />
+	{@render children?.()}
+</Sidebar.Provider>

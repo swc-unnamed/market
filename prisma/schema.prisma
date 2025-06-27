@@ -1,0 +1,272 @@
+generator client {
+  provider        = "prisma-client"
+  output          = "../src/lib/database/prisma"
+  previewFeatures = ["queryCompiler", "driverAdapters", "relationJoins"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("UM_DATABASE_URL")
+}
+
+enum Role {
+  Patron
+  Auctioneer
+  Developer
+  Tzar
+
+  @@map("roles")
+}
+
+enum AuctionListingStatus {
+  Draft
+  Active
+  Sold
+  Cancelled
+  Expired
+  PendingPayment
+  PendingMakeover
+  PendingVerification
+  Complete
+
+  @@map("auction_listing_status")
+}
+
+enum AuctionListingType {
+  Live
+  Standard
+  Private
+
+  @@map("auction_listing_types")
+}
+
+enum EntityLedgerType {
+  Auction
+  Marketplace
+
+  @@map("entity_ledger_types")
+}
+
+model User {
+  id                     String           @id @default(cuid())
+  combineId              String           @unique
+  username               String
+  combineScopes          String[]         @default(["character_read"])
+  discordId              String?          @unique
+  discordUsername        String?
+  role                   Role             @default(Patron)
+  apiKey                 String           @unique @default(uuid())
+  banned                 Boolean          @default(false)
+  bannedReason           String?
+  bannedDate             DateTime?
+  createdAt              DateTime         @default(now())
+  lastLogin              DateTime         @default(now())
+  profile                Profile?
+  ownedOrganizations     Organization[]
+  moderatedLiveAuctions  AuctionLive[]
+  auctionListingsCreated AuctionListing[] @relation("auction_listing_created")
+  auctionListingsWon     AuctionListing[] @relation("auction_listing_won")
+  auctionBids            AuctionBid[]
+
+  @@map("users")
+}
+
+model Profile {
+  id                 String                    @id @default(cuid())
+  userId             String                    @unique
+  user               User                      @relation(fields: [userId], references: [id])
+  displayName        String
+  avatar             String?
+  biography          String?
+  reputation         Int                       @default(50)
+  memberships        OrganizationMember[]      @relation("memberships")
+  activeMembershipId String?
+  activeMembership   OrganizationMember?       @relation("active_membership", fields: [activeMembershipId], references: [id])
+  reputationLedger   ProfileReputationLedger[]
+
+  @@map("profiles")
+}
+
+model ProfileReputationLedger {
+  id        String   @id @default(cuid())
+  profileId String
+  profile   Profile  @relation(fields: [profileId], references: [id])
+  value     Int
+  reason    String
+  timestamp DateTime @default(now())
+
+  @@index([profileId], name: "idx_profile_reputation_ledgers_profile_id")
+  @@index([timestamp], name: "idx_profile_reputation_ledgers_timestamp")
+  @@map("profile_reputation_ledgers")
+}
+
+model BetaAccess {
+  id        String   @id @default(cuid())
+  combineId String   @unique
+  createdAt DateTime @default(now())
+
+  @@map("beta_access")
+}
+
+model Entity {
+  id           String               @id @default(cuid())
+  name         String
+  type         String
+  combineUid   String               @unique
+  combineHref  String
+  combineData  Json                 @db.JsonB
+  imageSmall   String
+  imageLarge   String
+  ledgers      EntityLedger[]
+  auctionItems AuctionListingItem[]
+
+  @@map("entities")
+}
+
+model EntityLedger {
+  id        String           @id @default(cuid())
+  entityId  String
+  entity    Entity           @relation(fields: [entityId], references: [id])
+  type      EntityLedgerType
+  value     String
+  timestamp DateTime         @default(now())
+
+  @@index([entityId], name: "idx_entity_ledgers_entity_id")
+  @@index([timestamp], name: "idx_entity_ledgers_timestamp")
+  @@map("entity_ledgers")
+}
+
+enum OrganizationRole {
+  Patron
+  Member
+  Admin
+  Owner
+
+  @@map("organization_roles")
+}
+
+model Organization {
+  id             String               @id @default(cuid())
+  name           String               @unique
+  slug           String               @unique
+  description    String?
+  logoUrl        String?
+  reputation     Int                  @default(0)
+  websiteUrl     String?
+  discordUrl     String?
+  ownerId        String
+  owner          User                 @relation(fields: [ownerId], references: [id])
+  createdAt      DateTime             @default(now())
+  members        OrganizationMember[]
+  AuctionListing AuctionListing[]
+
+  @@map("organizations")
+}
+
+model OrganizationMember {
+  id             String           @id @default(cuid())
+  organizationId String
+  organization   Organization     @relation(fields: [organizationId], references: [id])
+  profileId      String
+  profile        Profile          @relation("memberships", fields: [profileId], references: [id])
+  role           OrganizationRole @default(Patron)
+  joinedAt       DateTime         @default(now())
+  activeProfiles Profile[]        @relation("active_membership")
+
+  @@unique([organizationId, profileId], name: "unique_org_member")
+  @@map("organization_members")
+}
+
+model AuctionLive {
+  id          String           @id @default(cuid())
+  startTime   DateTime
+  title       String
+  description String?
+  moderatorId String
+  moderator   User             @relation(fields: [moderatorId], references: [id])
+  createdAt   DateTime         @default(now())
+  endedAt     DateTime?
+  listings    AuctionListing[]
+
+  @@map("auction_lives")
+}
+
+model AuctionListing {
+  id               String               @id @default(cuid())
+  listingNumber    Int                  @unique @default(autoincrement())
+  status           AuctionListingStatus @default(Draft)
+  type             AuctionListingType   @default(Live)
+  title            String
+  description      String
+  location         String
+  minimumBid       Int                  @default(100000)
+  creatorId        String
+  creator          User                 @relation("auction_listing_created", fields: [creatorId], references: [id])
+  anonymous        Boolean              @default(false)
+  creditsRecipient String
+  winnerId         String?
+  winner           User?                @relation("auction_listing_won", fields: [winnerId], references: [id])
+  organizationId   String?
+  organization     Organization?        @relation(fields: [organizationId], references: [id])
+  liveAuctionId    String?
+  liveAuction      AuctionLive?         @relation(fields: [liveAuctionId], references: [id])
+  allowBuyNow      Boolean              @default(false)
+  buyNowPrice      String?
+  winningBidAmount Int?                 @default(0)
+  bids             AuctionBid[]
+  reviews          AuctionReview[]
+  items            AuctionListingItem[]
+
+  @@map("auction_listings")
+}
+
+model AuctionListingItem {
+  id          String         @id @default(cuid())
+  listingId   String
+  listing     AuctionListing @relation(fields: [listingId], references: [id])
+  entityId    String
+  entity      Entity         @relation(fields: [entityId], references: [id])
+  name        String
+  quantity    Int
+  uuu         Boolean        @default(true)
+  unique      Boolean        @default(false)
+  customName  String?
+  customImage String?
+  imported    Boolean        @default(false)
+  createdAt   DateTime       @default(now())
+
+  @@map("auction_listing_items")
+}
+
+model AuctionBid {
+  id               String         @id @default(cuid())
+  auctionListingId String
+  auctionListing   AuctionListing @relation(fields: [auctionListingId], references: [id])
+  bidderId         String
+  bidder           User           @relation(fields: [bidderId], references: [id])
+  amount           Int
+  createdAt        DateTime       @default(now())
+
+  @@map("auction_bids")
+}
+
+model AuctionReview {
+  id          String         @id @default(cuid())
+  listingId   String
+  listing     AuctionListing @relation(fields: [listingId], references: [id])
+  reviewerId  String
+  revieweeId  String
+  createdAt   DateTime       @default(now())
+  completedAt DateTime?
+
+  @@map("auction_reviews")
+}
+
+model AuctionEvent {
+  id        String   @id @default(cuid())
+  message   String
+  href      String?
+  createdAt DateTime @default(now())
+
+  @@map("auction_events")
+}
