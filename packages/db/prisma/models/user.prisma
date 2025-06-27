@@ -1,0 +1,52 @@
+model User {
+  id                     String           @id @default(cuid())
+  combineId              String           @unique
+  username               String
+  combineScopes          String[]         @default(["character_read"])
+  discordId              String?          @unique
+  discordUsername        String?
+  role                   Role             @default(Patron)
+  apiKey                 String           @unique @default(uuid())
+  banned                 Boolean          @default(false)
+  bannedReason           String?
+  bannedDate             DateTime?
+  createdAt              DateTime         @default(now())
+  lastLogin              DateTime         @default(now())
+  profile                Profile?
+  ownedOrganizations     Organization[]
+  moderatedLiveAuctions  AuctionLive[]
+  auctionListingsCreated AuctionListing[] @relation("auction_listing_created")
+  auctionListingsWon     AuctionListing[] @relation("auction_listing_won")
+  auctionBids            AuctionBid[]
+
+  @@map("users")
+}
+
+model Profile {
+  id                 String                    @id @default(cuid())
+  userId             String                    @unique
+  user               User                      @relation(fields: [userId], references: [id])
+  displayName        String
+  avatar             String?
+  biography          String?
+  reputation         Int                       @default(50)
+  memberships        OrganizationMember[]      @relation("memberships")
+  activeMembershipId String?
+  activeMembership   OrganizationMember?       @relation("active_membership", fields: [activeMembershipId], references: [id])
+  reputationLedger   ProfileReputationLedger[]
+
+  @@map("profiles")
+}
+
+model ProfileReputationLedger {
+  id        String   @id @default(cuid())
+  profileId String
+  profile   Profile  @relation(fields: [profileId], references: [id])
+  value     Int
+  reason    String
+  timestamp DateTime @default(now())
+
+  @@index([profileId], name: "idx_profile_reputation_ledgers_profile_id")
+  @@index([timestamp], name: "idx_profile_reputation_ledgers_timestamp")
+  @@map("profile_reputation_ledgers")
+}

@@ -1,0 +1,10 @@
+generator client {
+  provider        = "prisma-client"
+  output          = "../src/prisma"
+  previewFeatures = ["queryCompiler", "driverAdapters", "relationJoins"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("UM_DATABASE_URL")
+}

@@ -1,0 +1,7 @@
+model BetaAccess {
+  id        String   @id @default(cuid())
+  combineId String   @unique
+  createdAt DateTime @default(now())
+
+  @@map("beta_access")
+}

@@ -1,0 +1,31 @@
+model Organization {
+  id             String               @id @default(cuid())
+  name           String               @unique
+  slug           String               @unique
+  description    String?
+  logoUrl        String?
+  reputation     Int                  @default(0)
+  websiteUrl     String?
+  discordUrl     String?
+  ownerId        String
+  owner          User                 @relation(fields: [ownerId], references: [id])
+  createdAt      DateTime             @default(now())
+  members        OrganizationMember[]
+  AuctionListing AuctionListing[]
+
+  @@map("organizations")
+}
+
+model OrganizationMember {
+  id             String           @id @default(cuid())
+  organizationId String
+  organization   Organization     @relation(fields: [organizationId], references: [id])
+  profileId      String
+  profile        Profile          @relation("memberships", fields: [profileId], references: [id])
+  role           OrganizationRole @default(Patron)
+  joinedAt       DateTime         @default(now())
+  activeProfiles Profile[]        @relation("active_membership")
+
+  @@unique([organizationId, profileId], name: "unique_org_member")
+  @@map("organization_members")
+}

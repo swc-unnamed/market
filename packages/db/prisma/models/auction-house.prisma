@@ -1,0 +1,93 @@
+model AuctionLive {
+  id          String           @id @default(cuid())
+  startTime   DateTime
+  title       String
+  description String?
+  moderatorId String
+  moderator   User             @relation(fields: [moderatorId], references: [id])
+  createdAt   DateTime         @default(now())
+  endedAt     DateTime?
+  listings    AuctionListing[]
+
+  @@map("auction_lives")
+}
+
+model AuctionListing {
+  id               String               @id @default(cuid())
+  listingNumber    Int                  @unique @default(autoincrement())
+  status           AuctionListingStatus @default(Draft)
+  type             AuctionListingType   @default(Live)
+  title            String
+  description      String
+  location         String
+  minimumBid       Int                  @default(100000)
+  creatorId        String
+  creator          User                 @relation("auction_listing_created", fields: [creatorId], references: [id])
+  anonymous        Boolean              @default(false)
+  creditsRecipient String
+  winnerId         String?
+  winner           User?                @relation("auction_listing_won", fields: [winnerId], references: [id])
+  organizationId   String?
+  organization     Organization?        @relation(fields: [organizationId], references: [id])
+  liveAuctionId    String?
+  liveAuction      AuctionLive?         @relation(fields: [liveAuctionId], references: [id])
+  allowBuyNow      Boolean              @default(false)
+  buyNowPrice      String?
+  winningBidAmount Int?                 @default(0)
+  bids             AuctionBid[]
+  reviews          AuctionReview[]
+  items            AuctionListingItem[]
+
+  @@map("auction_listings")
+}
+
+model AuctionListingItem {
+  id          String         @id @default(cuid())
+  listingId   String
+  listing     AuctionListing @relation(fields: [listingId], references: [id])
+  entityId    String
+  entity      Entity         @relation(fields: [entityId], references: [id])
+  name        String
+  quantity    Int
+  uuu         Boolean        @default(true)
+  unique      Boolean        @default(false)
+  customName  String?
+  customImage String?
+  imported    Boolean        @default(false)
+  createdAt   DateTime       @default(now())
+
+  @@map("auction_listing_items")
+}
+
+model AuctionBid {
+  id               String         @id @default(cuid())
+  auctionListingId String
+  auctionListing   AuctionListing @relation(fields: [auctionListingId], references: [id])
+  bidderId         String
+  bidder           User           @relation(fields: [bidderId], references: [id])
+  amount           Int
+  createdAt        DateTime       @default(now())
+
+  @@map("auction_bids")
+}
+
+model AuctionReview {
+  id          String         @id @default(cuid())
+  listingId   String
+  listing     AuctionListing @relation(fields: [listingId], references: [id])
+  reviewerId  String
+  revieweeId  String
+  createdAt   DateTime       @default(now())
+  completedAt DateTime?
+
+  @@map("auction_reviews")
+}
+
+model AuctionEvent {
+  id        String   @id @default(cuid())
+  message   String
+  href      String?
+  createdAt DateTime @default(now())
+
+  @@map("auction_events")
+}
