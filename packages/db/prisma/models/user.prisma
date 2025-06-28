@@ -1,17 +1,18 @@
 model User {
   id                     String           @id @default(cuid())
-  combineId              String           @unique
+  combineId              String           @unique @map("combine_id")
   username               String
-  combineScopes          String[]         @default(["character_read"])
-  discordId              String?          @unique
-  discordUsername        String?
+  combineScopes          String[]         @default(["character_read"]) @map("combine_scopes")
+  discordId              String?          @unique @map("discord_id")
+  discordUsername        String?          @map("discord_username")
   role                   Role             @default(Patron)
-  apiKey                 String           @unique @default(uuid())
+  apiKey                 String           @unique @default(uuid()) @map("api_key")
   banned                 Boolean          @default(false)
-  bannedReason           String?
-  bannedDate             DateTime?
-  createdAt              DateTime         @default(now())
-  lastLogin              DateTime         @default(now())
+  bannedReason           String?          @map("banned_reason")
+  bannedDate             DateTime?        @map("banned_date")
+  createdAt              DateTime         @default(now()) @map("created_at")
+  updatedAt              DateTime         @updatedAt @map("updated_at")
+  lastLogin              DateTime         @default(now()) @map("last_login")
   profile                Profile?
   ownedOrganizations     Organization[]
   moderatedLiveAuctions  AuctionLive[]
@@ -24,14 +25,14 @@ model User {
 
 model Profile {
   id                 String                    @id @default(cuid())
-  userId             String                    @unique
+  userId             String                    @unique @map("user_id")
   user               User                      @relation(fields: [userId], references: [id])
-  displayName        String
+  displayName        String                    @map("display_name")
   avatar             String?
   biography          String?
   reputation         Int                       @default(50)
   memberships        OrganizationMember[]      @relation("memberships")
-  activeMembershipId String?
+  activeMembershipId String?                   @map("active_membership_id")
   activeMembership   OrganizationMember?       @relation("active_membership", fields: [activeMembershipId], references: [id])
   reputationLedger   ProfileReputationLedger[]
 
@@ -40,7 +41,7 @@ model Profile {
 
 model ProfileReputationLedger {
   id        String   @id @default(cuid())
-  profileId String
+  profileId String   @map("profile_id")
   profile   Profile  @relation(fields: [profileId], references: [id])
   value     Int
   reason    String

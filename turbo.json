@@ -7,12 +7,17 @@
 	"tasks": {
 		"build": {
 			"outputs": [
-				"dist/**"
+				"dist/**",
+				"build/**"
 			]
 		},
 		"dev": {
 			"persistent": true,
 			"cache": false
+		},
+		"db:generate": {
+			"cache": false,
+			"persistent": false
 		}
 	}
 }

@@ -1,5 +1,4 @@
-
-import { PrismaClient } from './prisma/client';
+import { PrismaClient } from '@market/db'
 import { env } from '$env/dynamic/private';
 import { PrismaPg } from '@prisma/adapter-pg';
 
@@ -15,5 +14,5 @@ function getPrismaClient() {
 	return prisma;
 }
 
-export * from './prisma/client';
+export * from '@market/db';
 export const db = getPrismaClient();

@@ -2,11 +2,11 @@ model Entity {
   id           String               @id @default(cuid())
   name         String
   type         String
-  combineUid   String               @unique
-  combineHref  String
-  combineData  Json                 @db.JsonB
-  imageSmall   String
-  imageLarge   String
+  combineUid   String               @unique @map("combine_uid")
+  combineHref  String               @map("combine_href")
+  combineData  Json                 @map("combine_data") @db.JsonB
+  imageSmall   String               @map("image_small")
+  imageLarge   String               @map("image_large")
   ledgers      EntityLedger[]
   auctionItems AuctionListingItem[]
 
@@ -15,7 +15,7 @@ model Entity {
 
 model EntityLedger {
   id        String           @id @default(cuid())
-  entityId  String
+  entityId  String           @map("entity_id")
   entity    Entity           @relation(fields: [entityId], references: [id])
   type      EntityLedgerType
   value     String

@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import { PrismaClient } from '../../src/prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import combineData from './combine_entities.json' with { type: 'json' };
 
