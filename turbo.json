@@ -13,7 +13,17 @@
 		},
 		"dev": {
 			"persistent": true,
-			"cache": false
+			"cache": false,
+			"dependsOn": [
+				"^build:core"
+			]
+		},
+		"build:core": {
+			"cache": true,
+			"persistent": false,
+			"outputs": [
+				"packages/db/dist/**"
+			]
 		},
 		"db:generate": {
 			"cache": false,

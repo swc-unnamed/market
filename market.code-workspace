@@ -1,0 +1,21 @@
+{
+	"folders": [
+		{
+			"path": ".",
+			"name": "🔥 Unnamed Market"
+		},
+		{
+			"name": "🖥️ @market/market",
+			"path": "./apps/market"
+		},
+		{
+			"name": "🖥️ @market/api",
+			"path": "./apps/api"
+		},
+		{
+			"name": "📦 @market/db",
+			"path": "./packages/db"
+		}
+	],
+	"settings": {}
+}

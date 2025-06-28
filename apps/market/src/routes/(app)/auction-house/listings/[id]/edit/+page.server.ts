@@ -112,6 +112,8 @@ export const actions = {
 				quantity: form.data.quantity,
 				unique: form.data.unique,
 				uuu: form.data.uuu,
+				customName: form.data.customName,
+				customImage: form.data.customImage,
 				entity: {
 					connect: {
 						id: form.data.entityId

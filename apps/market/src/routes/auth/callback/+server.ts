@@ -21,6 +21,8 @@ export const GET = async ({ url, cookies }) => {
 	const code = url.searchParams.get('code') as string;
 	const state = url.searchParams.get('state') as string;
 
+	console.log(env.UM_DATABASE_URL)
+
 
 	let redirectTo = '/';
 
