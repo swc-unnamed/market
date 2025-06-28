@@ -1,0 +1,28 @@
+{
+	"name": "@market/db",
+	"version": "0.0.0",
+	"description": "Unnamed Market Database Package",
+	"main": "dist/client.mjs",
+	"types": "dist/client.d.mts",
+	"scripts": {
+		"dev": "prisma studio --browser none",
+		"build": "prisma generate && tsup",
+		"build:core": "prisma generate && tsup",
+		"db:generate": "prisma generate",
+		"db:deploy": "prisma migrate deploy",
+		"db:seed": "tsx ./prisma/seed/seed.ts"
+	},
+	"author": {
+		"name": "Marcinius Turelles",
+		"url": "https://github.com/swc-marc"
+	},
+	"license": "ISC",
+	"packageManager": "pnpm@10.12.3",
+	"dependencies": {
+		"@prisma/client": "^6.10.1",
+		"dotenv": "^16.6.0"
+	},
+	"devDependencies": {
+		"prisma": "^6.10.1"
+	}
+}

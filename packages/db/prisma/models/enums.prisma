@@ -1,0 +1,46 @@
+enum Role {
+  Patron
+  Auctioneer
+  Developer
+  Tzar
+
+  @@map("roles")
+}
+
+enum AuctionListingStatus {
+  Draft
+  Active
+  Sold
+  Cancelled
+  Expired
+  PendingPayment
+  PendingMakeover
+  PendingVerification
+  Complete
+
+  @@map("auction_listing_status")
+}
+
+enum AuctionListingType {
+  Live
+  Standard
+  Private
+
+  @@map("auction_listing_types")
+}
+
+enum EntityLedgerType {
+  Auction
+  Marketplace
+
+  @@map("entity_ledger_types")
+}
+
+enum OrganizationRole {
+  Patron
+  Member
+  Admin
+  Owner
+
+  @@map("organization_roles")
+}

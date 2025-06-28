@@ -1,0 +1,27 @@
+model Entity {
+  id           String               @id @default(cuid())
+  name         String
+  type         String
+  combineUid   String               @unique @map("combine_uid")
+  combineHref  String               @map("combine_href")
+  combineData  Json                 @map("combine_data") @db.JsonB
+  imageSmall   String               @map("image_small")
+  imageLarge   String               @map("image_large")
+  ledgers      EntityLedger[]
+  auctionItems AuctionListingItem[]
+
+  @@map("entities")
+}
+
+model EntityLedger {
+  id        String           @id @default(cuid())
+  entityId  String           @map("entity_id")
+  entity    Entity           @relation(fields: [entityId], references: [id])
+  type      EntityLedgerType
+  value     String
+  timestamp DateTime         @default(now())
+
+  @@index([entityId], name: "idx_entity_ledgers_entity_id")
+  @@index([timestamp], name: "idx_entity_ledgers_timestamp")
+  @@map("entity_ledgers")
+}
