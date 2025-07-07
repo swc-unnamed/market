@@ -15,6 +15,7 @@
 	import { SwcTimestamp } from 'swcombine.js';
 	import { enhance } from '$app/forms';
 	import { toast } from 'svelte-sonner';
+	import AdminTerminalButton from '../components/admin-terminal-button.svelte';
 
 	let { data } = $props();
 
@@ -52,32 +53,36 @@
 	]}
 >
 	{#snippet navigation()}
-		<div class="flex items-center gap-1">
-			<NavigationTabs tab="dashboard" />
+		<div class="flex w-full items-center gap-1 rounded-md border p-2">
+			<NavigationTabs />
 		</div>
 	{/snippet}
 
 	{#snippet right()}
-		<form
-			action="?/createDraft"
-			method="post"
-			use:enhance={() => {
-				return async ({ result }) => {
-					if (result.type == 'success') {
-						toast.success('Draft listing created successfully');
-						await goto(`/auction-house/listings/${result.data?.draftId}/edit`);
-					}
+		<div class="flex items-center gap-2">
+			<form
+				action="?/createDraft"
+				method="post"
+				use:enhance={() => {
+					return async ({ result }) => {
+						if (result.type == 'success') {
+							toast.success('Draft listing created successfully');
+							await goto(`/auction-house/listings/${result.data?.draftId}/edit`);
+						}
 
-					if (result.type == 'error') {
-						toast.error('Failed to create listing', {
-							description: result.error.message
-						});
-					}
-				};
-			}}
-		>
-			<Button size="sm" type="submit">Create Listing</Button>
-		</form>
+						if (result.type == 'error') {
+							toast.error('Failed to create listing', {
+								description: result.error.message
+							});
+						}
+					};
+				}}
+			>
+				<Button size="sm" type="submit" variant="outline">Create Listing</Button>
+			</form>
+
+			<AdminTerminalButton />
+		</div>
 	{/snippet}
 
 	<div class="grid grid-cols-1 gap-3">
