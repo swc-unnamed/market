@@ -27,7 +27,5 @@
 		</Button>
 	{/snippet}
 
-	<pre>
-		{JSON.stringify(pendingListings, null, 2)}
-	</pre>
+	<p>Pending</p>
 </PageWrapper>

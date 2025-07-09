@@ -4,7 +4,7 @@ import { guard } from '$lib/utils/guard.js'
 import { redirect } from '@sveltejs/kit'
 import { superValidate } from 'sveltekit-superforms'
 import { zod } from 'sveltekit-superforms/adapters'
-import { createLiveAuctionSchema } from '../components/schemas'
+import { liveAuctionSchema } from '../components/schemas'
 
 export const load = async ({ locals }) => {
 	if (!guard(locals, GlobalAuctioneerAccessPolicy)) {
@@ -52,7 +52,7 @@ export const load = async ({ locals }) => {
 		}
 	});
 
-	const createAuctionForm = await superValidate(zod(createLiveAuctionSchema));
+	const createAuctionForm = await superValidate(zod(liveAuctionSchema));
 
 	return {
 		pendingListings: pendingListings,
@@ -67,7 +67,7 @@ export const actions = {
 			return redirect(303, '/auction-house')
 		}
 
-		const form = await superValidate(request, zod(createLiveAuctionSchema));
+		const form = await superValidate(request, zod(liveAuctionSchema));
 
 		if (!form.valid) {
 			return { form };

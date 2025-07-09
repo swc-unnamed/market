@@ -4,6 +4,7 @@
 	import * as DropdownMenu from '../ui/dropdown-menu';
 	import Icon from '@iconify/svelte';
 	import * as Avatar from '../ui/avatar';
+	import * as Alert from '../ui/alert';
 	import { goto, preloadData } from '$app/navigation';
 	import AppNav from './app-nav.svelte';
 	import AppOrgSwitcher from './app-org-switcher.svelte';
@@ -24,7 +25,7 @@
 					<Icon icon="lucide:arrow-big-up-dash" />
 				</Avatar.Fallback>
 			</Avatar.Root>
-			<span class="truncate text-center text-xl leading-none font-semibold"> Unnamed Market </span>
+			<span class="truncate text-center text-xl font-semibold leading-none"> Unnamed Market </span>
 		</div>
 		<Sidebar.Separator />
 	</Sidebar.Header>
@@ -34,6 +35,13 @@
 	</Sidebar.Content>
 
 	<Sidebar.Footer>
+		<Alert.Root class="border-red-600 shadow-lg">
+			<Alert.Title>Beta Alert</Alert.Title>
+			<Alert.Description>
+				We are still in beta, albeit a public beta, so expect some bugs and issues. If you find bugs
+				or have feedback, please let us know in the Discord server.
+			</Alert.Description>
+		</Alert.Root>
 		<AppOrgSwitcher />
 		<Sidebar.Menu>
 			<Sidebar.MenuItem>

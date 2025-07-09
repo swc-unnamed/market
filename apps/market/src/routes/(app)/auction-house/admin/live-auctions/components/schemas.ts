@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const createLiveAuctionSchema = z.object({
+export const liveAuctionSchema = z.object({
 	title: z.string().min(1, 'Title is required'),
 	description: z.string().min(1, 'Description is required'),
 	startTime: z.string().min(1, 'Start time is required'),
@@ -8,4 +8,4 @@ export const createLiveAuctionSchema = z.object({
 	listings: z.array(z.string()).min(1, 'At least one listing is required')
 });
 
-export type CreateLiveAuctionSchema = z.infer<typeof createLiveAuctionSchema>;
+export type LiveAuctionSchema = z.infer<typeof liveAuctionSchema>;

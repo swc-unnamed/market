@@ -4,12 +4,14 @@ import { guard } from '$lib/utils/guard.js'
 import { error, redirect } from '@sveltejs/kit'
 import { superValidate } from 'sveltekit-superforms'
 import { zod } from 'sveltekit-superforms/adapters'
-import { createLiveAuctionSchema } from '../components/schemas.js'
+import { liveAuctionSchema } from '../components/schemas.js'
 
-export const load = async ({ locals, params }) => {
+export const load = async ({ locals, params, url, depends }) => {
 	if (!guard(locals, GlobalAuctioneerAccessPolicy)) {
 		return redirect(303, '/auction-house')
 	}
+
+	depends('app:auction-house/admin/live-auctions')
 
 	const auction = await db.auctionLive.findUnique({
 		where: {
@@ -73,7 +75,7 @@ export const load = async ({ locals, params }) => {
 	const localFormattedStartTime = localStartTime.toISOString().slice(0, 16);
 
 
-	const createAuctionForm = await superValidate(zod(createLiveAuctionSchema), {
+	const updateAuctionForm = await superValidate(zod(liveAuctionSchema), {
 		defaults: {
 			title: auction.title,
 			description: auction.description,
@@ -83,20 +85,53 @@ export const load = async ({ locals, params }) => {
 		}
 	});
 
-	return {
-		auction: auction,
-		createAuctionForm: createAuctionForm,
-		availableModerators: availableModerators
+	const listingId = url.searchParams.get('lid');
+	if (listingId) {
+		const selectedListing = await db.auctionListing.findUnique({
+			where: {
+				id: listingId
+			},
+			include: {
+				items: {
+					include: {
+						entity: {
+							select: {
+								id: true,
+								name: true,
+								imageSmall: true
+							}
+						}
+					}
+				}
+			}
+		});
+
+		if (!selectedListing) {
+			return redirect(303, `/auction-house/admin/live-auctions/${params.id}`);
+		}
+
+		return {
+			auction: auction,
+			updateAuctionForm: updateAuctionForm,
+			availableModerators: availableModerators,
+			selectedListing: selectedListing
+		}
+	} else {
+		return {
+			auction: auction,
+			updateAuctionForm: updateAuctionForm,
+			availableModerators: availableModerators
+		}
 	}
 }
 
 export const actions = {
-	create: async ({ request, locals }) => {
+	save: async ({ request, locals, params }) => {
 		if (!guard(locals, GlobalAuctioneerAccessPolicy)) {
 			return redirect(303, '/auction-house')
 		}
 
-		const form = await superValidate(request, zod(createLiveAuctionSchema));
+		const form = await superValidate(request, zod(liveAuctionSchema));
 
 		if (!form.valid) {
 			return { form };
@@ -104,22 +139,63 @@ export const actions = {
 
 		const { title, description, startTime, moderatorId, listings } = form.data;
 
-		console.log(new Date(startTime));
+		const auction = await db.auctionLive.findUnique({
+			where: {
+				id: params.id
+			}
+		});
 
-		const newAuction = await db.auctionLive.create({
+		if (!auction) {
+			return error(404, {
+				message: 'Auction was not found.'
+			});
+		}
+
+		await db.auctionLive.update({
+			where: {
+				id: params.id
+			},
 			data: {
 				title: title,
 				description: description,
 				startTime: new Date(startTime),
 				moderatorId: moderatorId,
 				listings: {
-					connect: listings.map(id => ({ id }))
+					set: listings.map(listingId => ({ id: listingId }))
 				}
 			}
 		});
 
-		console.log('New Live Auction Created:', newAuction);
+		return { updateAuctionForm: { ...form, success: true } };
+	},
 
-		return { form: { ...form, success: true }, newAuction };
+	end: async ({ locals, params }) => {
+		console.log('Ending auction with ID:', params.id);
+		if (!guard(locals, GlobalAuctioneerAccessPolicy)) {
+			return redirect(303, '/auction-house')
+		}
+
+		const auction = await db.auctionLive.findUnique({
+			where: {
+				id: params.id
+			}
+		});
+
+		if (!auction) {
+			return error(404, {
+				message: 'Auction was not found.'
+			});
+		}
+
+		await db.auctionLive.update({
+			where: {
+				id: params.id
+			},
+			data: {
+				endedAt: new Date()
+			}
+		});
+
+		return redirect(303, `/auction-house/admin/live-auctions/${params.id}`);
 	}
 }

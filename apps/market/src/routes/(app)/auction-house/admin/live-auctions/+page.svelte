@@ -3,6 +3,7 @@
 	import AdminNavTabs from '../../components/admin-navtabs.svelte';
 	import * as Card from '$lib/components/ui/card';
 	import * as Avatar from '$lib/components/ui/avatar';
+	import * as Table from '$lib/components/ui/table';
 	import { Button } from '$lib/components/ui/button';
 	import { Separator } from '$lib/components/ui/separator';
 	import { Link2 } from '@lucide/svelte';
@@ -40,36 +41,51 @@
 		</Button>
 	{/snippet}
 
-	<div class="grid grid-cols-1 gap-3">
-		{#each auctions as auction}
-			<Card.Root>
-				<Card.Header class="flex flex-row items-center justify-between ">
-					<Card.Title>{auction.title}</Card.Title>
-					<div class="flex flex-row items-center gap-2">
-						<Avatar.Root>
-							<Avatar.Image src={auction.moderator.profile?.avatar} />
-						</Avatar.Root>
-						{auction.moderator.profile?.displayName}
-					</div>
-				</Card.Header>
-				<Card.Content class="grid grid-cols-1 gap-3">
-					<p class="whitespace-pre-wrap">{auction.description}</p>
-					<Separator />
-					<div class="grid grid-cols-2 gap-3">
-						<div class="rounded-md border-2 p-2">Listing Count: {auction._count.listings}</div>
-						<div class="rounded-md border-2 p-2">
-							Start Time: {auction.startTime.toLocaleDateString()}
-							{auction.startTime.toLocaleTimeString()}
-						</div>
-					</div>
-				</Card.Content>
-				<Card.Footer>
-					<Button variant="secondary" href={`/auction-house/admin/live-auctions/${auction.id}`}>
-						<Link2 />
-						Details
-					</Button>
-				</Card.Footer>
-			</Card.Root>
-		{/each}
-	</div>
+	<Card.Root>
+		<Card.Header>
+			<Card.Title>Open Live Auctions</Card.Title>
+		</Card.Header>
+		<Card.Content>
+			<Table.Root>
+				<Table.Header>
+					<Table.Row>
+						<Table.Head>Title</Table.Head>
+						<Table.Head>Moderator</Table.Head>
+						<Table.Head>Start Time</Table.Head>
+						<Table.Head># of Listings</Table.Head>
+						<Table.Head>Actions</Table.Head>
+					</Table.Row>
+				</Table.Header>
+				<Table.Body>
+					{#each auctions as auction}
+						<Table.Row>
+							<Table.Cell>{auction.title}</Table.Cell>
+							<Table.Cell>
+								<div class="flex flex-row items-center gap-2">
+									<Avatar.Root>
+										<Avatar.Image src={auction.moderator.profile?.avatar} />
+									</Avatar.Root>
+									{auction.moderator.profile?.displayName}
+								</div>
+							</Table.Cell>
+							<Table.Cell>
+								{auction.startTime.toLocaleDateString()}
+								{auction.startTime.toLocaleTimeString()}
+							</Table.Cell>
+							<Table.Cell>{auction._count.listings}</Table.Cell>
+							<Table.Cell>
+								<Button
+									variant="secondary"
+									size="sm"
+									href={`/auction-house/admin/live-auctions/${auction.id}`}
+								>
+									Details
+								</Button>
+							</Table.Cell>
+						</Table.Row>
+					{/each}
+				</Table.Body>
+			</Table.Root>
+		</Card.Content>
+	</Card.Root>
 </PageWrapper>

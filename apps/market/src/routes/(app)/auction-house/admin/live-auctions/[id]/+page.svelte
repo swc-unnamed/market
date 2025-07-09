@@ -6,45 +6,79 @@
 	import { Textarea } from '$lib/components/ui/textarea';
 	import * as Select from '$lib/components/ui/select';
 	import * as Table from '$lib/components/ui/table';
-	import { superForm } from 'sveltekit-superforms';
+	import SuperDebug, { superForm } from 'sveltekit-superforms';
 	import * as Form from '$lib/components/ui/form';
 	import { zodClient } from 'sveltekit-superforms/adapters';
-	import { createLiveAuctionSchema } from '../components/schemas';
+	import { liveAuctionSchema } from '../components/schemas';
 	import { toast } from 'svelte-sonner';
 	import { Switch } from '$lib/components/ui/switch';
 	import * as Drawer from '$lib/components/ui/drawer';
-	import { RadioTower } from '@lucide/svelte';
+	import * as Dialog from '$lib/components/ui/dialog';
+	import { RadioTower, Cloud, Save, LockKeyhole } from '@lucide/svelte';
 	import { Separator } from '$lib/components/ui/separator';
+	import * as Tabs from '$lib/components/ui/tabs/index.js';
 	import { Label } from '$lib/components/ui/label';
+	import { goto, invalidate } from '$app/navigation';
+	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
+	import ListingDialog from '../components/listing-dialog.svelte';
 
 	const { data } = $props();
 
-	const form = superForm(data.createAuctionForm, {
+	const form = superForm(data.updateAuctionForm, {
 		dataType: 'json',
-		validators: zodClient(createLiveAuctionSchema),
 		onError: ({ result }) => {
 			console.log(result);
 			toast.error('There was an error creating the auction. Please check the form and try again.');
+		},
+		onResult: ({ result }) => {
+			console.log(result);
 		}
 	});
 	const { form: formData, enhance } = form;
 
 	let edit = $state(false);
-	let displayAuctionSheet = $state(true);
+	let displayListingDetails = $state(false);
+
 	const auction = $derived(data.auction);
+	const selectedListing = $derived(data.selectedListing);
+
 	const selectedModeratorObject = $derived.by(() => {
 		return data.availableModerators.find((mod) => mod.id === $formData.moderatorId);
 	});
+
 	const availableModerators = $derived.by(() => {
 		return data.availableModerators.map((mod) => ({
 			value: mod.id,
 			label: mod.profile?.displayName || mod.username
 		}));
 	});
+
+	$effect(() => {
+		if (selectedListing) {
+			displayListingDetails = true;
+		} else {
+			displayListingDetails = false;
+		}
+	});
+
+	async function removeListing(listingId: string) {
+		const response = await fetch(`/api/auctions/live/${auction.id}/listings/${listingId}`, {
+			method: 'DELETE',
+			body: JSON.stringify({})
+		});
+
+		if (response.ok) {
+			toast.success('Listing has been removed successfully.');
+			await invalidate('app:auction-house/admin/live-auctions');
+		} else {
+			const error = await response.json();
+			toast.error(`Failed to remove listing: ${error.message}`);
+		}
+	}
 </script>
 
 <PageWrapper
-	title="Create Live Auction"
+	title={data.auction.title}
 	breadcrumb={[
 		{ title: 'Auction House', href: '/auction-house' },
 		{
@@ -68,14 +102,16 @@
 			<Card.Header>
 				<div class="flex items-center justify-between">
 					<Card.Title>{auction.title}</Card.Title>
-					<div class="flex items-center gap-3">
-						<span>Edit</span>
-						<Switch bind:checked={edit} />
-					</div>
+					{#if !auction.endedAt}
+						<div class="flex items-center gap-3">
+							<span>Edit</span>
+							<Switch bind:checked={edit} />
+						</div>
+					{/if}
 				</div>
 			</Card.Header>
 			<Card.Content>
-				<form class="grid grid-cols-1 gap-4" action="?/create" method="post" use:enhance>
+				<form class="grid grid-cols-1 gap-4" method="post" use:enhance>
 					<Form.Field {form} name="title">
 						<Form.Control>
 							{#snippet children({ props })}
@@ -134,26 +170,47 @@
 						<Form.FieldErrors />
 					</Form.Field>
 
-					<div class="flex justify-end gap-3">
-						<Button size="sm" variant="destructive">End Auction</Button>
-						<Button size="sm" variant="outline">
-							<RadioTower />
-							Broadcast Auction
-						</Button>
-					</div>
+					{#if !auction.endedAt}
+						<div class="flex justify-end gap-3">
+							<Button size="sm" variant="destructive" formaction="?/end" type="submit">
+								<LockKeyhole />
+								End Auction
+							</Button>
+							<Button size="sm" variant="outline" formaction="?/save" type="submit">
+								<Save />
+								Save Changes
+							</Button>
+							<Button
+								size="sm"
+								variant="outline"
+								onclick={() => {
+									toast.warning(
+										'This feature is not yet implemented. It will be available in a future update.'
+									);
+								}}
+							>
+								<RadioTower />
+								Broadcast Auction
+							</Button>
+						</div>
+					{/if}
 				</form>
 			</Card.Content>
 		</Card.Root>
 
 		<Card.Root>
 			<Card.Header>
-				<Card.Title>Available Listings</Card.Title>
+				<div class="flex items-center justify-between">
+					<Card.Title>Assigned Listings</Card.Title>
+					<Button size="sm" variant="outline">Add Listing</Button>
+				</div>
 			</Card.Header>
 			<Card.Content>
 				<Table.Root>
 					<Table.Header>
 						<Table.Row>
 							<Table.Head>AHLID</Table.Head>
+							<Table.Head>Status</Table.Head>
 							<Table.Head>Title</Table.Head>
 							<Table.Head># of Items</Table.Head>
 							<Table.Head>Minimum Bid</Table.Head>
@@ -165,19 +222,14 @@
 						{#each auction?.listings as listing}
 							<Table.Row>
 								<Table.Cell>{listing.listingNumber}</Table.Cell>
+								<Table.Cell>{listing.status}</Table.Cell>
 								<Table.Cell>{listing.title}</Table.Cell>
 								<Table.Cell>{1}</Table.Cell>
 								<Table.Cell>{listing.minimumBid.toLocaleString()}</Table.Cell>
 								<Table.Cell>{listing.anonymous ? 'Yes' : 'No'}</Table.Cell>
-								<Table.Cell>
-									<Button
-										size="sm"
-										onclick={() => {
-											displayAuctionSheet = true;
-										}}
-									>
-										Start Auction
-									</Button>
+								<Table.Cell class="flex w-48 gap-2">
+									<ListingDialog auctionId={auction.id} listingId={listing.id} />
+									<Button size="sm" variant="outline">Remove Listing</Button>
 								</Table.Cell>
 							</Table.Row>
 						{/each}
@@ -186,53 +238,4 @@
 			</Card.Content>
 		</Card.Root>
 	</div>
-
-	<Drawer.Root bind:open={displayAuctionSheet}>
-		<Drawer.Content class="h-2/3">
-			<Drawer.Header>
-				<Drawer.Title>Listing Management</Drawer.Title>
-				<Drawer.Description>
-					<Button size="sm" variant="outline">
-						<RadioTower />
-						Broadcast Listing
-					</Button>
-				</Drawer.Description>
-			</Drawer.Header>
-			<div class="grid grid-cols-1 gap-3 p-2">
-				<div class="flex items-center justify-between">
-					<h3 class="max-w-48 text-wrap">Listing Title</h3>
-					<p>Credits To: Display Name</p>
-					<p>Minimum Bid: 100,000</p>
-				</div>
-				<Separator />
-				<div class="grid grid-cols-2 gap-3">
-					<div class="grid grid-cols-1 gap-2">
-						<h4>Description</h4>
-						<p>This will be the listing description</p>
-					</div>
-					<div class="grid grid-cols-1 gap-2">
-						<h4>Location</h4>
-						<p>This will be the listing description</p>
-					</div>
-					<div class="col-span-2">
-						<Separator />
-					</div>
-					<div class="grid grid-cols-1 gap-2">
-						<Label>Winning Big</Label>
-						<Input />
-					</div>
-					<div class="grid grid-cols-1 gap-2">
-						<Label>Won By</Label>
-						<Input />
-					</div>
-				</div>
-			</div>
-			<Drawer.Footer class="flex flex-row items-center justify-end">
-				<Button size="sm" variant="destructive" onclick={() => (displayAuctionSheet = false)}>
-					Close
-				</Button>
-				<Button size="sm" variant="outline">Save Changes</Button>
-			</Drawer.Footer>
-		</Drawer.Content>
-	</Drawer.Root>
 </PageWrapper>

@@ -12,14 +12,14 @@
 	import * as Form from '$lib/components/ui/form';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import SuperDebug from 'sveltekit-superforms';
-	import { createLiveAuctionSchema } from '../components/schemas';
+	import { liveAuctionSchema } from '../components/schemas';
 	import { toast } from 'svelte-sonner';
 
 	const { data } = $props();
 
 	const form = superForm(data.createAuctionForm, {
 		dataType: 'json',
-		validators: zodClient(createLiveAuctionSchema),
+		validators: zodClient(liveAuctionSchema),
 		onError: ({ result }) => {
 			console.log(result);
 			toast.error('There was an error creating the auction. Please check the form and try again.');
@@ -177,6 +177,4 @@
 			</Card.Content>
 		</Card.Root>
 	</div>
-
-	<SuperDebug data={$formData} />
 </PageWrapper>
