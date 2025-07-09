@@ -12,13 +12,15 @@
 <NavigationMenu.Root>
 	<NavigationMenu.List>
 		<NavigationMenu.Item>
-			<NavigationMenu.Link href="/auction-house/dashboard">Dashboard</NavigationMenu.Link>
+			<NavigationMenu.Link href="/auction-house/admin">Main Terminal</NavigationMenu.Link>
 		</NavigationMenu.Item>
 		<NavigationMenu.Item>
-			<NavigationMenu.Link href="/auction-house/listings">Browse Listings</NavigationMenu.Link>
+			<NavigationMenu.Link href="/auction-house/admin/live-auctions">
+				Live Auctions
+			</NavigationMenu.Link>
 		</NavigationMenu.Item>
 		<NavigationMenu.Item>
-			<NavigationMenu.Link href="/auction-house/admin">Auction Administration</NavigationMenu.Link>
+			<NavigationMenu.Link href="/auction-house/admin/listings">Listings</NavigationMenu.Link>
 		</NavigationMenu.Item>
 	</NavigationMenu.List>
 </NavigationMenu.Root>

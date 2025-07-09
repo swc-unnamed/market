@@ -9,8 +9,8 @@
 			"path": "./apps/market"
 		},
 		{
-			"name": "🖥️ @market/api",
-			"path": "./apps/api"
+			"name": "🖥️ @market/holochain",
+			"path": "./apps/holochain"
 		},
 		{
 			"name": "📦 @market/db",
