@@ -20,4 +20,4 @@ RUN pnpm build
 
 EXPOSE 3000
 
-CMD ["node", "/app/apps/market/build/index.js"]
+CMD ["node", "/app/out/full/apps/market/build/index.js"]
