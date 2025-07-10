@@ -18,12 +18,6 @@ RUN pnpm db:generate
 
 RUN pnpm build
 
-FROM node:22 AS runner
-
-WORKDIR /app
-
-COPY --from=base /app/out/full .
-
 EXPOSE 3000
 
 CMD ["node", "/app/apps/market/build/index.js"]
