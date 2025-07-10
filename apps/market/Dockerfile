@@ -24,8 +24,6 @@ WORKDIR /app
 
 COPY --from=base /app/out/full .
 
-USER node:node
-
 EXPOSE 3000
 
 CMD ["node", "/app/apps/market/build/index.js"]
