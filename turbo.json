@@ -28,6 +28,10 @@
 		"db:generate": {
 			"cache": false,
 			"persistent": false
+		},
+		"db:deploy": {
+			"cache": false,
+			"persistent": false
 		}
 	}
 }

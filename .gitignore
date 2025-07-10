@@ -25,3 +25,4 @@ vite.config.ts.timestamp-*
 ./src/lib/database/prisma
 dist
 .turbo
+out

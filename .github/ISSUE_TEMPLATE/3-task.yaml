@@ -1,0 +1,12 @@
+name: Task
+description: 'Task request'
+title: 'Task: '
+type: Task
+body:
+  - type: textarea
+    id: feature-description
+    validations:
+      required: true
+    attributes:
+      label: Details
+      placeholder: You should do ...
