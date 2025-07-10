@@ -1,0 +1,12 @@
+name: Enhancement
+description: Enhancement request
+title: 'Enhancement: '
+type: Enhancement
+body:
+  - type: textarea
+    id: feature-description
+    validations:
+      required: true
+    attributes:
+      label: Details
+      placeholder: You should change ...

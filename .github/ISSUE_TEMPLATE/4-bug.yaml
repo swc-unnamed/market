@@ -1,0 +1,12 @@
+name: Bug
+description: "Something isn't right."
+title: 'Bug: '
+type: Bug
+body:
+  - type: textarea
+    id: feature-description
+    validations:
+      required: true
+    attributes:
+      label: Details
+      placeholder: It breaks when ...

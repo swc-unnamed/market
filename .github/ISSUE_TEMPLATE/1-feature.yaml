@@ -1,0 +1,13 @@
+name: Feature
+description: Submit a proposal for a new feature
+title: 'Feature: '
+type: Feature
+body:
+  - type: textarea
+    id: feature-description
+    validations:
+      required: true
+    attributes:
+      label: Details
+      description: A clear and concise description of what the feature is.
+      placeholder: You should add ...
