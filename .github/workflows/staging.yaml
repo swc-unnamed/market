@@ -32,3 +32,7 @@ jobs:
           file: ./apps/market/Dockerfile
           push: true
           tags: ghcr.io/swc-unnamed/market:latest
+
+      - name: Deploy to Staging
+        run: |
+          curl --request GET '${{ secrets.COOLIFY_WEBHOOK }}' --header 'Authorization: Bearer ${{ secrets.COOLIFY_TOKEN }}'
