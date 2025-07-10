@@ -39,7 +39,7 @@ export const POST = async ({ locals, params, request }) => {
 		return json({ error: 'Invalid data' }, { status: 400 })
 	}
 
-	const { winnerId, saleAmount, status }: { winnerId: string, saleAmount: string, status: AuctionListingStatus } = data;
+	const { winnerId, saleAmount, status }: { winnerId: string, saleAmount: string, status: typeof AuctionListingStatus } = data;
 
 	const sanitizedAmount = parseInt(saleAmount.replace(/[,\s]/g, ''), 10);
 

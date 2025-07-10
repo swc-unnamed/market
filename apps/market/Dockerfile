@@ -1,4 +1,4 @@
-FROM node:22-slim AS base
+FROM node:22 AS base
 
 RUN npm install -g pnpm
 
@@ -18,7 +18,7 @@ RUN pnpm db:generate
 
 RUN pnpm build
 
-FROM node:22-slim AS runner
+FROM node:22 AS runner
 
 WORKDIR /app
 
