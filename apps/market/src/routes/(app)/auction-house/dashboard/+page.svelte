@@ -4,9 +4,9 @@
 	import * as Card from '$lib/components/ui/card';
 	import * as Table from '$lib/components/ui/table';
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
+	import * as Alert from '$lib/components/ui/alert/index.js';
 	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
-	import NavigationTabs from '../components/navtabs.svelte';
-	import { Button } from '$lib/components/ui/button';
+	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import Icon from '@iconify/svelte';
 	import ChartWonSold from '$lib/components/charts/auction-house/chart-won-sold.svelte';
 	import { gsap } from 'gsap';
@@ -15,7 +15,12 @@
 	import { SwcTimestamp } from 'swcombine.js';
 	import { enhance } from '$app/forms';
 	import { toast } from 'svelte-sonner';
-	import AdminTerminalButton from '../components/admin-terminal-button.svelte';
+	import AdminTerminalButton from '$lib/components/common/auction-house/admin-terminal-button.svelte';
+	import { GlobalAuctioneerAccessPolicy } from '$lib/utils/access-policies';
+	import { Skeleton } from '$lib/components/ui/skeleton';
+	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
+	import { Menu, Plus, Shield } from '@lucide/svelte';
+	import AuctionHouseMenu from '$lib/components/common/auction-house/auction-house-menu.svelte';
 
 	let { data } = $props();
 
@@ -41,6 +46,19 @@
 			});
 		};
 	}
+
+	async function getStatData() {
+		const response = await fetch('/api/auctions/dashboard/stats', {
+			method: 'GET'
+		});
+
+		if (!response.ok) {
+			throw new Error('Failed to fetch auction stats');
+		}
+
+		const data = await response.json();
+		return data;
+	}
 </script>
 
 <PageWrapper
@@ -52,117 +70,75 @@
 		}
 	]}
 >
-	{#snippet navigation()}
-		<div class="flex w-full items-center gap-1 rounded-md border p-2">
-			<NavigationTabs />
-		</div>
-	{/snippet}
-
 	{#snippet right()}
-		<div class="flex items-center gap-2">
-			<form
-				action="?/createDraft"
-				method="post"
-				use:enhance={() => {
-					return async ({ result }) => {
-						if (result.type == 'success') {
-							toast.success('Draft listing created successfully');
-							await goto(`/auction-house/listings/${result.data?.draftId}/edit`);
-						}
-
-						if (result.type == 'error') {
-							toast.error('Failed to create listing', {
-								description: result.error.message
-							});
-						}
-					};
-				}}
-			>
-				<Button size="sm" type="submit" variant="outline">Create Listing</Button>
-			</form>
-
-			<AdminTerminalButton />
-		</div>
+		<AuctionHouseMenu />
 	{/snippet}
 
 	<div class="grid grid-cols-1 gap-3">
-		<div class="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
-			<Card.Root>
-				<Card.Header>
-					<Card.Title>
-						<div class="flex items-center justify-between">
-							<span>Amount Sold</span>
+		<div class="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-2">
+			{#await getStatData()}
+				<Skeleton class="h-full w-full" />
+				<Skeleton class="h-full w-full" />
+			{:then data}
+				<Card.Root>
+					<Card.Header>
+						<Card.Title>
+							<div class="flex items-center justify-between">
+								<span>Amount Sold</span>
+								<span class="font-galbasic">$</span>
+							</div>
+						</Card.Title>
+					</Card.Header>
+					<Card.Content>
+						<div class="flex items-center justify-center gap-1 text-center text-3xl">
 							<span class="font-galbasic">$</span>
+							<div
+								class="font-bold antialiased"
+								{@attach scrambleText(`${data.liveAuctionSold}`)}
+							></div>
 						</div>
-					</Card.Title>
-				</Card.Header>
-				<Card.Content>
-					<div class="font-galbasic text-center text-3xl">
-						<div class="font-galbasic" {@attach scrambleText('$420.5')}></div>
-					</div>
-					<div class="text-muted-foreground mt-3 flex items-center gap-2 text-sm">
-						<Icon class="text-red-500" icon="tabler:trending-down" />
-						<span>-2% from last month</span>
-					</div>
-				</Card.Content>
-			</Card.Root>
+					</Card.Content>
+				</Card.Root>
 
-			<Card.Root>
-				<Card.Header>
-					<Card.Title>
-						<div class="flex items-center justify-between">
-							<span>Amount Won</span>
-							<span class="font-galbasic">
-								<Icon class="text-green-500" icon="tabler:trophy" />
-							</span>
+				<Card.Root>
+					<Card.Header>
+						<Card.Title>
+							<div class="flex items-center justify-between">
+								<span>Amount Won</span>
+								<span class="font-galbasic">
+									<Icon class="text-green-500" icon="tabler:trophy" />
+								</span>
+							</div>
+						</Card.Title>
+					</Card.Header>
+					<Card.Content>
+						<div class="flex items-center justify-center gap-1 text-center text-3xl">
+							<span class="font-galbasic">$</span>
+							<div
+								class="font-bold antialiased"
+								{@attach scrambleText(`${data.liveAuctionWon}`)}
+							></div>
 						</div>
-					</Card.Title>
-				</Card.Header>
-				<Card.Content>
-					<div class="font-galbasic text-center text-3xl">
-						<div class="font-galbasic" {@attach scrambleText('$1.69')}></div>
-					</div>
-					<div class="text-muted-foreground mt-3 flex items-center gap-2 text-sm">
-						<Icon class="text-green-500" icon="tabler:trending-up" />
-						<span>+2.6% from last month</span>
-					</div>
-				</Card.Content>
-			</Card.Root>
-
-			<Card.Root>
-				<Card.Header>
-					<Card.Title>Pending Bids</Card.Title>
-				</Card.Header>
-				<Card.Content class="text-center">
-					<div class="font-galbasic flex justify-center gap-2 text-center text-3xl">
-						<Icon class="mt-1" icon="tabler:arrows-exchange" />
-						<div class="font-galbasic" {@attach scrambleText('0')}></div>
-					</div>
-				</Card.Content>
-			</Card.Root>
-
-			<Card.Root>
-				<Card.Header>
-					<Card.Title>Reputation</Card.Title>
-				</Card.Header>
-				<Card.Content class="text-center">
-					<div class="flex justify-center gap-2 text-center text-3xl">
-						<Icon class="mt-1" icon="lucide:stars" />
-						<div
-							class="font-galbasic"
-							{@attach scrambleText(data.user.profile.reputation.toLocaleString())}
-						></div>
-					</div>
-					<div class="text-muted-foreground mt-3 flex items-center gap-2 text-sm">
-						<Icon class="text-green-500" icon="tabler:trending-up" />
-						<span>+340 from last month</span>
-					</div>
-				</Card.Content>
-			</Card.Root>
+					</Card.Content>
+				</Card.Root>
+			{/await}
 		</div>
 
 		<div class="grid grid-cols-1 gap-3 md:grid-cols-2">
-			<ChartWonSold />
+			<Card.Root>
+				<Card.Header>
+					<Card.Title>Average Income - Last 6 Months</Card.Title>
+				</Card.Header>
+				<Card.Content>
+					<Alert.Root>
+						<Alert.Title>Under Construction</Alert.Title>
+						<Alert.Description>
+							This feature is currently under construction and will be available soon. We are mainly
+							just waiting for data to populate and once it's ready, this will be fully functional.
+						</Alert.Description>
+					</Alert.Root>
+				</Card.Content>
+			</Card.Root>
 			<Card.Root>
 				<Card.Header>
 					<Card.Title>Recent Updates</Card.Title>
@@ -170,7 +146,7 @@
 				</Card.Header>
 				<Card.Content>
 					<ScrollArea class="h-[230px]">
-						<div class="grid grid-cols-1 gap-1 px-3">
+						<div class="grid grid-cols-1 gap-1">
 							<div class="hover:bg-muted rounded-md border p-2 hover:cursor-pointer">
 								<p>Listing #123 has been created</p>
 							</div>

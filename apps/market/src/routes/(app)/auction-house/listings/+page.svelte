@@ -1,8 +1,8 @@
 <script lang="ts">
 	import PageWrapper from '$lib/components/layout/page-wrapper.svelte';
 	import { Button } from '$lib/components/ui/button';
-	import AdminTerminalButton from '../components/admin-terminal-button.svelte';
-	import NavigationTabs from '../components/navtabs.svelte';
+	import AdminTerminalButton from '$lib/components/common/auction-house/admin-terminal-button.svelte';
+	import NavigationTabs from '../../../../lib/components/common/auction-house/navtabs.svelte';
 </script>
 
 <PageWrapper title="Listings" breadcrumb={[{ title: 'Auction House', href: '/auction-house' }]}>

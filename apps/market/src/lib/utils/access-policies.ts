@@ -1,4 +1,4 @@
-import type { Role } from '$lib/database/prisma';
+import type { Role } from '$lib/database/db';
 
 export const GlobalPatronAccessPolicy: Role[] = ['Patron', 'Auctioneer', 'Developer', 'Tzar'];
 

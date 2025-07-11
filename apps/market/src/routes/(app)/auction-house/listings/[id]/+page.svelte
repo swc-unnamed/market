@@ -1,4 +1,5 @@
 <script lang="ts">
+	import AuctionHouseMenu from '$lib/components/common/auction-house/auction-house-menu.svelte';
 	import PageWrapper from '$lib/components/layout/page-wrapper.svelte';
 	import * as Avatar from '$lib/components/ui/avatar';
 	import { Badge } from '$lib/components/ui/badge';
@@ -18,6 +19,10 @@
 		{ title: 'Listings', href: '/auction-house/listings' }
 	]}
 >
+	{#snippet right()}
+		<AuctionHouseMenu />
+	{/snippet}
+
 	<div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
 		<!-- Main Listing Info -->
 		<div class="flex flex-col gap-6 lg:col-span-2">
@@ -129,8 +134,8 @@
 			<Card.Root>
 				<Card.Content>
 					<div class="grid grid-cols-1 gap-2 md:grid-cols-3">
-						<Button variant="secondary">Subscribe</Button>
-						<Button variant="secondary">Share</Button>
+						<Button variant="secondary" disabled>Subscribe</Button>
+						<Button variant="secondary" disabled>Share</Button>
 						<Tooltip.Provider>
 							<Tooltip.Root>
 								<Tooltip.Trigger class="w-full">

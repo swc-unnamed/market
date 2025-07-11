@@ -2,10 +2,9 @@
 	import type { Snippet } from 'svelte';
 	import { useSidebar } from '../ui/sidebar';
 	import * as Sidebar from '../ui/sidebar';
-	import { Button } from '../ui/button';
-	import Icon from '@iconify/svelte';
 	import { Separator } from '../ui/separator';
 	import * as Breadcrumb from '../ui/breadcrumb';
+	import Terminal from '$lib/novu/client/terminal.svelte';
 	interface PageWrapperProps {
 		title?: string;
 		subTitle?: string;
@@ -78,14 +77,11 @@
 				</Breadcrumb.Root>
 			</div>
 
-			<div class="px-4">
-				{#if right}
+			<div class="flex items-center gap-2 pr-4">
+				<Terminal />
+				<div>
 					{@render right?.()}
-				{:else if description}
-					<p class="text-muted-foreground ml-auto hidden px-3 text-sm lg:flex">
-						{description}
-					</p>
-				{/if}
+				</div>
 			</div>
 		</div>
 	</header>

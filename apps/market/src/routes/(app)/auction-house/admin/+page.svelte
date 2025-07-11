@@ -1,7 +1,7 @@
 <script lang="ts">
 	import PageWrapper from '$lib/components/layout/page-wrapper.svelte';
 	import { Button } from '$lib/components/ui/button';
-	import AdminNavTabs from '../components/admin-navtabs.svelte';
+	import AdminNavTabs from '../../../../lib/components/common/auction-house/admin-navtabs.svelte';
 
 	const { data } = $props();
 	const auctions = $derived(data.auctions);

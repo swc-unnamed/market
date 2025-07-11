@@ -23,7 +23,22 @@
 			title: 'Auction House',
 			icon: 'lucide:blocks',
 			href: '/auction-house/dashboard',
-			accessPolicy: GlobalPatronAccessPolicy
+			accessPolicy: GlobalPatronAccessPolicy,
+			initialOpen: true,
+			nested: [
+				{
+					title: 'Dashboard',
+					icon: 'lucide:blocks',
+					href: '/auction-house/dashboard',
+					accessPolicy: GlobalPatronAccessPolicy
+				},
+				{
+					title: 'Listings',
+					icon: 'lucide:blocks',
+					href: '/auction-house/listings',
+					accessPolicy: GlobalPatronAccessPolicy
+				}
+			]
 		},
 		// {
 		//   title: 'Holochain',

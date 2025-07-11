@@ -13,6 +13,7 @@
 	import NumberInput from '$lib/components/number-input.svelte';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
 	import { buttonVariants } from '$lib/components/ui/button/index.js';
+	import AuctionHouseMenu from '$lib/components/common/auction-house/auction-house-menu.svelte';
 
 	let { data } = $props();
 	let listing = $derived(data.listing);
@@ -44,6 +45,9 @@
 		}
 	]}
 >
+	{#snippet right()}
+		<AuctionHouseMenu />
+	{/snippet}
 	<div class="grid grid-cols-1 gap-2 md:grid-cols-3">
 		<form method="post" use:enhance>
 			<Card.Root>
