@@ -102,7 +102,8 @@ const authentication: Handle = async ({ event, resolve }) => {
 
   event.locals.terminal = {
     appId: env.NOVU_APPLICATION_ID,
-    apiUrl: env.NOVU_API_URL
+    apiUrl: env.NOVU_API_URL,
+    socketUrl: env.NOVU_SOCKET_URL
   }
 
   return resolve(event)

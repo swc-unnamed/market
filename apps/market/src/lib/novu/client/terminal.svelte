@@ -1,5 +1,6 @@
 <script lang="ts">
 	import * as Sheet from '$lib/components/ui/sheet/index.js';
+	import * as Alert from '$lib/components/ui/alert/index.js';
 	import { type TerminalContext, TerminalContextKey } from '$lib/context/terminal.context';
 	import { type UserContext, UserContextKey } from '$lib/context/user.context';
 	import { getContext, onMount } from 'svelte';
@@ -15,45 +16,22 @@
 	const userContext = getContext<UserContext>(UserContextKey);
 	const terminalContext = getContext<TerminalContext>(TerminalContextKey);
 
-	const novu = getNovuClient({
-		apiUrl: terminalContext.apiUrl,
-		appId: terminalContext.appId,
-		subscriberId: userContext.id
-	});
+	let novu: Novu | null = null;
 
 	let unreadCount = $state(0);
 	let terminalOpen = $state(false);
 	let notifications = $state<Notification[]>([]);
 	let terminalInitialized = $state(false);
 
-	$effect(() => {
-		novu.on('notifications.notification_received', (data) => {
-			console.log('new notification =>', data);
-		});
-
-		novu.on('notifications.unread_count_changed', (data) => {
-			console.log('new unread notifications count =>', data);
-		});
-
-		novu.on('notification.read.resolved', (e) => {
-			console.log('Notification marked as read =>', e);
-		});
-
-		novu.on('notifications.unseen_count_changed', (data) => {
-			console.log('New unseen notifications count =>', data);
-		});
-	});
-
 	// $inspect(notifications, terminalInitialized);
 
 	onMount(async () => {
-		// novu = getNovuClient({
-		// 	apiUrl: terminalContext.apiUrl,
-		// 	appId: terminalContext.appId,
-		// 	subscriberId: userContext.id
-		// });
-
-		novu.socket.connect();
+		novu = getNovuClient({
+			apiUrl: terminalContext.apiUrl,
+			appId: terminalContext.appId,
+			subscriberId: userContext.id,
+			socketUrl: terminalContext.socketUrl
+		});
 
 		if (!novu) {
 			console.error('Novu client is not initialized');
@@ -66,9 +44,37 @@
 			read: false
 		});
 
+		unreadCount = notifs.data?.notifications.length || 0;
+
 		novu.on('socket.connect.resolved', () => {
 			console.log('🤖 Terminal connected');
 			terminalInitialized = true;
+		});
+
+		novu.on('notifications.notification_received', (data) => {
+			notifications = [data.result, ...notifications];
+		});
+
+		novu.on('notifications.unread_count_changed', (data) => {
+			console.log('new unread notifications count =>', data);
+
+			unreadCount = data.result;
+		});
+
+		novu.on('notification.read.resolved', (e) => {
+			console.log('Notification marked as read =>', e);
+		});
+
+		novu.on('notifications.unseen_count_changed', (data) => {
+			console.log('New unseen notifications count =>', data);
+		});
+
+		novu.on('notifications.count.resolved', (data) => {
+			console.log('New notifications count =>', data);
+		});
+
+		novu.on('notification.read.pending', (e) => {
+			console.log('Notification read pending =>', e);
 		});
 
 		if (notifs.data) {
@@ -81,14 +87,12 @@
 
 	async function markAsRead(id: string) {
 		try {
-			await novu.notifications.read({
+			await novu?.notifications.read({
 				notificationId: id
 			});
 
 			// Remove the notification from the list
 			notifications = notifications.filter((notif) => notif.id !== id);
-
-			toast('done');
 		} catch (err) {
 			console.error('Failed to mark notification as read:', err);
 			toast.error('Failed to mark notification as read');
@@ -128,33 +132,39 @@
 						<Tabs.Trigger value="auction_house">Auction House</Tabs.Trigger>
 					</Tabs.List>
 					<Tabs.Content value="all">
-						<div class="grid grid-cols-1 gap-1">
-							{#if notifications}
-								{#each notifications as notif}
-									<div class="border-1 rounded-lg p-2">
-										<div class="flex flex-col gap-1">
-											<h4>{notif.subject}</h4>
-											<p class="text-sm">{notif.body}</p>
-											<div class="flex items-center justify-between">
-												<span class="text-muted-foreground text-xs">
-													{formatDistance(notif.createdAt, new Date(), {
-														addSuffix: true,
-														includeSeconds: true
-													})}
-												</span>
-												<Button
-													size="sm"
-													variant="ghost"
-													onclick={async () => {
-														await markAsRead(notif.id);
-													}}>Dismiss</Button
-												>
+						{#if notifications.length > 0}
+							<div class="grid grid-cols-1 gap-1">
+								{#if notifications}
+									{#each notifications as notif}
+										<div class="border-1 rounded-lg p-2">
+											<div class="flex flex-col gap-1">
+												<h4>{notif.subject}</h4>
+												<p class="text-sm">{notif.body}</p>
+												<div class="flex items-center justify-between">
+													<span class="text-muted-foreground text-xs">
+														{formatDistance(notif.createdAt, new Date(), {
+															addSuffix: true,
+															includeSeconds: true
+														})}
+													</span>
+													<Button
+														size="sm"
+														variant="ghost"
+														onclick={async () => {
+															await markAsRead(notif.id);
+														}}>Dismiss</Button
+													>
+												</div>
 											</div>
 										</div>
-									</div>
-								{/each}
-							{/if}
-						</div>
+									{/each}
+								{/if}
+							</div>
+						{:else}
+							<Alert.Root>
+								<Alert.Description>You're all caught up! No new notifications.</Alert.Description>
+							</Alert.Root>
+						{/if}
 					</Tabs.Content>
 					<Tabs.Content value="auction_house">
 						<div class="border-1 rounded-lg p-2">

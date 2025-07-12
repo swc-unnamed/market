@@ -66,11 +66,8 @@ export const newListingWorkflow = workflow('new-listing', async ({ step, payload
 
   await step.inApp('notify terminal', async () => {
     return {
-      subject: `New Listing: ${listingData.listing.title}`,
-      body: `Auction Listing #${listingData.listing.listingNumber} has been created.\n\n` +
-        `Title: ${listingData.listing.title}\n` +
-        `Description: ${listingData.listing.description}\n` +
-        `Minimum Bid: ${listingData.listing.minimumBid}\n`,
+      subject: `${listingData.listing.title}`,
+      body: `A new Auction listing has been created. The bidding starts at ${listingData.listing.minimumBid.toLocaleString()} credits.`,
       primaryAction: {
         label: 'View Details',
         redirect: {
