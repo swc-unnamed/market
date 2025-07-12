@@ -16,14 +16,15 @@
 	import * as Chart from '$lib/components/ui/chart/index.js';
 	import * as Card from '$lib/components/ui/card/index.js';
 
-	const chartData = [
-		{ date: new Date('2024-01-01'), won: 186, sold: 0 },
-		{ date: new Date('2024-02-01'), won: 305, sold: 0 },
-		{ date: new Date('2024-03-01'), won: 90.4, sold: 0 },
-		{ date: new Date('2024-04-01'), won: 730, sold: 190 },
-		{ date: new Date('2024-05-01'), won: 0, sold: 0 },
-		{ date: new Date('2024-06-01'), won: 0, sold: 0 }
-	];
+	interface Props {
+		chartData: {
+			date: Date;
+			won: number;
+			sold: number;
+		}[];
+	}
+
+	let { chartData }: Props = $props();
 
 	const chartConfig = {
 		won: { label: 'won', color: 'var(--chart-1)' },

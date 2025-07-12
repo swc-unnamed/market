@@ -36,3 +36,10 @@ jobs:
       - name: Deploy to Staging
         run: |
           curl --request GET '${{ secrets.COOLIFY_PROD_WEBHOOK }}' --header 'Authorization: Bearer ${{ secrets.COOLIFY_PROD_TOKEN }}'
+
+      - name: Sync Notifications
+        uses: novuhq/actions-novu-sync@v2
+        with:
+          secret-key: ${{ secrets.NOVU_PROD_SECRET_KEY }}
+          bridge-url: ${{ secrets.NOVU_PROD_BRIDGE_URL }}
+          api-url: ${{ secrets.NOVU_API_URL }}

@@ -10,7 +10,7 @@
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { Switch } from '$lib/components/ui/switch';
 	import { Button } from '$lib/components/ui/button';
-	import type { Entity } from '$lib/database/prisma/client';
+	import type { Entity } from '$lib/database/db';
 	import { toast } from 'svelte-sonner';
 	import * as Avatar from '$lib/components/ui/avatar';
 
@@ -171,7 +171,7 @@
 						<Avatar.Root class="size-24 rounded-none">
 							<Avatar.Image class="rounded-none" src={entity.imageSmall} alt={entity.name} />
 							<Avatar.Fallback
-								class="flex h-24 w-24 items-center justify-center rounded-none p-3 text-xs text-wrap"
+								class="flex h-24 w-24 items-center justify-center text-wrap rounded-none p-3 text-xs"
 							>
 								{entity.name}
 							</Avatar.Fallback>

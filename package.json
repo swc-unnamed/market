@@ -1,47 +1,51 @@
 {
-	"name": "unnamed-market",
-	"private": true,
-	"author": {
-		"name": "swc-marc",
-		"url": "https://github.com/swc-marc"
-	},
-	"pnpm": {
-		"onlyBuiltDependencies": [
-			"@prisma/client",
-			"@prisma/engines",
-			"@tailwindcss/oxide",
-			"esbuild",
-			"prisma"
-		]
-	},
-	"packageManager": "pnpm@8.9.0",
-	"scripts": {
-		"dev": "turbo run dev",
-		"build": "turbo run build",
-		"db:generate": "turbo run db:generate",
-		"db:deploy": "turbo run db:deploy"
-	},
-	"dependencies": {
-		"@hono/node-server": "^1.14.4",
-		"@paralleldrive/cuid2": "^2.2.2",
-		"@prisma/adapter-pg": "^6.10.1",
-		"@prisma/client": "^6.10.1",
-		"date-fns": "^4.1.0",
-		"dotenv": "^16.6.0",
-		"hono": "^4.8.3",
-		"jsonwebtoken": "^9.0.2",
-		"nanoid": "^5.1.5",
-		"swcombine.js": "^0.0.11",
-		"tsup": "^8.5.0",
-		"tsx": "^4.20.3",
-		"turbo": "^2.5.4",
-		"typescript": "^5.8.3",
-		"zod": "^3.25.67"
-	},
-	"devDependencies": {
-		"@types/jsonwebtoken": "^9.0.9",
-		"@types/node": "^22.15.33",
-		"dotenv-cli": "^8.0.0",
-		"prisma": "^6.10.1"
-	}
+  "name": "unnamed-market",
+  "private": true,
+  "author": {
+    "name": "swc-marc",
+    "url": "https://github.com/swc-marc"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@prisma/client",
+      "@prisma/engines",
+      "@tailwindcss/oxide",
+      "esbuild",
+      "prisma"
+    ]
+  },
+  "packageManager": "pnpm@8.9.0",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "db:generate": "turbo run db:generate",
+    "db:deploy": "turbo run db:deploy",
+    "novu:dev:sync": "chmod +ux ./scripts/dev-sync.sh && ./scripts/dev-sync.sh"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.14.4",
+    "@novu/api": "^1.4.0",
+    "@novu/framework": "^2.6.7",
+    "@novu/js": "^3.5.0",
+    "@paralleldrive/cuid2": "^2.2.2",
+    "@prisma/adapter-pg": "^6.10.1",
+    "@prisma/client": "^6.10.1",
+    "date-fns": "^4.1.0",
+    "dotenv": "^16.6.0",
+    "hono": "^4.8.3",
+    "jsonwebtoken": "^9.0.2",
+    "nanoid": "^5.1.5",
+    "swcombine.js": "^0.0.11",
+    "tsup": "^8.5.0",
+    "tsx": "^4.20.3",
+    "turbo": "^2.5.4",
+    "typescript": "^5.8.3",
+    "zod": "^3.25.67"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/node": "^22.15.33",
+    "dotenv-cli": "^8.0.0",
+    "prisma": "^6.10.1"
+  }
 }

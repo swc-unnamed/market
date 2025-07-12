@@ -1,6 +1,6 @@
 <script lang="ts">
 	import PageWrapper from '$lib/components/layout/page-wrapper.svelte';
-	import AdminNavTabs from '../../components/admin-navtabs.svelte';
+	import AdminNavTabs from '$lib/components/common/auction-house/admin-navtabs.svelte';
 	import * as Card from '$lib/components/ui/card';
 	import * as Avatar from '$lib/components/ui/avatar';
 	import * as Table from '$lib/components/ui/table';
