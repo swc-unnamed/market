@@ -11,6 +11,8 @@ permissions:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    env:
+      NOVU_SECRET_KEY: "dummy-secret-key"
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

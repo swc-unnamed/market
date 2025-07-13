@@ -10,8 +10,8 @@ let novu: Novu | null = null;
 export const novuClient = (): Novu => {
   if (!novu) {
     novu = new Novu({
-      secretKey: env.NOVU_SECRET_KEY,
-      serverURL: env.NOVU_API_URL
+      secretKey: env.NOVU_SECRET_KEY || '',
+      serverURL: env.NOVU_API_URL || ''
     });
   }
 
