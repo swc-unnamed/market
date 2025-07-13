@@ -3,8 +3,8 @@ import { env } from '$env/dynamic/private';
 import { newListingWorkflow } from '$lib/novu/auction-house';
 
 const client = new Client({
-  apiUrl: env.NOVU_API_URL,
-  secretKey: env.NOVU_SECRET_KEY,
+  apiUrl: env.NOVU_API_URL || '',
+  secretKey: env.NOVU_SECRET_KEY || 'nokey',
   strictAuthentication: false
 });
 
