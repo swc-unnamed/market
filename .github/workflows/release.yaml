@@ -37,6 +37,13 @@ jobs:
         run: |
           curl --request GET '${{ secrets.COOLIFY_PROD_WEBHOOK }}' --header 'Authorization: Bearer ${{ secrets.COOLIFY_PROD_TOKEN }}'
 
+  sync-notifications:
+    needs: build-and-deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait 5 minutes before syncing
+        run: sleep 300
+
       - name: Sync Notifications
         uses: novuhq/actions-novu-sync@v2
         with:
