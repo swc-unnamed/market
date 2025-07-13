@@ -16,6 +16,8 @@ RUN pnpm install
 
 RUN pnpm db:generate
 
+ENV NOVU_SECRET_KEY "dummy"
+
 RUN pnpm build
 
 EXPOSE 3000
