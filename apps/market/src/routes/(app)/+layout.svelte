@@ -7,7 +7,7 @@
 	let { children, data } = $props();
 
 	setContext<UserContext>(UserContextKey, data.user);
-	setContext<TerminalContext>(TerminalContextKey, data.termina);
+	setContext<TerminalContext>(TerminalContextKey, data.terminal);
 </script>
 
 <Sidebar.Provider>

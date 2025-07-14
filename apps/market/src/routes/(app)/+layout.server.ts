@@ -8,6 +8,6 @@ export const load = async ({ locals }) => {
 
   return {
     user: locals.user,
-    termina: locals.terminal
+    terminal: locals.terminal
   };
 };
