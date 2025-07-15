@@ -213,6 +213,7 @@
 										<Select.Item value={'Active'}>Active</Select.Item>
 										<Select.Item value={'Sold'}>Sold</Select.Item>
 										<Select.Item value={'PendingMakeover'}>Pending Makeover</Select.Item>
+										<Select.Item value={'Complete'}>Complete</Select.Item>
 									</Select.Content>
 								</Select.Root>
 							</div>

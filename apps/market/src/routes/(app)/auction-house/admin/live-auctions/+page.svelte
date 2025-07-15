@@ -7,6 +7,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Separator } from '$lib/components/ui/separator';
 	import { Link2 } from '@lucide/svelte';
+	import AuctionHouseAdminMenu from '$lib/components/common/auction-house/auction-house-admin-menu.svelte';
 
 	const { data } = $props();
 
@@ -21,29 +22,23 @@
 			href: '/auction-house'
 		},
 		{
-			title: 'Admin Terminal',
+			title: 'Admin',
 			href: '/auction-house/admin'
 		}
 	]}
 >
-	{#snippet navigation()}
-		<div class="flex w-full items-center gap-1 rounded-md border p-2">
-			<AdminNavTabs />
-		</div>
-	{/snippet}
-
 	{#snippet right()}
-		<Button size="sm" variant="outline" href="/auction-house/admin/live-auctions/create">
-			Create Live Auction
-		</Button>
-		<Button size="sm" variant="destructive" href="/auction-house/dashboard">
-			Exit Admin Terminal
-		</Button>
+		<AuctionHouseAdminMenu />
 	{/snippet}
 
 	<Card.Root>
 		<Card.Header>
-			<Card.Title>Open Live Auctions</Card.Title>
+			<div class="flex items-center justify-between">
+				<Card.Title>Open Live Auctions</Card.Title>
+				<Button href="/auction-house/admin/live-auctions/create" size="sm" variant="outline">
+					Create Live Auction
+				</Button>
+			</div>
 		</Card.Header>
 		<Card.Content>
 			<Table.Root>
@@ -53,6 +48,7 @@
 						<Table.Head>Moderator</Table.Head>
 						<Table.Head>Start Time</Table.Head>
 						<Table.Head># of Listings</Table.Head>
+						<Table.Head>Status</Table.Head>
 						<Table.Head>Actions</Table.Head>
 					</Table.Row>
 				</Table.Header>
@@ -73,6 +69,7 @@
 								{auction.startTime.toLocaleTimeString()}
 							</Table.Cell>
 							<Table.Cell>{auction._count.listings}</Table.Cell>
+							<Table.Cell>{auction.status}</Table.Cell>
 							<Table.Cell>
 								<Button
 									variant="secondary"

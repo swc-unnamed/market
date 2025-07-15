@@ -78,7 +78,18 @@
 			</div>
 
 			<div class="flex items-center gap-2 pr-4">
-				<Terminal />
+				<Terminal
+					tabs={[
+						{
+							label: 'All',
+							value: []
+						},
+						{
+							label: 'Auction House',
+							value: ['auction house', 'listings']
+						}
+					]}
+				/>
 				<div>
 					{@render right?.()}
 				</div>

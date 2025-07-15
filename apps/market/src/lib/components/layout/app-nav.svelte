@@ -6,7 +6,10 @@
 	import { useSidebar } from '../ui/sidebar';
 	import * as Sidebar from '../ui/sidebar';
 	import * as Collapsible from '../ui/collapsible';
-	import { GlobalPatronAccessPolicy } from '$lib/utils/access-policies';
+	import {
+		GlobalAuctioneerAccessPolicy,
+		GlobalPatronAccessPolicy
+	} from '$lib/utils/access-policies';
 	import { page } from '$app/state';
 	import { getContext } from 'svelte';
 	import { type UserContext, UserContextKey } from '$lib/context/user.context';
@@ -20,25 +23,28 @@
 
 	const globalRoutes: Route[] = [
 		{
-			title: 'Auction House',
+			title: 'Dashboard',
 			icon: 'lucide:blocks',
 			href: '/auction-house/dashboard',
-			accessPolicy: GlobalPatronAccessPolicy,
-			initialOpen: true,
-			nested: [
-				{
-					title: 'Dashboard',
-					icon: 'lucide:blocks',
-					href: '/auction-house/dashboard',
-					accessPolicy: GlobalPatronAccessPolicy
-				},
-				{
-					title: 'Listings',
-					icon: 'lucide:blocks',
-					href: '/auction-house/listings',
-					accessPolicy: GlobalPatronAccessPolicy
-				}
-			]
+			accessPolicy: GlobalPatronAccessPolicy
+		},
+		{
+			title: 'Auctions',
+			icon: 'lucide:blocks',
+			href: '/auction-house/auctions',
+			accessPolicy: GlobalPatronAccessPolicy
+		},
+		{
+			title: 'Listings',
+			icon: 'lucide:blocks',
+			href: '/auction-house/listings',
+			accessPolicy: GlobalPatronAccessPolicy
+		},
+		{
+			title: 'Auction House Admin',
+			icon: 'lucide:settings',
+			href: '/auction-house/admin',
+			accessPolicy: GlobalAuctioneerAccessPolicy
 		},
 		// {
 		//   title: 'Holochain',
@@ -73,7 +79,7 @@
 </script>
 
 <Sidebar.Group>
-	<Sidebar.GroupLabel>Global Terminal</Sidebar.GroupLabel>
+	<Sidebar.GroupLabel>Auction House</Sidebar.GroupLabel>
 	<Sidebar.Menu>
 		<!-- <Sidebar.MenuItem>
 			<Sidebar.MenuButton

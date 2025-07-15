@@ -19,6 +19,12 @@ export const load = async ({ locals }) => {
         select: {
           id: true
         }
+      },
+      liveAuction: {
+        select: {
+          id: true,
+          title: true,
+        }
       }
     }
   });
@@ -51,10 +57,35 @@ export const load = async ({ locals }) => {
     take: 10,
   });
 
+  const auctions = await db.auctionLive.findMany({
+    where: {
+      status: 'Upcoming',
+    },
+    include: {
+      _count: {
+        select: {
+          listings: true
+        }
+      },
+      moderator: {
+        select: {
+          profile: {
+            select: {
+              id: true,
+              displayName: true,
+              avatar: true
+            }
+          }
+        }
+      }
+    }
+  });
+
   return {
     drafts: drafts,
     active: active,
     past: past,
+    auctions: auctions,
   }
 }
 

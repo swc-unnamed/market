@@ -1509,7 +1509,8 @@ export const AuctionLiveScalarFieldEnum = {
   description: 'description',
   moderatorId: 'moderatorId',
   createdAt: 'createdAt',
-  endedAt: 'endedAt'
+  endedAt: 'endedAt',
+  status: 'status'
 } as const
 
 export type AuctionLiveScalarFieldEnum = (typeof AuctionLiveScalarFieldEnum)[keyof typeof AuctionLiveScalarFieldEnum]
@@ -1772,6 +1773,20 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'AuctionLiveStatus'
+ */
+export type EnumAuctionLiveStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AuctionLiveStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'AuctionLiveStatus[]'
+ */
+export type ListEnumAuctionLiveStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AuctionLiveStatus[]'>
     
 
 

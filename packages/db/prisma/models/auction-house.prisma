@@ -1,12 +1,13 @@
 model AuctionLive {
-  id          String           @id @default(cuid())
-  startTime   DateTime         @map("start_time")
+  id          String            @id @default(cuid())
+  startTime   DateTime          @map("start_time")
   title       String
   description String?
-  moderatorId String           @map("moderator_id")
-  moderator   User             @relation(fields: [moderatorId], references: [id])
-  createdAt   DateTime         @default(now()) @map("created_at")
-  endedAt     DateTime?        @map("ended_at")
+  moderatorId String            @map("moderator_id")
+  moderator   User              @relation(fields: [moderatorId], references: [id])
+  createdAt   DateTime          @default(now()) @map("created_at")
+  endedAt     DateTime?         @map("ended_at")
+  status      AuctionLiveStatus @default(Upcoming) @map("status")
   listings    AuctionListing[]
 
   @@map("auction_lives")

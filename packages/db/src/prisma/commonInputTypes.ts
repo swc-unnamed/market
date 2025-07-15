@@ -65,6 +65,13 @@ export type DateTimeNullableFilter<$PrismaModel = never> = {
   not?: Prisma.NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
 }
 
+export type EnumAuctionLiveStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.AuctionLiveStatus | Prisma.EnumAuctionLiveStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.AuctionLiveStatus[] | Prisma.ListEnumAuctionLiveStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.AuctionLiveStatus[] | Prisma.ListEnumAuctionLiveStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumAuctionLiveStatusFilter<$PrismaModel> | $Enums.AuctionLiveStatus
+}
+
 export type SortOrderInput = {
   sort: Prisma.SortOrder
   nulls?: Prisma.NullsOrder
@@ -132,6 +139,16 @@ export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
   _min?: Prisma.NestedDateTimeNullableFilter<$PrismaModel>
   _max?: Prisma.NestedDateTimeNullableFilter<$PrismaModel>
+}
+
+export type EnumAuctionLiveStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.AuctionLiveStatus | Prisma.EnumAuctionLiveStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.AuctionLiveStatus[] | Prisma.ListEnumAuctionLiveStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.AuctionLiveStatus[] | Prisma.ListEnumAuctionLiveStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumAuctionLiveStatusWithAggregatesFilter<$PrismaModel> | $Enums.AuctionLiveStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumAuctionLiveStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumAuctionLiveStatusFilter<$PrismaModel>
 }
 
 export type IntFilter<$PrismaModel = never> = {
@@ -387,6 +404,13 @@ export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
   not?: Prisma.NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
 }
 
+export type NestedEnumAuctionLiveStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.AuctionLiveStatus | Prisma.EnumAuctionLiveStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.AuctionLiveStatus[] | Prisma.ListEnumAuctionLiveStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.AuctionLiveStatus[] | Prisma.ListEnumAuctionLiveStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumAuctionLiveStatusFilter<$PrismaModel> | $Enums.AuctionLiveStatus
+}
+
 export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
@@ -469,6 +493,16 @@ export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
   _min?: Prisma.NestedDateTimeNullableFilter<$PrismaModel>
   _max?: Prisma.NestedDateTimeNullableFilter<$PrismaModel>
+}
+
+export type NestedEnumAuctionLiveStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.AuctionLiveStatus | Prisma.EnumAuctionLiveStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.AuctionLiveStatus[] | Prisma.ListEnumAuctionLiveStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.AuctionLiveStatus[] | Prisma.ListEnumAuctionLiveStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumAuctionLiveStatusWithAggregatesFilter<$PrismaModel> | $Enums.AuctionLiveStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumAuctionLiveStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumAuctionLiveStatusFilter<$PrismaModel>
 }
 
 export type NestedEnumAuctionListingStatusFilter<$PrismaModel = never> = {

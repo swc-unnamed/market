@@ -2,6 +2,7 @@ import { Novu } from '@novu/js';
 
 let client: Novu | null = null;
 
+
 export type GetNovuClientOptions = {
   appId: string;
   subscriberId: string;

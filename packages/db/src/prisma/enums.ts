@@ -17,6 +17,17 @@ export const Role = {
 export type Role = (typeof Role)[keyof typeof Role]
 
 
+export const AuctionLiveStatus = {
+  Upcoming: 'Upcoming',
+  InProgress: 'InProgress',
+  Completed: 'Completed',
+  Cancelled: 'Cancelled',
+  Closed: 'Closed'
+} as const
+
+export type AuctionLiveStatus = (typeof AuctionLiveStatus)[keyof typeof AuctionLiveStatus]
+
+
 export const AuctionListingStatus = {
   Draft: 'Draft',
   Active: 'Active',

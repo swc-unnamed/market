@@ -6,21 +6,15 @@
 	import { Textarea } from '$lib/components/ui/textarea';
 	import * as Select from '$lib/components/ui/select';
 	import * as Table from '$lib/components/ui/table';
+	import * as Alert from '$lib/components/ui/alert';
 	import SuperDebug, { superForm } from 'sveltekit-superforms';
 	import * as Form from '$lib/components/ui/form';
-	import { zodClient } from 'sveltekit-superforms/adapters';
-	import { liveAuctionSchema } from '../components/schemas';
 	import { toast } from 'svelte-sonner';
 	import { Switch } from '$lib/components/ui/switch';
-	import * as Drawer from '$lib/components/ui/drawer';
-	import * as Dialog from '$lib/components/ui/dialog';
 	import { RadioTower, Cloud, Save, LockKeyhole } from '@lucide/svelte';
-	import { Separator } from '$lib/components/ui/separator';
-	import * as Tabs from '$lib/components/ui/tabs/index.js';
-	import { Label } from '$lib/components/ui/label';
-	import { goto, invalidate } from '$app/navigation';
-	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
+	import { enhance as formEnhance } from '$app/forms';
 	import ListingDialog from '../components/listing-dialog.svelte';
+	import AuctionHouseAdminMenu from '$lib/components/common/auction-house/auction-house-admin-menu.svelte';
 
 	const { data } = $props();
 
@@ -60,21 +54,6 @@
 			displayListingDetails = false;
 		}
 	});
-
-	async function removeListing(listingId: string) {
-		const response = await fetch(`/api/auctions/live/${auction.id}/listings/${listingId}`, {
-			method: 'DELETE',
-			body: JSON.stringify({})
-		});
-
-		if (response.ok) {
-			toast.success('Listing has been removed successfully.');
-			await invalidate('app:auction-house/admin/live-auctions');
-		} else {
-			const error = await response.json();
-			toast.error(`Failed to remove listing: ${error.message}`);
-		}
-	}
 </script>
 
 <PageWrapper
@@ -82,7 +61,7 @@
 	breadcrumb={[
 		{ title: 'Auction House', href: '/auction-house' },
 		{
-			title: 'Admin Terminal',
+			title: 'Admin',
 			href: '/auction-house/admin'
 		},
 		{
@@ -92,9 +71,7 @@
 	]}
 >
 	{#snippet right()}
-		<Button size="sm" variant="destructive" href="/auction-house/dashboard">
-			Exit Admin Terminal
-		</Button>
+		<AuctionHouseAdminMenu />
 	{/snippet}
 
 	<div class="grid grid-cols-1 gap-3">
@@ -110,6 +87,7 @@
 					{/if}
 				</div>
 			</Card.Header>
+
 			<Card.Content>
 				<form class="grid grid-cols-1 gap-4" method="post" use:enhance>
 					<Form.Field {form} name="title">
@@ -147,7 +125,7 @@
 
 					<Form.Field {form} name="moderatorId">
 						<Form.Control>
-							{#snippet children({ props })}
+							{#snippet children()}
 								<Form.Label>Moderator</Form.Label>
 								<Select.Root type="single" name="moderator" bind:value={$formData.moderatorId}>
 									<Select.Trigger class="w-full" disabled={!edit}>
@@ -170,7 +148,7 @@
 						<Form.FieldErrors />
 					</Form.Field>
 
-					{#if !auction.endedAt}
+					{#if auction.status === 'Upcoming' || auction.status === 'InProgress'}
 						<div class="flex justify-end gap-3">
 							<Button size="sm" variant="destructive" formaction="?/end" type="submit">
 								<LockKeyhole />
@@ -196,13 +174,44 @@
 					{/if}
 				</form>
 			</Card.Content>
+			<Card.Footer class="flex justify-end">
+				<form
+					method="post"
+					use:formEnhance={({}) => {
+						return async ({ result }) => {
+							if (result.type === 'failure') {
+								toast.error((result.data?.message as string) || 'Failed to close auction!');
+							}
+
+							if (result.type === 'success') {
+								toast.success('Auction closed successfully!');
+							}
+						};
+					}}
+				>
+					{#if auction.status === 'Completed'}
+						<Button variant="outline" formaction="?/close" type="submit">Close Auction</Button>
+					{/if}
+
+					{#if auction.status === 'Closed'}
+						<Alert.Root>
+							<Alert.Title>Auction Closed</Alert.Title>
+							<Alert.Description>
+								This auction has been closed. You can no longer make changes to it.
+							</Alert.Description>
+						</Alert.Root>
+					{/if}
+				</form>
+			</Card.Footer>
 		</Card.Root>
 
 		<Card.Root>
 			<Card.Header>
 				<div class="flex items-center justify-between">
 					<Card.Title>Assigned Listings</Card.Title>
-					<Button size="sm" variant="outline">Add Listing</Button>
+					{#if auction.status === 'InProgress' || auction.status === 'Upcoming'}
+						<Button size="sm" variant="outline">Add Listing</Button>
+					{/if}
 				</div>
 			</Card.Header>
 			<Card.Content>
@@ -228,8 +237,10 @@
 								<Table.Cell>{listing.minimumBid.toLocaleString()}</Table.Cell>
 								<Table.Cell>{listing.anonymous ? 'Yes' : 'No'}</Table.Cell>
 								<Table.Cell class="flex w-48 gap-2">
-									<ListingDialog auctionId={auction.id} listingId={listing.id} />
-									<Button size="sm" variant="outline">Remove Listing</Button>
+									{#if auction.status === 'InProgress' || auction.status === 'Upcoming'}
+										<ListingDialog auctionId={auction.id} listingId={listing.id} />
+										<Button size="sm" variant="outline">Remove Listing</Button>
+									{/if}
 								</Table.Cell>
 							</Table.Row>
 						{/each}

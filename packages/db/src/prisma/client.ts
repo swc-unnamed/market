@@ -112,6 +112,9 @@ export type ProfileReputationLedger = Prisma.ProfileReputationLedgerModel
 export type Role = $Enums.Role
 export const Role = $Enums.Role
 
+export type AuctionLiveStatus = $Enums.AuctionLiveStatus
+export const AuctionLiveStatus = $Enums.AuctionLiveStatus
+
 export type AuctionListingStatus = $Enums.AuctionListingStatus
 export const AuctionListingStatus = $Enums.AuctionListingStatus
 

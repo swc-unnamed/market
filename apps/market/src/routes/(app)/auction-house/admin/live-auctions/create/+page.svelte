@@ -14,6 +14,7 @@
 	import SuperDebug from 'sveltekit-superforms';
 	import { liveAuctionSchema } from '../components/schemas';
 	import { toast } from 'svelte-sonner';
+	import AuctionHouseAdminMenu from '$lib/components/common/auction-house/auction-house-admin-menu.svelte';
 
 	const { data } = $props();
 
@@ -55,9 +56,7 @@
 	]}
 >
 	{#snippet right()}
-		<Button size="sm" variant="destructive" href="/auction-house/dashboard">
-			Exit Admin Terminal
-		</Button>
+		<AuctionHouseAdminMenu />
 	{/snippet}
 
 	<div class="grid grid-cols-1 gap-3">

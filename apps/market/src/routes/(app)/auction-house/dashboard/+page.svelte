@@ -21,16 +21,28 @@
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import { Menu, Plus, Shield } from '@lucide/svelte';
 	import AuctionHouseMenu from '$lib/components/common/auction-house/auction-house-menu.svelte';
+	import type { Notification, Novu } from '@novu/js';
+	import { getNovuClient } from '$lib/novu/client/client.js';
+	import { format, formatDistance } from 'date-fns';
 
 	let { data } = $props();
+
+	const novu = getNovuClient({
+		apiUrl: data.terminal.apiUrl,
+		appId: data.terminal.appId,
+		socketUrl: data.terminal.socketUrl,
+		subscriberId: data.user.id
+	});
 
 	gsap.registerPlugin(ScrambleTextPlugin);
 
 	const draftListings = $derived(data.drafts);
 	const activeListings = $derived(data.active);
 	const pastListings = $derived(data.past);
+	const auctions = $derived(data.auctions);
 
-	let tabSelection = $state('active');
+	let notifications = $state<Notification[]>([]);
+	let tabSelection = $state('live_auctions');
 
 	function scrambleText(text: string) {
 		return (element: HTMLElement) => {
@@ -59,6 +71,33 @@
 		const data = await response.json();
 		return data;
 	}
+
+	async function loadActivityFeed() {
+		const notificationResult = await novu.notifications.list({
+			limit: 10,
+			read: false,
+			useCache: false,
+			tags: ['activity']
+		});
+
+		if (!notificationResult) {
+			throw new Error('Failed to load activity feed');
+		}
+
+		notifications = notificationResult.data?.notifications || [];
+	}
+
+	$effect(() => {
+		loadActivityFeed();
+
+		novu.on('notifications.notification_received', (e) => {
+			if (e.result) {
+				notifications = [e.result, ...notifications];
+			} else {
+				console.error('Notification received event did not contain a result:', e);
+			}
+		});
+	});
 </script>
 
 <PageWrapper
@@ -141,23 +180,40 @@
 			</Card.Root>
 			<Card.Root>
 				<Card.Header>
-					<Card.Title>Recent Updates</Card.Title>
-					<Card.Description>Recent activity in the auction house.</Card.Description>
+					<div class="flex items-center justify-between">
+						<Card.Title>Feed</Card.Title>
+						<Button
+							variant="ghost"
+							size="sm"
+							onclick={async () => {
+								await novu.notifications.readAll({
+									tags: ['activity']
+								});
+
+								notifications = [];
+
+								toast.success('Activity feed cleared');
+							}}
+						>
+							<Icon icon="tabler:clear-all" />
+						</Button>
+					</div>
+					<Card.Description>Your curated activity feed</Card.Description>
 				</Card.Header>
 				<Card.Content>
 					<ScrollArea class="h-[230px]">
-						<div class="grid grid-cols-1 gap-1">
-							<div class="hover:bg-muted rounded-md border p-2 hover:cursor-pointer">
-								<p>Listing #123 has been created</p>
-							</div>
-
-							<div class="hover:bg-muted rounded-md border p-2 hover:cursor-pointer">
-								<p>Live Auction {SwcTimestamp.now().toString('{y}')}-03 has been scheduled</p>
-							</div>
-
-							<div class="hover:bg-muted rounded-md border p-2 hover:cursor-pointer">
-								<p>Live Auction {SwcTimestamp.now().toString('{y}')}-04 has been scheduled</p>
-							</div>
+						<div class="grid grid-cols-1 gap-2">
+							{#each notifications as notif}
+								<div class="flex flex-col items-start gap-1 rounded-md border p-2">
+									<Badge variant="outline">{notif.subject}</Badge>
+									<p>{notif.body}</p>
+									<p class="text-muted-foreground text-xs">
+										{formatDistance(new Date(notif.createdAt), new Date(), {
+											addSuffix: true
+										})}
+									</p>
+								</div>
+							{/each}
 						</div>
 					</ScrollArea>
 				</Card.Content>
@@ -174,8 +230,8 @@
 						<Tabs.List class="w-full">
 							<Tabs.Trigger value="drafts">Drafts ({draftListings.length})</Tabs.Trigger>
 							<Tabs.Trigger value="active">Active ({activeListings.length})</Tabs.Trigger>
-							<Tabs.Trigger value="live_auctions">Live Auctions (0)</Tabs.Trigger>
-							<Tabs.Trigger value="past">Past (0)</Tabs.Trigger>
+							<Tabs.Trigger value="live_auctions">Live Auctions ({auctions.length})</Tabs.Trigger>
+							<Tabs.Trigger value="past">Past ({pastListings.length})</Tabs.Trigger>
 						</Tabs.List>
 						<Tabs.Content value="drafts">
 							<div class="grid grid-cols-1 gap-3">
@@ -218,12 +274,15 @@
 								</Table.Root>
 							</div>
 						</Tabs.Content>
+
 						<Tabs.Content value="active">
 							<div class="grid grid-cols-1 gap-3">
 								<Table.Root>
 									<Table.Header>
 										<Table.Row>
 											<Table.Head>Title</Table.Head>
+											<Table.Head>Live Auction</Table.Head>
+											<Table.Head>Status</Table.Head>
 											<Table.Head>Items</Table.Head>
 											<Table.Head>Minimum Bid</Table.Head>
 											<Table.Head></Table.Head>
@@ -233,6 +292,8 @@
 										{#each activeListings as listing, i}
 											<Table.Row>
 												<Table.Cell>{listing.title}</Table.Cell>
+												<Table.Cell>{listing.liveAuction?.title}</Table.Cell>
+												<Table.Cell>{listing.status}</Table.Cell>
 												<Table.Cell>
 													<Badge>Items: {listing.items.length}</Badge>
 												</Table.Cell>
@@ -259,13 +320,56 @@
 								</Table.Root>
 							</div>
 						</Tabs.Content>
+
 						<Tabs.Content value="live_auctions">
-							<div class="p-8 text-center">
-								<p class="text-muted-foreground">
-									There are no planned auctions at this time. Check back later.
-								</p>
+							<div class="grid grid-cols-1 gap-3 md:grid-cols-3">
+								{#each auctions as auction}
+									<Card.Root>
+										<Card.Header>
+											<div class="flex items-center justify-between">
+												<Card.Title>{auction.title}</Card.Title>
+												<Badge variant="outline">
+													{auction.status}
+												</Badge>
+											</div>
+											<div class="flex flex-col">
+												<p class="text-muted-foreground text-xs">Moderated by</p>
+												<div class="flex items-center gap-2">
+													<img
+														src={auction.moderator.profile?.avatar}
+														alt="mod avatar"
+														class="size-6 rounded-md"
+													/>
+													<span class="text-sm">{auction.moderator.profile?.displayName}</span>
+												</div>
+											</div>
+										</Card.Header>
+
+										<Card.Content>
+											<div class="grid grid-cols-1 gap-3">
+												<p>Item Count: {auction._count.listings}</p>
+												<div class="flex justify-between">
+													<p>
+														{SwcTimestamp.fromDate(auction.startTime).toString('Y{y} D{d} {h}:{m}')}
+													</p>
+													<p>{format(auction.startTime, 'MM/dd/yy HH:mm')}</p>
+												</div>
+											</div>
+										</Card.Content>
+										<Card.Footer>
+											<Button
+												variant="outline"
+												size="sm"
+												href={`/auction-house/auctions/${auction.id}`}
+											>
+												View Details
+											</Button>
+										</Card.Footer>
+									</Card.Root>
+								{/each}
 							</div>
 						</Tabs.Content>
+
 						<Tabs.Content value="past">
 							<div class="grid grid-cols-1 gap-3">
 								<Table.Root>

@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { goto, preloadData } from '$app/navigation';
-	import { buttonVariants } from '$lib/components/ui/button';
+	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import { type UserContext, UserContextKey } from '$lib/context/user.context';
 	import { GlobalAuctioneerAccessPolicy } from '$lib/utils/access-policies';
-	import { Menu, Plus, Shield } from '@lucide/svelte';
+	import { Menu, Plus, SatelliteDish, Shield } from '@lucide/svelte';
 	import { getContext } from 'svelte';
 	import { toast } from 'svelte-sonner';
 
@@ -14,9 +14,9 @@
 
 <DropdownMenu.Root>
 	<DropdownMenu.Trigger>
-		<div class="hover:bg-secondary p-1 hover:rounded-sm">
-			<Menu class="size-6 " />
-		</div>
+		<Button variant="ghost" size="sm">
+			<Menu class="size-6" />
+		</Button>
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content class="w-56" align="end" sideOffset={4}>
 		<DropdownMenu.Group>
@@ -46,6 +46,18 @@
 						<span>Create Listing</span>
 					</button>
 				</form>
+			</DropdownMenu.Item>
+			<DropdownMenu.Item>
+				<button
+					class="flex items-center gap-2"
+					onmouseenter={async () => {
+						await preloadData('/auction-house/auctions');
+					}}
+					onclick={async () => await goto('/auction-house/auctions')}
+				>
+					<SatelliteDish />
+					Auctions
+				</button>
 			</DropdownMenu.Item>
 			{#if GlobalAuctioneerAccessPolicy.includes(userContext.role)}
 				<DropdownMenu.Item>

@@ -1,6 +1,7 @@
 import { serve, Client } from '@novu/framework/sveltekit';
 import { env } from '$env/dynamic/private';
 import { newListingWorkflow } from '$lib/novu/auction-house';
+import { activityFeed } from '$lib/novu/common/activity-feed';
 
 const client = new Client({
   apiUrl: env.NOVU_API_URL || '',
@@ -9,6 +10,6 @@ const client = new Client({
 });
 
 export const { GET, POST, OPTIONS } = serve({
-  workflows: [newListingWorkflow],
+  workflows: [newListingWorkflow, activityFeed],
   client: client,
 })

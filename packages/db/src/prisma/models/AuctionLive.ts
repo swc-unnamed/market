@@ -31,6 +31,7 @@ export type AuctionLiveMinAggregateOutputType = {
   moderatorId: string | null
   createdAt: Date | null
   endedAt: Date | null
+  status: $Enums.AuctionLiveStatus | null
 }
 
 export type AuctionLiveMaxAggregateOutputType = {
@@ -41,6 +42,7 @@ export type AuctionLiveMaxAggregateOutputType = {
   moderatorId: string | null
   createdAt: Date | null
   endedAt: Date | null
+  status: $Enums.AuctionLiveStatus | null
 }
 
 export type AuctionLiveCountAggregateOutputType = {
@@ -51,6 +53,7 @@ export type AuctionLiveCountAggregateOutputType = {
   moderatorId: number
   createdAt: number
   endedAt: number
+  status: number
   _all: number
 }
 
@@ -63,6 +66,7 @@ export type AuctionLiveMinAggregateInputType = {
   moderatorId?: true
   createdAt?: true
   endedAt?: true
+  status?: true
 }
 
 export type AuctionLiveMaxAggregateInputType = {
@@ -73,6 +77,7 @@ export type AuctionLiveMaxAggregateInputType = {
   moderatorId?: true
   createdAt?: true
   endedAt?: true
+  status?: true
 }
 
 export type AuctionLiveCountAggregateInputType = {
@@ -83,6 +88,7 @@ export type AuctionLiveCountAggregateInputType = {
   moderatorId?: true
   createdAt?: true
   endedAt?: true
+  status?: true
   _all?: true
 }
 
@@ -166,6 +172,7 @@ export type AuctionLiveGroupByOutputType = {
   moderatorId: string
   createdAt: Date
   endedAt: Date | null
+  status: $Enums.AuctionLiveStatus
   _count: AuctionLiveCountAggregateOutputType | null
   _min: AuctionLiveMinAggregateOutputType | null
   _max: AuctionLiveMaxAggregateOutputType | null
@@ -197,6 +204,7 @@ export type AuctionLiveWhereInput = {
   moderatorId?: Prisma.StringFilter<"AuctionLive"> | string
   createdAt?: Prisma.DateTimeFilter<"AuctionLive"> | Date | string
   endedAt?: Prisma.DateTimeNullableFilter<"AuctionLive"> | Date | string | null
+  status?: Prisma.EnumAuctionLiveStatusFilter<"AuctionLive"> | $Enums.AuctionLiveStatus
   moderator?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   listings?: Prisma.AuctionListingListRelationFilter
 }
@@ -209,6 +217,7 @@ export type AuctionLiveOrderByWithRelationInput = {
   moderatorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   endedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
   moderator?: Prisma.UserOrderByWithRelationInput
   listings?: Prisma.AuctionListingOrderByRelationAggregateInput
 }
@@ -224,6 +233,7 @@ export type AuctionLiveWhereUniqueInput = Prisma.AtLeast<{
   moderatorId?: Prisma.StringFilter<"AuctionLive"> | string
   createdAt?: Prisma.DateTimeFilter<"AuctionLive"> | Date | string
   endedAt?: Prisma.DateTimeNullableFilter<"AuctionLive"> | Date | string | null
+  status?: Prisma.EnumAuctionLiveStatusFilter<"AuctionLive"> | $Enums.AuctionLiveStatus
   moderator?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   listings?: Prisma.AuctionListingListRelationFilter
 }, "id">
@@ -236,6 +246,7 @@ export type AuctionLiveOrderByWithAggregationInput = {
   moderatorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   endedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
   _count?: Prisma.AuctionLiveCountOrderByAggregateInput
   _max?: Prisma.AuctionLiveMaxOrderByAggregateInput
   _min?: Prisma.AuctionLiveMinOrderByAggregateInput
@@ -252,6 +263,7 @@ export type AuctionLiveScalarWhereWithAggregatesInput = {
   moderatorId?: Prisma.StringWithAggregatesFilter<"AuctionLive"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"AuctionLive"> | Date | string
   endedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"AuctionLive"> | Date | string | null
+  status?: Prisma.EnumAuctionLiveStatusWithAggregatesFilter<"AuctionLive"> | $Enums.AuctionLiveStatus
 }
 
 export type AuctionLiveCreateInput = {
@@ -261,6 +273,7 @@ export type AuctionLiveCreateInput = {
   description?: string | null
   createdAt?: Date | string
   endedAt?: Date | string | null
+  status?: $Enums.AuctionLiveStatus
   moderator: Prisma.UserCreateNestedOneWithoutModeratedLiveAuctionsInput
   listings?: Prisma.AuctionListingCreateNestedManyWithoutLiveAuctionInput
 }
@@ -273,6 +286,7 @@ export type AuctionLiveUncheckedCreateInput = {
   moderatorId: string
   createdAt?: Date | string
   endedAt?: Date | string | null
+  status?: $Enums.AuctionLiveStatus
   listings?: Prisma.AuctionListingUncheckedCreateNestedManyWithoutLiveAuctionInput
 }
 
@@ -283,6 +297,7 @@ export type AuctionLiveUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.EnumAuctionLiveStatusFieldUpdateOperationsInput | $Enums.AuctionLiveStatus
   moderator?: Prisma.UserUpdateOneRequiredWithoutModeratedLiveAuctionsNestedInput
   listings?: Prisma.AuctionListingUpdateManyWithoutLiveAuctionNestedInput
 }
@@ -295,6 +310,7 @@ export type AuctionLiveUncheckedUpdateInput = {
   moderatorId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.EnumAuctionLiveStatusFieldUpdateOperationsInput | $Enums.AuctionLiveStatus
   listings?: Prisma.AuctionListingUncheckedUpdateManyWithoutLiveAuctionNestedInput
 }
 
@@ -306,6 +322,7 @@ export type AuctionLiveCreateManyInput = {
   moderatorId: string
   createdAt?: Date | string
   endedAt?: Date | string | null
+  status?: $Enums.AuctionLiveStatus
 }
 
 export type AuctionLiveUpdateManyMutationInput = {
@@ -315,6 +332,7 @@ export type AuctionLiveUpdateManyMutationInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.EnumAuctionLiveStatusFieldUpdateOperationsInput | $Enums.AuctionLiveStatus
 }
 
 export type AuctionLiveUncheckedUpdateManyInput = {
@@ -325,6 +343,7 @@ export type AuctionLiveUncheckedUpdateManyInput = {
   moderatorId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.EnumAuctionLiveStatusFieldUpdateOperationsInput | $Enums.AuctionLiveStatus
 }
 
 export type AuctionLiveCountOrderByAggregateInput = {
@@ -335,6 +354,7 @@ export type AuctionLiveCountOrderByAggregateInput = {
   moderatorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   endedAt?: Prisma.SortOrder
+  status?: Prisma.SortOrder
 }
 
 export type AuctionLiveMaxOrderByAggregateInput = {
@@ -345,6 +365,7 @@ export type AuctionLiveMaxOrderByAggregateInput = {
   moderatorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   endedAt?: Prisma.SortOrder
+  status?: Prisma.SortOrder
 }
 
 export type AuctionLiveMinOrderByAggregateInput = {
@@ -355,6 +376,7 @@ export type AuctionLiveMinOrderByAggregateInput = {
   moderatorId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   endedAt?: Prisma.SortOrder
+  status?: Prisma.SortOrder
 }
 
 export type AuctionLiveNullableScalarRelationFilter = {
@@ -386,6 +408,10 @@ export type NullableStringFieldUpdateOperationsInput = {
 
 export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
+}
+
+export type EnumAuctionLiveStatusFieldUpdateOperationsInput = {
+  set?: $Enums.AuctionLiveStatus
 }
 
 export type AuctionLiveCreateNestedOneWithoutListingsInput = {
@@ -453,6 +479,7 @@ export type AuctionLiveCreateWithoutListingsInput = {
   description?: string | null
   createdAt?: Date | string
   endedAt?: Date | string | null
+  status?: $Enums.AuctionLiveStatus
   moderator: Prisma.UserCreateNestedOneWithoutModeratedLiveAuctionsInput
 }
 
@@ -464,6 +491,7 @@ export type AuctionLiveUncheckedCreateWithoutListingsInput = {
   moderatorId: string
   createdAt?: Date | string
   endedAt?: Date | string | null
+  status?: $Enums.AuctionLiveStatus
 }
 
 export type AuctionLiveCreateOrConnectWithoutListingsInput = {
@@ -489,6 +517,7 @@ export type AuctionLiveUpdateWithoutListingsInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.EnumAuctionLiveStatusFieldUpdateOperationsInput | $Enums.AuctionLiveStatus
   moderator?: Prisma.UserUpdateOneRequiredWithoutModeratedLiveAuctionsNestedInput
 }
 
@@ -500,6 +529,7 @@ export type AuctionLiveUncheckedUpdateWithoutListingsInput = {
   moderatorId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.EnumAuctionLiveStatusFieldUpdateOperationsInput | $Enums.AuctionLiveStatus
 }
 
 export type AuctionLiveCreateWithoutModeratorInput = {
@@ -509,6 +539,7 @@ export type AuctionLiveCreateWithoutModeratorInput = {
   description?: string | null
   createdAt?: Date | string
   endedAt?: Date | string | null
+  status?: $Enums.AuctionLiveStatus
   listings?: Prisma.AuctionListingCreateNestedManyWithoutLiveAuctionInput
 }
 
@@ -519,6 +550,7 @@ export type AuctionLiveUncheckedCreateWithoutModeratorInput = {
   description?: string | null
   createdAt?: Date | string
   endedAt?: Date | string | null
+  status?: $Enums.AuctionLiveStatus
   listings?: Prisma.AuctionListingUncheckedCreateNestedManyWithoutLiveAuctionInput
 }
 
@@ -559,6 +591,7 @@ export type AuctionLiveScalarWhereInput = {
   moderatorId?: Prisma.StringFilter<"AuctionLive"> | string
   createdAt?: Prisma.DateTimeFilter<"AuctionLive"> | Date | string
   endedAt?: Prisma.DateTimeNullableFilter<"AuctionLive"> | Date | string | null
+  status?: Prisma.EnumAuctionLiveStatusFilter<"AuctionLive"> | $Enums.AuctionLiveStatus
 }
 
 export type AuctionLiveCreateManyModeratorInput = {
@@ -568,6 +601,7 @@ export type AuctionLiveCreateManyModeratorInput = {
   description?: string | null
   createdAt?: Date | string
   endedAt?: Date | string | null
+  status?: $Enums.AuctionLiveStatus
 }
 
 export type AuctionLiveUpdateWithoutModeratorInput = {
@@ -577,6 +611,7 @@ export type AuctionLiveUpdateWithoutModeratorInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.EnumAuctionLiveStatusFieldUpdateOperationsInput | $Enums.AuctionLiveStatus
   listings?: Prisma.AuctionListingUpdateManyWithoutLiveAuctionNestedInput
 }
 
@@ -587,6 +622,7 @@ export type AuctionLiveUncheckedUpdateWithoutModeratorInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.EnumAuctionLiveStatusFieldUpdateOperationsInput | $Enums.AuctionLiveStatus
   listings?: Prisma.AuctionListingUncheckedUpdateManyWithoutLiveAuctionNestedInput
 }
 
@@ -597,6 +633,7 @@ export type AuctionLiveUncheckedUpdateManyWithoutModeratorInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.EnumAuctionLiveStatusFieldUpdateOperationsInput | $Enums.AuctionLiveStatus
 }
 
 
@@ -638,6 +675,7 @@ export type AuctionLiveSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   moderatorId?: boolean
   createdAt?: boolean
   endedAt?: boolean
+  status?: boolean
   moderator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   listings?: boolean | Prisma.AuctionLive$listingsArgs<ExtArgs>
   _count?: boolean | Prisma.AuctionLiveCountOutputTypeDefaultArgs<ExtArgs>
@@ -651,6 +689,7 @@ export type AuctionLiveSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   moderatorId?: boolean
   createdAt?: boolean
   endedAt?: boolean
+  status?: boolean
   moderator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["auctionLive"]>
 
@@ -662,6 +701,7 @@ export type AuctionLiveSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   moderatorId?: boolean
   createdAt?: boolean
   endedAt?: boolean
+  status?: boolean
   moderator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["auctionLive"]>
 
@@ -673,9 +713,10 @@ export type AuctionLiveSelectScalar = {
   moderatorId?: boolean
   createdAt?: boolean
   endedAt?: boolean
+  status?: boolean
 }
 
-export type AuctionLiveOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "startTime" | "title" | "description" | "moderatorId" | "createdAt" | "endedAt", ExtArgs["result"]["auctionLive"]>
+export type AuctionLiveOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "startTime" | "title" | "description" | "moderatorId" | "createdAt" | "endedAt" | "status", ExtArgs["result"]["auctionLive"]>
 export type AuctionLiveInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   moderator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   listings?: boolean | Prisma.AuctionLive$listingsArgs<ExtArgs>
@@ -702,6 +743,7 @@ export type $AuctionLivePayload<ExtArgs extends runtime.Types.Extensions.Interna
     moderatorId: string
     createdAt: Date
     endedAt: Date | null
+    status: $Enums.AuctionLiveStatus
   }, ExtArgs["result"]["auctionLive"]>
   composites: {}
 }
@@ -1134,6 +1176,7 @@ export interface AuctionLiveFieldRefs {
   readonly moderatorId: Prisma.FieldRef<"AuctionLive", 'String'>
   readonly createdAt: Prisma.FieldRef<"AuctionLive", 'DateTime'>
   readonly endedAt: Prisma.FieldRef<"AuctionLive", 'DateTime'>
+  readonly status: Prisma.FieldRef<"AuctionLive", 'AuctionLiveStatus'>
 }
     
 

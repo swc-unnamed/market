@@ -7,6 +7,16 @@ enum Role {
   @@map("roles")
 }
 
+enum AuctionLiveStatus {
+  Upcoming
+  InProgress
+  Completed
+  Cancelled
+  Closed
+
+  @@map("auction_live_status")
+}
+
 enum AuctionListingStatus {
   Draft
   Active
