@@ -4,6 +4,7 @@
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Card from '$lib/components/ui/card';
+	import * as Alert from '$lib/components/ui/alert';
 	import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import { Database } from '@lucide/svelte';
@@ -19,6 +20,13 @@
 	{/snippet}
 
 	<div class="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
+		{#if listings.length < 1}
+			<Alert.Root class="col-span-4 w-full bg-black">
+				<Alert.Description class="w-full text-center">
+					<h3 class="text-center">There are currently no listings available!</h3>
+				</Alert.Description>
+			</Alert.Root>
+		{/if}
 		{#each listings as listing}
 			<Card.Root class="border-2 bg-black">
 				<img src={listing.items[0].entity.imageLarge} class="" alt="entity" />
