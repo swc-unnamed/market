@@ -33,6 +33,9 @@ export const load = async ({ locals, params, url, depends }) => {
       listings: {
         include: {
           items: true
+        },
+        orderBy: {
+          listingNumber: 'asc'
         }
       }
     }
@@ -137,7 +140,7 @@ export const actions = {
       return { form };
     }
 
-    const { title, description, startTime, moderatorId, listings } = form.data;
+    const { title, description, startTime, moderatorId } = form.data;
 
     const auction = await db.auctionLive.findUnique({
       where: {
@@ -160,9 +163,6 @@ export const actions = {
         description: description,
         startTime: new Date(startTime),
         moderatorId: moderatorId,
-        listings: {
-          set: listings.map(listingId => ({ id: listingId }))
-        }
       }
     });
 

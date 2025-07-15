@@ -15,6 +15,7 @@
 	import { enhance as formEnhance } from '$app/forms';
 	import ListingDialog from '../components/listing-dialog.svelte';
 	import AuctionHouseAdminMenu from '$lib/components/common/auction-house/auction-house-admin-menu.svelte';
+	import { invalidate } from '$app/navigation';
 
 	const { data } = $props();
 
@@ -185,6 +186,7 @@
 
 							if (result.type === 'success') {
 								toast.success('Auction closed successfully!');
+								await invalidate('app:auction-house/admin/live-auctions');
 							}
 						};
 					}}
@@ -237,9 +239,12 @@
 								<Table.Cell>{listing.minimumBid.toLocaleString()}</Table.Cell>
 								<Table.Cell>{listing.anonymous ? 'Yes' : 'No'}</Table.Cell>
 								<Table.Cell class="flex w-48 gap-2">
-									{#if auction.status === 'InProgress' || auction.status === 'Upcoming'}
+									{#if auction.status === 'InProgress' || auction.status === 'Upcoming' || auction.status === 'Completed'}
 										<ListingDialog auctionId={auction.id} listingId={listing.id} />
-										<Button size="sm" variant="outline">Remove Listing</Button>
+
+										{#if auction.status === 'Upcoming' || auction.status === 'InProgress'}
+											<Button size="sm" variant="outline">Remove Listing</Button>
+										{/if}
 									{/if}
 								</Table.Cell>
 							</Table.Row>

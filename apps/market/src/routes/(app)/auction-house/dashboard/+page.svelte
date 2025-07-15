@@ -42,7 +42,7 @@
 	const auctions = $derived(data.auctions);
 
 	let notifications = $state<Notification[]>([]);
-	let tabSelection = $state('live_auctions');
+	let tabSelection = $state('active');
 
 	function scrambleText(text: string) {
 		return (element: HTMLElement) => {
