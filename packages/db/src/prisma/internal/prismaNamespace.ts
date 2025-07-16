@@ -399,7 +399,7 @@ export const ModelName = {
   AuctionListingItem: 'AuctionListingItem',
   AuctionBid: 'AuctionBid',
   AuctionReview: 'AuctionReview',
-  AuctionEvent: 'AuctionEvent',
+  LiveAuctionSetting: 'LiveAuctionSetting',
   BetaAccess: 'BetaAccess',
   Entity: 'Entity',
   EntityLedger: 'EntityLedger',
@@ -423,7 +423,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "auctionLive" | "auctionListing" | "auctionListingItem" | "auctionBid" | "auctionReview" | "auctionEvent" | "betaAccess" | "entity" | "entityLedger" | "organization" | "organizationMember" | "user" | "profile" | "profileReputationLedger"
+    modelProps: "auctionLive" | "auctionListing" | "auctionListingItem" | "auctionBid" | "auctionReview" | "liveAuctionSetting" | "betaAccess" | "entity" | "entityLedger" | "organization" | "organizationMember" | "user" | "profile" | "profileReputationLedger"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -797,77 +797,77 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    AuctionEvent: {
-      payload: Prisma.$AuctionEventPayload<ExtArgs>
-      fields: Prisma.AuctionEventFieldRefs
+    LiveAuctionSetting: {
+      payload: Prisma.$LiveAuctionSettingPayload<ExtArgs>
+      fields: Prisma.LiveAuctionSettingFieldRefs
       operations: {
         findUnique: {
-          args: Prisma.AuctionEventFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuctionEventPayload> | null
+          args: Prisma.LiveAuctionSettingFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LiveAuctionSettingPayload> | null
         }
         findUniqueOrThrow: {
-          args: Prisma.AuctionEventFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuctionEventPayload>
+          args: Prisma.LiveAuctionSettingFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LiveAuctionSettingPayload>
         }
         findFirst: {
-          args: Prisma.AuctionEventFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuctionEventPayload> | null
+          args: Prisma.LiveAuctionSettingFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LiveAuctionSettingPayload> | null
         }
         findFirstOrThrow: {
-          args: Prisma.AuctionEventFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuctionEventPayload>
+          args: Prisma.LiveAuctionSettingFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LiveAuctionSettingPayload>
         }
         findMany: {
-          args: Prisma.AuctionEventFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuctionEventPayload>[]
+          args: Prisma.LiveAuctionSettingFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LiveAuctionSettingPayload>[]
         }
         create: {
-          args: Prisma.AuctionEventCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuctionEventPayload>
+          args: Prisma.LiveAuctionSettingCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LiveAuctionSettingPayload>
         }
         createMany: {
-          args: Prisma.AuctionEventCreateManyArgs<ExtArgs>
+          args: Prisma.LiveAuctionSettingCreateManyArgs<ExtArgs>
           result: BatchPayload
         }
         createManyAndReturn: {
-          args: Prisma.AuctionEventCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuctionEventPayload>[]
+          args: Prisma.LiveAuctionSettingCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LiveAuctionSettingPayload>[]
         }
         delete: {
-          args: Prisma.AuctionEventDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuctionEventPayload>
+          args: Prisma.LiveAuctionSettingDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LiveAuctionSettingPayload>
         }
         update: {
-          args: Prisma.AuctionEventUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuctionEventPayload>
+          args: Prisma.LiveAuctionSettingUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LiveAuctionSettingPayload>
         }
         deleteMany: {
-          args: Prisma.AuctionEventDeleteManyArgs<ExtArgs>
+          args: Prisma.LiveAuctionSettingDeleteManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateMany: {
-          args: Prisma.AuctionEventUpdateManyArgs<ExtArgs>
+          args: Prisma.LiveAuctionSettingUpdateManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateManyAndReturn: {
-          args: Prisma.AuctionEventUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuctionEventPayload>[]
+          args: Prisma.LiveAuctionSettingUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LiveAuctionSettingPayload>[]
         }
         upsert: {
-          args: Prisma.AuctionEventUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuctionEventPayload>
+          args: Prisma.LiveAuctionSettingUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LiveAuctionSettingPayload>
         }
         aggregate: {
-          args: Prisma.AuctionEventAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateAuctionEvent>
+          args: Prisma.LiveAuctionSettingAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLiveAuctionSetting>
         }
         groupBy: {
-          args: Prisma.AuctionEventGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AuctionEventGroupByOutputType>[]
+          args: Prisma.LiveAuctionSettingGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LiveAuctionSettingGroupByOutputType>[]
         }
         count: {
-          args: Prisma.AuctionEventCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AuctionEventCountAggregateOutputType> | number
+          args: Prisma.LiveAuctionSettingCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LiveAuctionSettingCountAggregateOutputType> | number
         }
       }
     }
@@ -1587,14 +1587,12 @@ export const AuctionReviewScalarFieldEnum = {
 export type AuctionReviewScalarFieldEnum = (typeof AuctionReviewScalarFieldEnum)[keyof typeof AuctionReviewScalarFieldEnum]
 
 
-export const AuctionEventScalarFieldEnum = {
+export const LiveAuctionSettingScalarFieldEnum = {
   id: 'id',
-  message: 'message',
-  href: 'href',
-  createdAt: 'createdAt'
+  broadcastWebhook: 'broadcastWebhook'
 } as const
 
-export type AuctionEventScalarFieldEnum = (typeof AuctionEventScalarFieldEnum)[keyof typeof AuctionEventScalarFieldEnum]
+export type LiveAuctionSettingScalarFieldEnum = (typeof LiveAuctionSettingScalarFieldEnum)[keyof typeof LiveAuctionSettingScalarFieldEnum]
 
 
 export const BetaAccessScalarFieldEnum = {
@@ -1992,7 +1990,7 @@ export type GlobalOmitConfig = {
   auctionListingItem?: Prisma.AuctionListingItemOmit
   auctionBid?: Prisma.AuctionBidOmit
   auctionReview?: Prisma.AuctionReviewOmit
-  auctionEvent?: Prisma.AuctionEventOmit
+  liveAuctionSetting?: Prisma.LiveAuctionSettingOmit
   betaAccess?: Prisma.BetaAccessOmit
   entity?: Prisma.EntityOmit
   entityLedger?: Prisma.EntityLedgerOmit

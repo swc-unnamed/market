@@ -55,6 +55,16 @@
 			displayListingDetails = false;
 		}
 	});
+
+	async function handleBroadcast() {
+		const response = await fetch(`/api/auctions/live/${auction.id}/broadcast`, {
+			method: 'POST'
+		});
+
+		const result = await response.json();
+
+		toast.success(result.message || 'Broadcast sent successfully!');
+	}
 </script>
 
 <PageWrapper
@@ -162,10 +172,9 @@
 							<Button
 								size="sm"
 								variant="outline"
-								onclick={() => {
-									toast.warning(
-										'This feature is not yet implemented. It will be available in a future update.'
-									);
+								onclick={async () => {
+									toast.info('Broadcasting auction...');
+									await handleBroadcast();
 								}}
 							>
 								<RadioTower />

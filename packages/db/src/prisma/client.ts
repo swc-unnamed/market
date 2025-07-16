@@ -64,10 +64,10 @@ export type AuctionBid = Prisma.AuctionBidModel
  */
 export type AuctionReview = Prisma.AuctionReviewModel
 /**
- * Model AuctionEvent
+ * Model LiveAuctionSetting
  * 
  */
-export type AuctionEvent = Prisma.AuctionEventModel
+export type LiveAuctionSetting = Prisma.LiveAuctionSettingModel
 /**
  * Model BetaAccess
  * 

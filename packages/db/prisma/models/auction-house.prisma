@@ -84,11 +84,9 @@ model AuctionReview {
   @@map("auction_reviews")
 }
 
-model AuctionEvent {
-  id        String   @id @default(cuid())
-  message   String
-  href      String?
-  createdAt DateTime @default(now()) @map("created_at")
+model LiveAuctionSetting {
+  id               String @id @default(cuid())
+  broadcastWebhook String @map("broadcast_webhook")
 
-  @@map("auction_events")
+  @@map("live_auction_settings")
 }

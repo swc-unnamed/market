@@ -79,6 +79,16 @@
 			toast.error('Failed to record sale.');
 		}
 	}
+
+	async function handleBroadcastListing(id: string) {
+		const response = await fetch(`/api/auctions/live/${auctionId}/listings/${id}/broadcast`, {
+			method: 'POST'
+		});
+
+		const result = await response.json();
+
+		toast.success(result.message || 'Broadcast sent successfully!');
+	}
 </script>
 
 <Dialog.Root bind:open={dialogOpen}>
@@ -99,8 +109,9 @@
 				<Button
 					size="sm"
 					variant="outline"
-					onclick={() => {
+					onclick={async () => {
 						toast('Broadcasting...');
+						await handleBroadcastListing(listingId);
 					}}
 				>
 					<RadioTower />
