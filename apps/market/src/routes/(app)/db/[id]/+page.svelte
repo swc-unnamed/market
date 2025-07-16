@@ -4,7 +4,7 @@
 	import PageWrapper from '$lib/components/layout/page-wrapper.svelte';
 	import * as Card from '$lib/components/ui/card';
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
-	import LedgerData from './components/ledger-data.svelte';
+	import LedgerData from '$lib/components/database/ledger-data.svelte';
 
 	let { data } = $props();
 	let entity = $derived(data.entity);
@@ -37,6 +37,9 @@
 						</Tabs.List>
 						<Tabs.Content value="account">
 							<ChartPriceIndex />
+							<p class="mt-3 text-center font-bold underline underline-offset-4">
+								This is dummy data. As things progress, it will have actual data.
+							</p>
 						</Tabs.Content>
 						<Tabs.Content value="ledger">
 							<LedgerData />

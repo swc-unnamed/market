@@ -1,4 +1,4 @@
-import { GlobalAdminAccessPolicy } from '$lib/utils/access-policies';
+import { GlobalAdminAccessPolicy, GlobalAuctioneerAccessPolicy } from '$lib/utils/access-policies';
 
 export type Route = {
   title: string;
@@ -23,6 +23,17 @@ export const getOrganizationRoutes = (orgSlug: string): Route[] => {
     },
   ];
 };
+
+export const getAuctioneerRoutes = (): Route[] => {
+  return [
+    		{
+			title: 'Auction House Admin',
+			icon: 'lucide:settings',
+			href: '/auction-house/admin',
+			accessPolicy: GlobalAuctioneerAccessPolicy
+		},
+  ]
+}
 
 export const getAdminRoutes = (): Route[] => {
   return [

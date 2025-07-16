@@ -4,7 +4,7 @@ import { guard } from '$lib/utils/guard.js'
 import { error, fail, redirect } from '@sveltejs/kit'
 import { superValidate } from 'sveltekit-superforms'
 import { zod } from 'sveltekit-superforms/adapters'
-import { liveAuctionSchema } from '../components/schemas.js'
+import { liveAuctionSchema } from '../../../../../../lib/models/schemas/live-auction.schema.js'
 
 export const load = async ({ locals, params, url, depends }) => {
   if (!guard(locals, GlobalAuctioneerAccessPolicy)) {

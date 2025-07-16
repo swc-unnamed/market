@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { afterNavigate, goto, preloadData } from '$app/navigation';
-	import { getOrganizationRoutes, getAdminRoutes, type Route } from './routes';
+	import { getOrganizationRoutes, getAdminRoutes, type Route, getAuctioneerRoutes } from './routes';
 	import Icon from '@iconify/svelte';
 	import { Group } from '../ui/command';
 	import { useSidebar } from '../ui/sidebar';
@@ -41,25 +41,6 @@
 			accessPolicy: GlobalPatronAccessPolicy
 		},
 		{
-			title: 'Auction House Admin',
-			icon: 'lucide:settings',
-			href: '/auction-house/admin',
-			accessPolicy: GlobalAuctioneerAccessPolicy
-		},
-		// {
-		//   title: 'Holochain',
-		//   icon: 'lucide:package-search',
-		//   href: '/holochain',
-		//   nested: [],
-		//   accessPolicy: GlobalPatronAccessPolicy
-		// },
-		// {
-		//   title: 'Marketplace',
-		//   icon: 'lucide:chart-no-axes-combined',
-		//   href: '/marketplace',
-		//   accessPolicy: GlobalPatronAccessPolicy
-		// },
-		{
 			title: 'Database',
 			icon: 'lucide:database',
 			href: '/db',
@@ -67,6 +48,8 @@
 			accessPolicy: GlobalPatronAccessPolicy
 		}
 	];
+
+	const auctioneerRoutes: Route[] = getAuctioneerRoutes();
 
 	const sidebar = useSidebar();
 	let isSidebarOpen = $derived(sidebar.open);
@@ -81,95 +64,170 @@
 <Sidebar.Group>
 	<Sidebar.GroupLabel>Auction House</Sidebar.GroupLabel>
 	<Sidebar.Menu>
-		<!-- <Sidebar.MenuItem>
-			<Sidebar.MenuButton
-				onclick={async () => await goto('/dashboard')}
-				onmouseenter={async () => preloadData('/dashboard')}
-				class={page.url.pathname.startsWith('/dashboard') ? 'bg-secondary' : ''}
-			>
-				<div class="flex items-center gap-3">
-					<Icon icon="lucide:layout-dashboard" class="h-4 w-4" />
-					<p>Dashboard</p>
-				</div>
-			</Sidebar.MenuButton>
-		</Sidebar.MenuItem> -->
 		{#each globalRoutes as route (route.title)}
-			<Collapsible.Root class="group/collapsible" open={route.initialOpen}>
-				{#snippet child({ props })}
-					<Sidebar.MenuItem {...props}>
-						<Collapsible.Trigger
-							onmouseover={async () => {
-								if (!route.nested?.length || !isSidebarOpen) {
-									if (route.disablePrefetch) {
-										return;
+			{#if route.accessPolicy.includes(userContext.role)}
+				<Collapsible.Root class="group/collapsible" open={route.initialOpen}>
+					{#snippet child({ props })}
+						<Sidebar.MenuItem {...props}>
+							<Collapsible.Trigger
+								onmouseover={async () => {
+									if (!route.nested?.length || !isSidebarOpen) {
+										if (route.disablePrefetch) {
+											return;
+										}
+										await preloadData(route.href);
 									}
-									await preloadData(route.href);
-								}
-							}}
-							onclick={async () => {
-								if (!route?.nested?.length || !isSidebarOpen) {
-									await goto(route.href);
-								}
-							}}
-							onauxclick={() => {
-								if (!route.nested?.length || !isSidebarOpen) {
-									window.open(route.href, '_blank');
-								}
-							}}
-						>
-							{#snippet child({ props })}
-								<Sidebar.MenuButton
-									{...props}
-									class={page.url.pathname.startsWith(route.href) ? 'bg-secondary' : ''}
-								>
-									{#snippet tooltipContent()}
-										{route.title}
-									{/snippet}
-									{#if route.icon}
-										<Icon icon={route.icon} class="h-8 w-8 text-xl" />
-									{/if}
-									<span>{route.title}</span>
-									{#if route?.nested?.length}
-										<Icon
-											icon="tabler:chevron-right"
-											class="ml-auto size-6 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
-										/>
-									{/if}
-								</Sidebar.MenuButton>
-							{/snippet}
-						</Collapsible.Trigger>
-
-						<Collapsible.Content>
-							{#if route.nested?.length}
-								<Sidebar.MenuSub>
-									<Sidebar.MenuSubButton>
-										{#snippet child({ props })}
-											{#if route.nested}
-												{#each route.nested as subItem (subItem.title)}
-													<Sidebar.MenuSubItem>
-														<Sidebar.MenuButton
-															onmouseenter={async () => await preloadData(subItem.href)}
-															onclick={async () => await goto(subItem.href)}
-														>
-															{#if subItem.icon}
-																<Icon icon={subItem.icon} class="size-6" />
-															{/if}
-															<span>{subItem.title}</span>
-														</Sidebar.MenuButton>
-													</Sidebar.MenuSubItem>
-												{/each}
-											{/if}
+								}}
+								onclick={async () => {
+									if (!route?.nested?.length || !isSidebarOpen) {
+										await goto(route.href);
+									}
+								}}
+								onauxclick={() => {
+									if (!route.nested?.length || !isSidebarOpen) {
+										window.open(route.href, '_blank');
+									}
+								}}
+							>
+								{#snippet child({ props })}
+									<Sidebar.MenuButton
+										{...props}
+										class={page.url.pathname.startsWith(route.href) ? 'bg-secondary' : ''}
+									>
+										{#snippet tooltipContent()}
+											{route.title}
 										{/snippet}
-									</Sidebar.MenuSubButton>
-								</Sidebar.MenuSub>
-							{/if}
-						</Collapsible.Content>
-					</Sidebar.MenuItem>
-				{/snippet}
-			</Collapsible.Root>
+										{#if route.icon}
+											<Icon icon={route.icon} class="h-8 w-8 text-xl" />
+										{/if}
+										<span>{route.title}</span>
+										{#if route?.nested?.length}
+											<Icon
+												icon="tabler:chevron-right"
+												class="ml-auto size-6 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
+											/>
+										{/if}
+									</Sidebar.MenuButton>
+								{/snippet}
+							</Collapsible.Trigger>
+
+							<Collapsible.Content>
+								{#if route.nested?.length}
+									<Sidebar.MenuSub>
+										<Sidebar.MenuSubButton>
+											{#snippet child({ props })}
+												{#if route.nested}
+													{#each route.nested as subItem (subItem.title)}
+														<Sidebar.MenuSubItem>
+															<Sidebar.MenuButton
+																onmouseenter={async () => await preloadData(subItem.href)}
+																onclick={async () => await goto(subItem.href)}
+															>
+																{#if subItem.icon}
+																	<Icon icon={subItem.icon} class="size-6" />
+																{/if}
+																<span>{subItem.title}</span>
+															</Sidebar.MenuButton>
+														</Sidebar.MenuSubItem>
+													{/each}
+												{/if}
+											{/snippet}
+										</Sidebar.MenuSubButton>
+									</Sidebar.MenuSub>
+								{/if}
+							</Collapsible.Content>
+						</Sidebar.MenuItem>
+					{/snippet}
+				</Collapsible.Root>
+			{/if}
 		{/each}
 	</Sidebar.Menu>
 </Sidebar.Group>
+
+{#if GlobalAuctioneerAccessPolicy.includes(userContext.role)}
+	<Sidebar.Group>
+		<Sidebar.GroupLabel>Auctioneer Options</Sidebar.GroupLabel>
+		<Sidebar.Menu>
+			{#each auctioneerRoutes as route (route.title)}
+				{#if route.accessPolicy.includes(userContext.role)}
+					<Collapsible.Root class="group/collapsible" open={route.initialOpen}>
+						{#snippet child({ props })}
+							<Sidebar.MenuItem {...props}>
+								<Collapsible.Trigger
+									onmouseover={async () => {
+										if (!route.nested?.length || !isSidebarOpen) {
+											if (route.disablePrefetch) {
+												return;
+											}
+											await preloadData(route.href);
+										}
+									}}
+									onclick={async () => {
+										if (!route?.nested?.length || !isSidebarOpen) {
+											await goto(route.href);
+										}
+									}}
+									onauxclick={() => {
+										if (!route.nested?.length || !isSidebarOpen) {
+											window.open(route.href, '_blank');
+										}
+									}}
+								>
+									{#snippet child({ props })}
+										<Sidebar.MenuButton
+											{...props}
+											class={page.url.pathname.startsWith(route.href) ? 'bg-secondary' : ''}
+										>
+											{#snippet tooltipContent()}
+												{route.title}
+											{/snippet}
+											{#if route.icon}
+												<Icon icon={route.icon} class="h-8 w-8 text-xl" />
+											{/if}
+											<span>{route.title}</span>
+											{#if route?.nested?.length}
+												<Icon
+													icon="tabler:chevron-right"
+													class="ml-auto size-6 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
+												/>
+											{/if}
+										</Sidebar.MenuButton>
+									{/snippet}
+								</Collapsible.Trigger>
+
+								<Collapsible.Content>
+									{#if route.nested?.length}
+										<Sidebar.MenuSub>
+											<Sidebar.MenuSubButton>
+												{#snippet child({ props })}
+													{#if route.nested}
+														{#each route.nested as subItem (subItem.title)}
+															<Sidebar.MenuSubItem>
+																<Sidebar.MenuButton
+																	onmouseenter={async () => await preloadData(subItem.href)}
+																	onclick={async () => await goto(subItem.href)}
+																>
+																	{#if subItem.icon}
+																		<Icon icon={subItem.icon} class="size-6" />
+																	{/if}
+																	<span>{subItem.title}</span>
+																</Sidebar.MenuButton>
+															</Sidebar.MenuSubItem>
+														{/each}
+													{/if}
+												{/snippet}
+											</Sidebar.MenuSubButton>
+										</Sidebar.MenuSub>
+									{/if}
+								</Collapsible.Content>
+							</Sidebar.MenuItem>
+						{/snippet}
+					</Collapsible.Root>
+				{/if}
+			{/each}
+		</Sidebar.Menu>
+	</Sidebar.Group>
+{/if}
 
 <!-- {#if isOrgContext && orgContext}
 	{@const orgRoutes = getOrganizationRoutes(orgContext.slug)}

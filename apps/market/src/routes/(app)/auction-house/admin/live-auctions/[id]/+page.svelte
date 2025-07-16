@@ -13,7 +13,7 @@
 	import { Switch } from '$lib/components/ui/switch';
 	import { RadioTower, Cloud, Save, LockKeyhole } from '@lucide/svelte';
 	import { enhance as formEnhance } from '$app/forms';
-	import ListingDialog from '../components/listing-dialog.svelte';
+	import ListingDialog from '$lib/components/ah-listing-dialog.svelte';
 	import AuctionHouseAdminMenu from '$lib/components/common/auction-house/auction-house-admin-menu.svelte';
 	import { invalidate } from '$app/navigation';
 
