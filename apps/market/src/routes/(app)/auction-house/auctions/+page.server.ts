@@ -18,8 +18,13 @@ export const load = async () => {
             }
           }
         }
+      },
+      _count: {
+        select: {
+          listings: true
+        }
       }
-    }
+    },
   });
 
   return {

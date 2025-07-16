@@ -8,8 +8,15 @@ export const load = async ({ params }) => {
     },
     include: {
       listings: {
+        omit: {
+          creatorId: true
+        },
         include: {
-          items: true
+          items: {
+            include: {
+              entity: true
+            }
+          }
         }
       }
     }

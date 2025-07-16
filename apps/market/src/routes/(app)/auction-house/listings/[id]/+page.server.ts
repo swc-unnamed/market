@@ -28,6 +28,12 @@ export const load = async ({ params }) => {
             }
           }
         }
+      },
+      liveAuction: {
+        select: {
+          id: true,
+          title: true,
+        }
       }
     }
   });
