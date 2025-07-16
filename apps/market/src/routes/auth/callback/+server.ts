@@ -26,7 +26,7 @@ export const GET = async ({ url, cookies }) => {
   console.log(env.UM_DATABASE_URL)
 
 
-  let redirectTo = '/';
+  let redirectTo = '/auction-house/dashboard';
 
   if (state != 'profile') {
     //

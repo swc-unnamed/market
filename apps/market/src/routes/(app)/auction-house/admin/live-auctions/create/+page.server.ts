@@ -4,7 +4,7 @@ import { guard } from '$lib/utils/guard.js'
 import { redirect } from '@sveltejs/kit'
 import { superValidate } from 'sveltekit-superforms'
 import { zod } from 'sveltekit-superforms/adapters'
-import { liveAuctionSchema } from '../components/schemas'
+import { liveAuctionSchema } from '$lib/models/schemas/live-auction.schema'
 import { activityFeed } from '$lib/novu/common/activity-feed'
 
 export const load = async ({ locals }) => {

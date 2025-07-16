@@ -12,7 +12,7 @@
 	import * as Form from '$lib/components/ui/form';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import SuperDebug from 'sveltekit-superforms';
-	import { liveAuctionSchema } from '../components/schemas';
+	import { liveAuctionSchema } from '$lib/models/schemas/live-auction.schema.js';
 	import { toast } from 'svelte-sonner';
 	import AuctionHouseAdminMenu from '$lib/components/common/auction-house/auction-house-admin-menu.svelte';
 

@@ -5,14 +5,13 @@
 	import { Input } from '$lib/components/ui/input/index.js';
 	import { Label } from '$lib/components/ui/label/index.js';
 	import { Textarea } from '$lib/components/ui/textarea/index.js';
-	import TableListingItems from '../../../components/table-listing-items.svelte';
-	import ItemForm from '../../../components/item-form.svelte';
+	import TableListingItems from '$lib/components/ah-table-listing-items.svelte';
+	import ItemForm from '$lib/components/ah-item-form.svelte';
 	import { Button } from '$lib/components/ui/button';
 	import { superForm } from 'sveltekit-superforms';
 	import { toast } from 'svelte-sonner';
 	import NumberInput from '$lib/components/number-input.svelte';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
-	import { buttonVariants } from '$lib/components/ui/button/index.js';
 	import AuctionHouseMenu from '$lib/components/common/auction-house/auction-house-menu.svelte';
 
 	let { data } = $props();
