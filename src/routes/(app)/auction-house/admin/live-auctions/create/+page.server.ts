@@ -5,7 +5,7 @@ import { redirect } from '@sveltejs/kit'
 import { superValidate } from 'sveltekit-superforms'
 import { zod } from 'sveltekit-superforms/adapters'
 import { liveAuctionSchema } from '$lib/models/schemas/live-auction.schema'
-import { activityFeed } from '$lib/novu/common/activity-feed'
+import { activityFeed } from '$lib/novu/workflows/common/activity-feed'
 
 export const load = async ({ locals }) => {
   if (!guard(locals, GlobalAuctioneerAccessPolicy)) {

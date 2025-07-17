@@ -9,13 +9,18 @@ import jwt from 'jsonwebtoken';
 
 
 function isUnauthenticatedPath(path: string): boolean {
-  const unauthenticatedPaths = ['/auth/login', '/auth/callback', '/api/storage', '/api/novu'];
-  return unauthenticatedPaths.some((p) => path.startsWith(p));
+  const unauthenticatedPaths = [
+    /^\/auth\/login/,
+    /^\/auth\/callback/,
+    /^\/api\/storage/,
+    /^\/api\/novu(\/|$)/ // matches /api/novu and any subpath
+  ];
+  return unauthenticatedPaths.some((re) => re.test(path));
 }
 
 const authentication: Handle = async ({ event, resolve }) => {
   if (isUnauthenticatedPath(event.url.pathname)) {
-    console.log('Unauthenticated path, skipping authentication');
+    console.log(`Skipping auth for: ${event.url.pathname}`)
     return resolve(event);
   }
 
@@ -112,7 +117,7 @@ const authentication: Handle = async ({ event, resolve }) => {
 
 const refreshCombineAccessTokens: Handle = async ({ event, resolve }) => {
   if (isUnauthenticatedPath(event.url.pathname)) {
-    console.log('Unauthenticated path, skipping Combine token refresh');
+    console.log(`Skipping auth for: ${event.url.pathname}`)
     return resolve(event);
   }
 

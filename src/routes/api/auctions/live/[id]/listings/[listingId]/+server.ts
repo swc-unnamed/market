@@ -1,5 +1,5 @@
 import { db } from '$lib/database/db.js';
-import { activityFeed } from '$lib/novu/common/activity-feed.js';
+import { activityFeed } from '$lib/novu/workflows/common/activity-feed.js';
 import { GlobalAuctioneerAccessPolicy, GlobalPatronAccessPolicy } from '$lib/utils/access-policies.js';
 import { guard } from '$lib/utils/guard.js';
 import { json } from '@sveltejs/kit';

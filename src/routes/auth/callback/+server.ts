@@ -5,6 +5,7 @@ import { COOKIE_UM_STATE, COOKIE_UM_SESSION, COOKIE_UM_COMBINE_ACCESS_TOKEN, COO
 import type { JwtToken } from '$lib/models/common/jwt';
 import { novuClient } from '$lib/novu/server/client.server.js';
 import { TOPIC_AUCTION_LISTING_CREATED } from '$lib/novu/topics.js';
+import { welcome } from '$lib/novu/workflows/common/welcome.js';
 import { encrypt } from '$lib/utils/encrypt';
 import { redirect, type Cookies } from '@sveltejs/kit';
 import jwt from 'jsonwebtoken';
@@ -93,6 +94,15 @@ async function exchangeCode(code: string): Promise<AuthenticatedCharacter> {
 }
 
 async function login(cookies: Cookies, character: AuthenticatedCharacter, redirectTo: string) {
+
+  const userExists = await db.user.findFirst({
+    where: {
+      combineId: character.character.swcapi.character.uid,
+    },
+    select: {
+      id: true
+    }
+  });
 
   const user = await db.user.upsert({
     where: {
@@ -195,6 +205,13 @@ async function login(cookies: Cookies, character: AuthenticatedCharacter, redire
 
   if (!subscriber) {
     console.error('Failed to create Novu subscriber');
+  }
+
+  if (!userExists) {
+    // Trigger a Welcome workflow for new users
+    await welcome.trigger({
+      to: user.id
+    });
   }
 
   return redirect(307, redirectTo);

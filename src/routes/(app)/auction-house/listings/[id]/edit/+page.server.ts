@@ -1,6 +1,6 @@
 import { db } from '$lib/database/db.js';
 import { auctionItemSchema, auctionListingUpdateSchema } from '$lib/models/schemas/auction-item.schema.js';
-import { newListingWorkflow } from '$lib/novu/auction-house/new-listing.workflow.js';
+import { newListingWorkflow } from '$lib/novu/workflows/auction-house/new-listing.workflow.js';
 import { TOPIC_AUCTION_LISTING_CREATED } from '$lib/novu/topics.js';
 import { GlobalAdminAccessPolicy } from '$lib/utils/access-policies.js';
 import { error, redirect } from '@sveltejs/kit';

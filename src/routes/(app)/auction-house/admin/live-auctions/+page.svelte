@@ -1,14 +1,10 @@
 <script lang="ts">
 	import PageWrapper from '$lib/components/layout/page-wrapper.svelte';
-	import AdminNavTabs from '$lib/components/common/auction-house/admin-navtabs.svelte';
 	import * as Card from '$lib/components/ui/card';
 	import * as Avatar from '$lib/components/ui/avatar';
 	import * as Table from '$lib/components/ui/table';
 	import { Button } from '$lib/components/ui/button';
-	import { Separator } from '$lib/components/ui/separator';
-	import { Link2 } from '@lucide/svelte';
 	import AuctionHouseAdminMenu from '$lib/components/common/auction-house/auction-house-admin-menu.svelte';
-	import Likes from './likes.svelte';
 
 	const { data } = $props();
 
@@ -31,14 +27,6 @@
 	{#snippet right()}
 		<AuctionHouseAdminMenu />
 	{/snippet}
-
-	<svelte:boundary>
-		<Likes />
-
-		{#snippet pending()}
-			<p>loading...</p>
-		{/snippet}
-	</svelte:boundary>
 
 	<Card.Root>
 		<Card.Header>
