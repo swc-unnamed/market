@@ -2,15 +2,9 @@ FROM node:22 AS base
 
 RUN npm install -g pnpm
 
-RUN npm install -g turbo@^2
-
 WORKDIR /app
 
 COPY . .
-
-RUN turbo prune @market/market --docker
-
-WORKDIR /app/out/full
 
 RUN pnpm install
 
@@ -18,6 +12,12 @@ RUN pnpm db:generate
 
 RUN pnpm build
 
+FROM base AS runner
+WORKDIR /app
+
+COPY --from=base /app/node_modules ./node_modules
+COPY --from=base /app/build ./build
+
 EXPOSE 3000
 
-CMD ["node", "/app/out/full/apps/market/build/index.js"]
+CMD ["node", "/app/build/index.js"]

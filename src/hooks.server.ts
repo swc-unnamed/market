@@ -15,6 +15,7 @@ function isUnauthenticatedPath(path: string): boolean {
 
 const authentication: Handle = async ({ event, resolve }) => {
   if (isUnauthenticatedPath(event.url.pathname)) {
+    console.log('Unauthenticated path, skipping authentication');
     return resolve(event);
   }
 
@@ -111,6 +112,7 @@ const authentication: Handle = async ({ event, resolve }) => {
 
 const refreshCombineAccessTokens: Handle = async ({ event, resolve }) => {
   if (isUnauthenticatedPath(event.url.pathname)) {
+    console.log('Unauthenticated path, skipping Combine token refresh');
     return resolve(event);
   }
 

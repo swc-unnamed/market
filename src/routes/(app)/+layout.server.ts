@@ -1,3 +1,4 @@
+import { env } from '$env/dynamic/private';
 import { novuClient } from '$lib/novu/server/client.server.js';
 
 export const load = async ({ locals }) => {
@@ -8,6 +9,7 @@ export const load = async ({ locals }) => {
 
   return {
     user: locals.user,
-    terminal: locals.terminal
+    terminal: locals.terminal,
+    baseUrl: env.UM_BASE_URL,
   };
 };

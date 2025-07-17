@@ -1,7 +1,7 @@
 #!/bin/sh
 
 set -a
-. "$(dirname "$0")/.env"
+. "$(dirname "$0")/../.env"
 set +a
 
 BRIDGE_URL="http://host.docker.internal:5173"
