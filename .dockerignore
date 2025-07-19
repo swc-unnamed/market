@@ -1,5 +1,5 @@
 node_modules
-./src/lib/prisma
+src/lib/database/prisma
 .env
 build
 .svelte-kit
