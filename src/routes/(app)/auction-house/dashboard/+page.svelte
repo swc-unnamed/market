@@ -24,6 +24,7 @@
 	import type { Notification, Novu } from '@novu/js';
 	import { getNovuClient } from '$lib/novu/client/client.js';
 	import { format, formatDistance } from 'date-fns';
+	import { onMount } from 'svelte';
 
 	let { data } = $props();
 
@@ -87,7 +88,7 @@
 		notifications = notificationResult.data?.notifications || [];
 	}
 
-	$effect(() => {
+	onMount(() => {
 		loadActivityFeed();
 
 		novu.on('notifications.notification_received', (e) => {

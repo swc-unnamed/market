@@ -13,10 +13,13 @@
 </script>
 
 <DropdownMenu.Root>
-	<DropdownMenu.Trigger>
-		<Button variant="ghost" size="sm">
-			<Menu class="size-6" />
-		</Button>
+	<DropdownMenu.Trigger
+		class={buttonVariants({
+			variant: 'ghost',
+			size: 'sm'
+		})}
+	>
+		<Menu class="size-6" />
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content class="w-56" align="end" sideOffset={4}>
 		<DropdownMenu.Group>
@@ -59,7 +62,7 @@
 					Auctions
 				</button>
 			</DropdownMenu.Item>
-			{#if GlobalAuctioneerAccessPolicy.includes(userContext.role)}
+			<!-- {#if GlobalAuctioneerAccessPolicy.includes(userContext.role)}
 				<DropdownMenu.Item>
 					<button
 						class="flex items-center gap-2"
@@ -72,7 +75,7 @@
 						<span>Admin Terminal</span>
 					</button>
 				</DropdownMenu.Item>
-			{/if}
+			{/if} -->
 		</DropdownMenu.Group>
 	</DropdownMenu.Content>
 </DropdownMenu.Root>

@@ -39,8 +39,6 @@
 	// $inspect(notifications, terminalInitialized);
 
 	onMount(async () => {
-		console.log('mounted');
-
 		novu = getNovuClient({
 			apiUrl: terminalContext.apiUrl,
 			appId: terminalContext.appId,
@@ -184,7 +182,7 @@
 							: notifications.filter((n) => n.tags?.some((tag) => tab.value.includes(tag)))}
 					<Tabs.Content value={tab.label}>
 						{#each notifs as notif}
-							<div class="group mb-2 mt-2 flex flex-col rounded-md p-2">
+							<div class="group mt-2 mb-2 flex flex-col rounded-md p-2">
 								<div class="hover:bg-secondary flex flex-row items-start gap-2 rounded-md">
 									<!-- svelte-ignore a11y_click_events_have_key_events -->
 									<!-- svelte-ignore a11y_no_static_element_interactions -->
