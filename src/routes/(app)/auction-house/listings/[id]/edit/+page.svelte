@@ -13,6 +13,7 @@
 	import NumberInput from '$lib/components/number-input.svelte';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
 	import AuctionHouseMenu from '$lib/components/common/auction-house/auction-house-menu.svelte';
+	import { goto } from '$app/navigation';
 
 	let { data } = $props();
 	let listing = $derived(data.listing);
@@ -31,6 +32,20 @@
 			}
 		}
 	});
+
+	async function deleteListing() {
+		const response = await fetch(`/api/auction-house/listings/${listing.id}`, {
+			method: 'DELETE'
+		});
+
+		if (!response.ok) {
+			return toast.error(response.statusText);
+		}
+
+		toast.success('Listing deleted');
+
+		await goto(`/auction-house/dashboard`);
+	}
 </script>
 
 <PageWrapper
@@ -84,21 +99,26 @@ System:
 							<Label>Minimum Bid</Label>
 							<NumberInput bind:value={$form.minimumBid} />
 						</div>
-
-						<div class="grid grid-cols-1 gap-1 md:grid-cols-3">
-							<Button
-								variant="destructive"
-								onclick={() => {
-									deleteConfirmDialogOpen = true;
-								}}>Delete</Button
-							>
-							<Button variant="outline" onclick={() => (publicConfirmDialogOpen = true)}
-								>Publish</Button
-							>
-							<Button variant="outline" type="submit" formaction="?/save_listing">Save</Button>
-						</div>
 					</div>
 				</Card.Content>
+				<Card.Footer class="flex justify-between">
+					<div class="justify-start">
+						<Button
+							variant="destructive"
+							onclick={() => {
+								deleteConfirmDialogOpen = true;
+							}}
+						>
+							Delete
+						</Button>
+					</div>
+					<div class="items-center justify-end gap-3">
+						<Button variant="outline" onclick={() => (publicConfirmDialogOpen = true)}>
+							Publish
+						</Button>
+						<Button variant="outline" type="submit" formaction="?/save_listing">Save</Button>
+					</div>
+				</Card.Footer>
 			</Card.Root>
 		</form>
 
@@ -165,9 +185,7 @@ System:
 			</AlertDialog.Header>
 			<AlertDialog.Footer>
 				<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
-				<form action="?/delete_listing" method="post">
-					<Button variant="destructive" type="submit">Delete</Button>
-				</form>
+				<Button variant="destructive" onclick={deleteListing}>Delete</Button>
 			</AlertDialog.Footer>
 		</AlertDialog.Content>
 	</AlertDialog.Root>

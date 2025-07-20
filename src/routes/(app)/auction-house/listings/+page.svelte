@@ -21,9 +21,9 @@
 
 	<div class="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
 		{#if listings.length < 1}
-			<Alert.Root class="col-span-4 w-full bg-black">
-				<Alert.Description class="w-full text-center">
-					<h3 class="text-center">There are currently no listings available!</h3>
+			<Alert.Root class="col-span-4">
+				<Alert.Description>
+					There are currently no listings available. Check back later or create your own listing!
 				</Alert.Description>
 			</Alert.Root>
 		{/if}

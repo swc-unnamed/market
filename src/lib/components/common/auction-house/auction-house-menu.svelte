@@ -1,51 +1,61 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
 	import { goto, preloadData } from '$app/navigation';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
-	import { type UserContext, UserContextKey } from '$lib/context/user.context';
-	import { GlobalAuctioneerAccessPolicy } from '$lib/utils/access-policies';
 	import { Menu, Plus, SatelliteDish, Shield } from '@lucide/svelte';
-	import { getContext } from 'svelte';
 	import { toast } from 'svelte-sonner';
 
-	const userContext = getContext<UserContext>(UserContextKey);
+	async function createDraft() {
+		toast.loading('Creating draft listing...', {
+			id: 'create-draft'
+		});
+		const response = await fetch(`/api/auction-house/listings/drafts`, {
+			method: 'post'
+		});
+
+		if (!response.ok) {
+			toast.error(`Failed to create draft listing`, {
+				description: `Error: ${response.statusText}`
+			});
+
+			toast.error('Failed to create draft', {
+				description: `Reason: ${response.statusText}`
+			});
+
+			return;
+		}
+
+		const data: { draftId: string } = await response.json();
+
+		toast.dismiss('create-draft');
+
+		toast.success('Draft created', {
+			description: `Do you want to view it now?`,
+			action: {
+				label: 'Yes',
+				onClick: async () => await goto(`/auction-house/listings/${data.draftId}/edit`)
+			},
+			dismissable: true
+		});
+	}
 </script>
 
 <DropdownMenu.Root>
-	<DropdownMenu.Trigger>
-		<Button variant="ghost" size="sm">
-			<Menu class="size-6" />
-		</Button>
+	<DropdownMenu.Trigger
+		class={buttonVariants({
+			variant: 'ghost',
+			size: 'sm'
+		})}
+	>
+		<Menu class="size-6" />
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content class="w-56" align="end" sideOffset={4}>
 		<DropdownMenu.Group>
 			<DropdownMenu.Label>Actions</DropdownMenu.Label>
 			<DropdownMenu.Separator />
-			<DropdownMenu.Item>
-				<form
-					action="/auction-house/dashboard?/createDraft"
-					method="post"
-					use:enhance={() => {
-						return async ({ result }) => {
-							if (result.type == 'success') {
-								await goto(`/auction-house/listings/${result.data?.draftId}/edit`);
-								toast.success('Draft listing created successfully');
-							}
-
-							if (result.type == 'error') {
-								toast.error('Failed to create listing', {
-									description: result.error.message
-								});
-							}
-						};
-					}}
-				>
-					<button type="submit" class="flex items-center gap-2">
-						<Plus />
-						<span>Create Listing</span>
-					</button>
-				</form>
+			<DropdownMenu.Item onclick={createDraft}>
+				<Plus />
+				<span>Create Listing</span>
 			</DropdownMenu.Item>
 			<DropdownMenu.Item>
 				<button
@@ -59,7 +69,7 @@
 					Auctions
 				</button>
 			</DropdownMenu.Item>
-			{#if GlobalAuctioneerAccessPolicy.includes(userContext.role)}
+			<!-- {#if GlobalAuctioneerAccessPolicy.includes(userContext.role)}
 				<DropdownMenu.Item>
 					<button
 						class="flex items-center gap-2"
@@ -72,7 +82,7 @@
 						<span>Admin Terminal</span>
 					</button>
 				</DropdownMenu.Item>
-			{/if}
+			{/if} -->
 		</DropdownMenu.Group>
 	</DropdownMenu.Content>
 </DropdownMenu.Root>

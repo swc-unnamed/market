@@ -9,6 +9,7 @@
 	import { Separator } from '$lib/components/ui/separator';
 	import { getNovuClient } from '$lib/novu/client/client.js';
 	import { Database } from '@lucide/svelte';
+	import { toast } from 'svelte-sonner';
 
 	let { data } = $props();
 	let listing = $derived(data.listing);
@@ -19,6 +20,23 @@
 		socketUrl: data.terminal.socketUrl,
 		subscriberId: data.user.id
 	});
+
+	async function subscribe() {
+		const response = await fetch(`/api/auction-house/listings/${listing.id}/subscribe`, {
+			method: 'POST'
+		});
+
+		if (!response.ok) {
+			return toast.error(`Failed to subscribe to listing updates`, {
+				description: `Error: ${response.statusText}`
+			});
+		}
+
+		toast.success('Subscribed', {
+			description: `You will now receive updates for this listing in your feed.`,
+			dismissable: true
+		});
+	}
 </script>
 
 <PageWrapper
@@ -104,7 +122,7 @@
 			<Card.Root>
 				<Card.Content class="flex flex-col gap-3">
 					<div class="grid grid-cols-1 gap-3 md:grid-cols-3">
-						<Button size="sm" variant="outline" disabled>Subscribe</Button>
+						<Button size="sm" variant="outline" onclick={subscribe}>Subscribe</Button>
 						<Button size="sm" variant="outline" disabled>Buy Now</Button>
 						<Button size="sm" variant="outline" disabled>Share</Button>
 						<p class="text-muted-foreground col-span-3 text-center text-sm">

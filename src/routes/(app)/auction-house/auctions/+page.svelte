@@ -3,6 +3,7 @@
 	import PageWrapper from '$lib/components/layout/page-wrapper.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Card from '$lib/components/ui/card';
+	import * as Alert from '$lib/components/ui/alert';
 
 	let { data } = $props();
 	let auctions = $derived(data.auctions);
@@ -12,6 +13,14 @@
 	{#snippet right()}
 		<AuctionHouseMenu />
 	{/snippet}
+
+	{#if auctions.length < 1}
+		<Alert.Root>
+			<Alert.Description>
+				There are no pending Live Auctions at this time. Check back later.
+			</Alert.Description>
+		</Alert.Root>
+	{/if}
 
 	<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
 		{#each auctions as auction}

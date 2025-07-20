@@ -6,6 +6,7 @@ import { decrypt, encrypt } from '$lib/utils/encrypt';
 import { redirect, type Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 import jwt from 'jsonwebtoken';
+import 'dotenv/config'
 
 
 function isUnauthenticatedPath(path: string): boolean {
@@ -15,6 +16,7 @@ function isUnauthenticatedPath(path: string): boolean {
 
 const authentication: Handle = async ({ event, resolve }) => {
   if (isUnauthenticatedPath(event.url.pathname)) {
+    console.log(`Skipping auth for: ${event.url.pathname}`)
     return resolve(event);
   }
 
