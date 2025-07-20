@@ -196,53 +196,6 @@ export const actions = {
     };
   },
 
-  delete_listing: async ({ params, locals }) => {
-    const { id } = params;
-
-    const record = await db.auctionListing.findUnique({
-      where: { id: id },
-    });
-
-    if (!record) {
-      return error(404, {
-        message: 'Listing not found'
-      });
-    }
-
-    if (record.status != 'Draft') {
-      return error(403, {
-        message: 'You can only delete draft listings.'
-      });
-    }
-
-    let authorized = false;
-    if (record.creatorId == locals.user.id) {
-      authorized = true;
-    }
-
-    if (GlobalAdminAccessPolicy.includes(locals.user.role)) {
-      authorized = true;
-    }
-
-    if (!authorized) {
-      return error(403, {
-        message: 'You do not have permission to edit this listing.'
-      });
-    }
-
-    await db.auctionListingItem.deleteMany({
-      where: {
-        listingId: id
-      }
-    });
-
-    await db.auctionListing.delete({
-      where: { id: id }
-    });
-
-    return redirect(303, '/auction-house/dashboard');
-  },
-
   publish_listing: async ({ params, locals }) => {
     const { id } = params;
 
