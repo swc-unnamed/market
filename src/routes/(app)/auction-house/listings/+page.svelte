@@ -4,13 +4,9 @@
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Card from '$lib/components/ui/card';
-	import * as Alert from '$lib/components/ui/alert';
 	import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
-	import * as Tooltip from '$lib/components/ui/tooltip';
 	import { Database } from '@lucide/svelte';
 	import DataTable from './data-table/data-table.svelte';
-	import { columns } from './data-table/columns.js';
-	import { getTableData } from './listings.remote';
 
 	let { data } = $props();
 
