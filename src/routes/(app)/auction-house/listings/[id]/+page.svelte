@@ -10,9 +10,12 @@
 	import { getNovuClient } from '$lib/novu/client/client.js';
 	import { Database } from '@lucide/svelte';
 	import { toast } from 'svelte-sonner';
+	import { subscribeCommand, unsubscribeCommand } from './data.remote';
 
 	let { data } = $props();
 	let listing = $derived(data.listing);
+
+	$inspect(data);
 
 	const novu = getNovuClient({
 		apiUrl: data.terminal.apiUrl,
@@ -22,18 +25,28 @@
 	});
 
 	async function subscribe() {
-		const response = await fetch(`/api/auction-house/listings/${listing.id}/subscribe`, {
-			method: 'POST'
-		});
+		await subscribeCommand(listing.id);
+		// const response = await fetch(`/api/auction-house/listings/${listing.id}/subscribe`, {
+		// 	method: 'POST'
+		// });
 
-		if (!response.ok) {
-			return toast.error(`Failed to subscribe to listing updates`, {
-				description: `Error: ${response.statusText}`
-			});
-		}
+		// if (!response.ok) {
+		// 	return toast.error(`Failed to subscribe to listing updates`, {
+		// 		description: `Error: ${response.statusText}`
+		// 	});
+		// }
 
 		toast.success('Subscribed', {
 			description: `You will now receive updates for this listing in your feed.`,
+			dismissable: true
+		});
+	}
+
+	async function unsubscribe() {
+		await unsubscribeCommand(listing.id);
+
+		toast.success('Unsubscribed', {
+			description: `You will no longer receive updates for this listing.`,
 			dismissable: true
 		});
 	}
@@ -122,12 +135,12 @@
 			<Card.Root>
 				<Card.Content class="flex flex-col gap-3">
 					<div class="grid grid-cols-1 gap-3 md:grid-cols-3">
-						<Button size="sm" variant="outline" onclick={subscribe}>Subscribe</Button>
+						{#if listing.subscriptions.length > 0}
+							<Button size="sm" variant="outline" onclick={unsubscribe}>Unsubscribe</Button>
+						{:else}
+							<Button size="sm" variant="outline" onclick={subscribe}>Subscribe</Button>
+						{/if}
 						<Button size="sm" variant="outline" disabled>Buy Now</Button>
-						<Button size="sm" variant="outline" disabled>Share</Button>
-						<p class="text-muted-foreground col-span-3 text-center text-sm">
-							These actions are coming soon!
-						</p>
 					</div>
 
 					<Separator />

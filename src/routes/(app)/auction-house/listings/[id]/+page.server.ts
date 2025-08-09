@@ -1,7 +1,7 @@
 import { db } from '$lib/database/db.js';
 import { error, redirect } from '@sveltejs/kit';
 
-export const load = async ({ params }) => {
+export const load = async ({ params, locals }) => {
   const { id } = params;
 
   if (!id) {
@@ -33,6 +33,11 @@ export const load = async ({ params }) => {
         select: {
           id: true,
           title: true,
+        }
+      },
+      subscriptions: {
+        where: {
+          userId: locals.user.id
         }
       }
     }

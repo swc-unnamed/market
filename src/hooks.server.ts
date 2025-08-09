@@ -7,6 +7,7 @@ import { redirect, type Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 import jwt from 'jsonwebtoken';
 import 'dotenv/config'
+import type { UserSettings } from '$lib/models/common/user-settings';
 
 
 function isUnauthenticatedPath(path: string): boolean {
@@ -35,7 +36,8 @@ const authentication: Handle = async ({ event, resolve }) => {
   const user = await db.user.findUnique({
     where: { id: token.id },
     include: {
-      profile: true
+      profile: true,
+      settings: true
     }
   });
 
@@ -69,6 +71,10 @@ const authentication: Handle = async ({ event, resolve }) => {
     }
   });
 
+  const parsedSettings = user.settings && user.settings.settings
+    ? user.settings.settings as unknown as UserSettings
+    : { listingViewStyle: 'card' } as UserSettings;
+
   event.locals.user = {
     id: user.id,
     username: user.username,
@@ -99,7 +105,8 @@ const authentication: Handle = async ({ event, resolve }) => {
           role: membership.role
         }
       }))
-    }
+    },
+    settings: parsedSettings
   }
 
   event.locals.terminal = {
