@@ -48,10 +48,9 @@ export const columns: ColumnDef<Listing>[] = [
     enableColumnFilter: false,
   },
   {
-    accessorKey: 'entity.name',
+    accessorKey: 'name',
     header: 'Entity Name',
-    enableColumnFilter: false,
-    id: 'entityName'
+    enableColumnFilter: true
   },
   {
     accessorKey: 'listing.title',

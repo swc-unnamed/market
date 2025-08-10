@@ -20,15 +20,13 @@
 	let columns = tableColumns;
 
 	let { items: data } = await getTableData();
-	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 10 });
+	let columnFilters = $state<ColumnFiltersState>([]);
 	let columnVisibility = $state<VisibilityState>(
 		JSON.parse(
 			localStorage.getItem('columnVisibility') ||
 				JSON.stringify({ uuu: false, unique: false, customImage: false })
 		) as VisibilityState
 	);
-
-	$inspect(columnVisibility);
 
 	const table = createSvelteTable({
 		get data() {
@@ -46,9 +44,19 @@
 
 			localStorage.setItem('columnVisibility', JSON.stringify(columnVisibility));
 		},
+		onColumnFiltersChange: (updater) => {
+			if (typeof updater === 'function') {
+				columnFilters = updater(columnFilters);
+			} else {
+				columnFilters = updater;
+			}
+		},
 		state: {
 			get columnVisibility() {
 				return columnVisibility;
+			},
+			get columnFilters() {
+				return columnFilters;
 			}
 		}
 	});
@@ -57,10 +65,10 @@
 <div class="rounded-md border">
 	<div class="flex items-center p-3">
 		<Input
-			placeholder="Filter entities..."
-			value={table.getColumn('entityName')?.getFilterValue() as string}
-			onchange={(e) => table.getColumn('entityName')?.setFilterValue(e.currentTarget.value)}
-			oninput={(e) => table.getColumn('entityName')?.setFilterValue(e.currentTarget.value)}
+			placeholder="Filter items..."
+			value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
+			onchange={(e) => table.getColumn('name')?.setFilterValue(e.currentTarget.value)}
+			oninput={(e) => table.getColumn('name')?.setFilterValue(e.currentTarget.value)}
 			class="max-w-sm"
 		/>
 		<DropdownMenu.Root>
