@@ -94,7 +94,7 @@
 			</Card.Root>
 
 			<div class="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
-				{#each listing.items as item (item.id)}
+				{#each listing?.items as item (item.id)}
 					<Card.Root>
 						<Card.Header>
 							<div class="flex items-center justify-between">
@@ -135,7 +135,7 @@
 			<Card.Root>
 				<Card.Content class="flex flex-col gap-3">
 					<div class="grid grid-cols-1 gap-3 md:grid-cols-3">
-						{#if listing.subscriptions.length > 0}
+						{#if listing?.subscriptions.length > 0}
 							<Button size="sm" variant="outline" onclick={unsubscribe}>Unsubscribe</Button>
 						{:else}
 							<Button size="sm" variant="outline" onclick={subscribe}>Subscribe</Button>
@@ -156,7 +156,7 @@
 							<Input value={listing.creditsRecipient} readonly />
 						</div>
 
-						{#if listing.liveAuctionId}
+						{#if listing?.liveAuctionId}
 							<div class="flex flex-col gap-2">
 								<Button href={`/auction-house/auctions/${listing.liveAuctionId}`}>
 									View Associated Auction

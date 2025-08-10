@@ -16,10 +16,12 @@
 	import { getTableData } from '../listings.remote';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
+	import { goto } from '$app/navigation';
 
 	let columns = tableColumns;
 
 	let { items: data } = await getTableData();
+	let selectedEntityId = $state<string | undefined>(undefined);
 	let columnFilters = $state<ColumnFiltersState>([]);
 	let columnVisibility = $state<VisibilityState>(
 		JSON.parse(
@@ -60,6 +62,8 @@
 			}
 		}
 	});
+
+	$inspect(selectedEntityId);
 </script>
 
 <div class="rounded-md border">
@@ -71,25 +75,27 @@
 			oninput={(e) => table.getColumn('name')?.setFilterValue(e.currentTarget.value)}
 			class="max-w-sm"
 		/>
-		<DropdownMenu.Root>
-			<DropdownMenu.Trigger>
-				{#snippet child({ props })}
-					<Button {...props} size="sm" variant="secondary" class="ml-auto">Columns</Button>
-				{/snippet}
-			</DropdownMenu.Trigger>
-			<DropdownMenu.Content align="end">
-				{#each table.getAllColumns().filter((col) => col.getCanHide()) as column (column.id)}
-					{#if column.columnDef.enableColumnFilter !== false}
-						<DropdownMenu.CheckboxItem
-							class="capitalize"
-							bind:checked={() => column.getIsVisible(), (v) => column.toggleVisibility(!!v)}
-						>
-							{column.columnDef.header}
-						</DropdownMenu.CheckboxItem>
-					{/if}
-				{/each}
-			</DropdownMenu.Content>
-		</DropdownMenu.Root>
+		<div class="flex w-full items-center gap-2">
+			<DropdownMenu.Root>
+				<DropdownMenu.Trigger>
+					{#snippet child({ props })}
+						<Button {...props} size="sm" variant="secondary" class="ml-auto">Columns</Button>
+					{/snippet}
+				</DropdownMenu.Trigger>
+				<DropdownMenu.Content align="end">
+					{#each table.getAllColumns().filter((col) => col.getCanHide()) as column (column.id)}
+						{#if column.columnDef.enableColumnFilter !== false}
+							<DropdownMenu.CheckboxItem
+								class="capitalize"
+								bind:checked={() => column.getIsVisible(), (v) => column.toggleVisibility(!!v)}
+							>
+								{column.columnDef.header}
+							</DropdownMenu.CheckboxItem>
+						{/if}
+					{/each}
+				</DropdownMenu.Content>
+			</DropdownMenu.Root>
+		</div>
 	</div>
 	<Table.Root>
 		<Table.Header>
@@ -110,7 +116,13 @@
 		</Table.Header>
 		<Table.Body>
 			{#each table.getRowModel().rows as row (row.id)}
-				<Table.Row data-state={row.getIsSelected() && 'selected'}>
+				<Table.Row
+					class="cursor-pointer"
+					onclick={async () => {
+						await goto(`/auction-house/listings/${row.original.listingId}`);
+					}}
+					data-state={row.getIsSelected() && 'selected'}
+				>
 					{#each row.getVisibleCells() as cell (cell.id)}
 						<Table.Cell>
 							<FlexRender content={cell.column.columnDef.cell} context={cell.getContext()} />

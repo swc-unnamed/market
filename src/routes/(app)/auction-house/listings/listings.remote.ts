@@ -33,4 +33,16 @@ export const getTableData = query(async () => {
   return {
     items: items
   }
+});
+
+export const getEntities = query(async () => {
+  const entities = await db.entity.findMany({
+    select: {
+      id: true,
+      name: true,
+      imageSmall: true
+    }
+  });
+
+  return entities
 })
