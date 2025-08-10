@@ -1,4 +1,5 @@
 import type { Role } from "$lib/database/db";
+import type { UserSettings } from "$lib/models/common/user-settings";
 
 export const UserContextKey = 'user_context';
 
@@ -32,5 +33,6 @@ export interface UserContext {
         role: string;
       }
     }[];
-  }
+  };
+  settings: UserSettings;
 }

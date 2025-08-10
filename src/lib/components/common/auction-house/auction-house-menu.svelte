@@ -29,60 +29,11 @@
 
 		toast.dismiss('create-draft');
 
-		toast.success('Draft created', {
-			description: `Do you want to view it now?`,
-			action: {
-				label: 'Yes',
-				onClick: async () => await goto(`/auction-house/listings/${data.draftId}/edit`)
-			},
-			dismissable: true
-		});
+		await goto(`/auction-house/listings/${data.draftId}/edit`);
 	}
 </script>
 
-<DropdownMenu.Root>
-	<DropdownMenu.Trigger
-		class={buttonVariants({
-			variant: 'ghost',
-			size: 'sm'
-		})}
-	>
-		<Menu class="size-6" />
-	</DropdownMenu.Trigger>
-	<DropdownMenu.Content class="w-56" align="end" sideOffset={4}>
-		<DropdownMenu.Group>
-			<DropdownMenu.Label>Actions</DropdownMenu.Label>
-			<DropdownMenu.Separator />
-			<DropdownMenu.Item onclick={createDraft}>
-				<Plus />
-				<span>Create Listing</span>
-			</DropdownMenu.Item>
-			<DropdownMenu.Item>
-				<button
-					class="flex items-center gap-2"
-					onmouseenter={async () => {
-						await preloadData('/auction-house/auctions');
-					}}
-					onclick={async () => await goto('/auction-house/auctions')}
-				>
-					<SatelliteDish />
-					Auctions
-				</button>
-			</DropdownMenu.Item>
-			<!-- {#if GlobalAuctioneerAccessPolicy.includes(userContext.role)}
-				<DropdownMenu.Item>
-					<button
-						class="flex items-center gap-2"
-						onmouseenter={async () => {
-							await preloadData('/auction-house/admin');
-						}}
-						onclick={async () => await goto('/auction-house/admin')}
-					>
-						<Shield />
-						<span>Admin Terminal</span>
-					</button>
-				</DropdownMenu.Item>
-			{/if} -->
-		</DropdownMenu.Group>
-	</DropdownMenu.Content>
-</DropdownMenu.Root>
+<Button size="sm" variant="ghost" onclick={createDraft}>
+	<Plus />
+	Listing
+</Button>

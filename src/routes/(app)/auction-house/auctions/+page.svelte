@@ -14,7 +14,7 @@
 		<AuctionHouseMenu />
 	{/snippet}
 
-	{#if auctions.length < 1}
+	{#if data.auctions?.length < 1}
 		<Alert.Root>
 			<Alert.Description>
 				There are no pending Live Auctions at this time. Check back later.

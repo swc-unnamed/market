@@ -3,8 +3,8 @@ import { db } from '$lib/database/db';
 import type { Character } from '$lib/models/combine/character';
 import { COOKIE_UM_STATE, COOKIE_UM_SESSION, COOKIE_UM_COMBINE_ACCESS_TOKEN, COOKIE_UM_COMBINE_REFRESH_TOKEN } from '$lib/models/common/cookies';
 import type { JwtToken } from '$lib/models/common/jwt';
+import type { UserSettings } from '$lib/models/common/user-settings.js';
 import { novuClient } from '$lib/novu/server/client.server.js';
-import { TOPIC_AUCTION_LISTING_CREATED } from '$lib/novu/topics.js';
 import { encrypt } from '$lib/utils/encrypt';
 import { redirect, type Cookies } from '@sveltejs/kit';
 import jwt from 'jsonwebtoken';
@@ -94,6 +94,10 @@ async function exchangeCode(code: string): Promise<AuthenticatedCharacter> {
 
 async function login(cookies: Cookies, character: AuthenticatedCharacter, redirectTo: string) {
 
+  const defaultSettings: UserSettings = {
+    listingViewStyle: 'card'
+  }
+
   const user = await db.user.upsert({
     where: {
       combineId: character.character.swcapi.character.uid,
@@ -108,6 +112,11 @@ async function login(cookies: Cookies, character: AuthenticatedCharacter, redire
           displayName: character.character.swcapi.character.name,
           avatar: character.character.swcapi.character.image,
           reputation: 50
+        }
+      },
+      settings: {
+        create: {
+          settings: JSON.parse(JSON.stringify(defaultSettings))
         }
       }
     },
@@ -175,26 +184,19 @@ async function login(cookies: Cookies, character: AuthenticatedCharacter, redire
 
   cookies.delete(COOKIE_UM_STATE, { path: '/' });
   const novu = novuClient();
-  const subscriber = await novu.subscribers.create({
-    subscriberId: user.id,
-    avatar: user.profile?.avatar || '',
-    data: {
-      username: user.username,
-      combineId: user.combineId,
+
+  try {
+    const subscriber = await novu.subscribers.create({
+      subscriberId: user.id,
+      avatar: user.profile?.avatar || '',
+    });
+
+
+    if (!subscriber) {
+      console.error('Failed to create Novu subscriber');
     }
-  });
-
-  await novu.topics.create({
-    key: TOPIC_AUCTION_LISTING_CREATED,
-    name: 'Auction Listing Created',
-  });
-
-  await novu.topics.subscriptions.create({
-    subscriberIds: [user.id],
-  }, TOPIC_AUCTION_LISTING_CREATED)
-
-  if (!subscriber) {
-    console.error('Failed to create Novu subscriber');
+  } catch (err) {
+    console.error('Error creating Novu subscriber:', err);
   }
 
   return redirect(307, redirectTo);

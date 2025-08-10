@@ -1,26 +1,37 @@
 model User {
-  id                     String           @id @default(cuid())
-  combineId              String           @unique @map("combine_id")
-  username               String
-  combineScopes          String[]         @default(["character_read"]) @map("combine_scopes")
-  discordId              String?          @unique @map("discord_id")
-  discordUsername        String?          @map("discord_username")
-  role                   Role             @default(Patron)
-  apiKey                 String           @unique @default(uuid()) @map("api_key")
-  banned                 Boolean          @default(false)
-  bannedReason           String?          @map("banned_reason")
-  bannedDate             DateTime?        @map("banned_date")
-  createdAt              DateTime         @default(now()) @map("created_at")
-  updatedAt              DateTime         @updatedAt @map("updated_at")
-  lastLogin              DateTime         @default(now()) @map("last_login")
-  profile                Profile?
-  ownedOrganizations     Organization[]
-  moderatedLiveAuctions  AuctionLive[]
-  auctionListingsCreated AuctionListing[] @relation("auction_listing_created")
-  auctionListingsWon     AuctionListing[] @relation("auction_listing_won")
-  auctionBids            AuctionBid[]
+  id                          String                       @id @default(cuid())
+  combineId                   String                       @unique @map("combine_id")
+  username                    String
+  combineScopes               String[]                     @default(["character_read"]) @map("combine_scopes")
+  discordId                   String?                      @unique @map("discord_id")
+  discordUsername             String?                      @map("discord_username")
+  role                        Role                         @default(Patron)
+  apiKey                      String                       @unique @default(uuid()) @map("api_key")
+  banned                      Boolean                      @default(false)
+  bannedReason                String?                      @map("banned_reason")
+  bannedDate                  DateTime?                    @map("banned_date")
+  createdAt                   DateTime                     @default(now()) @map("created_at")
+  updatedAt                   DateTime                     @updatedAt @map("updated_at")
+  lastLogin                   DateTime                     @default(now()) @map("last_login")
+  profile                     Profile?
+  ownedOrganizations          Organization[]
+  moderatedLiveAuctions       AuctionLive[]
+  auctionListingsCreated      AuctionListing[]             @relation("auction_listing_created")
+  auctionListingsWon          AuctionListing[]             @relation("auction_listing_won")
+  auctionBids                 AuctionBid[]
+  auctionListingSubscriptions AuctionListingSubscription[] @relation("auction_listing_subscriptions")
+  settings                    UserSetting?
 
   @@map("users")
+}
+
+model UserSetting {
+  id       String @id @default(cuid())
+  userId   String @unique @map("user_id")
+  user     User   @relation(fields: [userId], references: [id])
+  settings Json   @default("{}")
+
+  @@map("user_settings")
 }
 
 model Profile {
