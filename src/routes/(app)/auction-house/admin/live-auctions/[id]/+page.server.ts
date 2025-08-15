@@ -4,9 +4,9 @@ import { guard } from '$lib/utils/guard.js'
 import { error, fail, redirect } from '@sveltejs/kit'
 import { superValidate } from 'sveltekit-superforms'
 import { zod } from 'sveltekit-superforms/adapters'
-import { liveAuctionSchema } from '../../../../../../lib/models/schemas/live-auction.schema.js'
+import { liveAuctionSchema } from '$lib/models/schemas/live-auction.schema.js'
 
-export const load = async ({ locals, params, url, depends }) => {
+export const load = async ({ locals, params, depends }) => {
   if (!guard(locals, GlobalAuctioneerAccessPolicy)) {
     return redirect(303, '/auction-house')
   }
@@ -71,60 +71,9 @@ export const load = async ({ locals, params, url, depends }) => {
     }
   });
 
-  const startTime = new Date(auction.startTime);
-
-  const localOffset = startTime.getTimezoneOffset() * 60000;
-  const localStartTime = new Date(startTime.getTime() - localOffset);
-  const localFormattedStartTime = localStartTime.toISOString().slice(0, 16);
-
-
-  const updateAuctionForm = await superValidate(zod(liveAuctionSchema), {
-    defaults: {
-      title: auction.title,
-      description: auction.description,
-      startTime: localFormattedStartTime,
-      moderatorId: auction.moderatorId,
-      listings: auction.listings.map(listing => listing.id)
-    }
-  });
-
-  const listingId = url.searchParams.get('lid');
-  if (listingId) {
-    const selectedListing = await db.auctionListing.findUnique({
-      where: {
-        id: listingId
-      },
-      include: {
-        items: {
-          include: {
-            entity: {
-              select: {
-                id: true,
-                name: true,
-                imageSmall: true
-              }
-            }
-          }
-        }
-      }
-    });
-
-    if (!selectedListing) {
-      return redirect(303, `/auction-house/admin/live-auctions/${params.id}`);
-    }
-
-    return {
-      auction: auction,
-      updateAuctionForm: updateAuctionForm,
-      availableModerators: availableModerators,
-      selectedListing: selectedListing
-    }
-  } else {
-    return {
-      auction: auction,
-      updateAuctionForm: updateAuctionForm,
-      availableModerators: availableModerators
-    }
+  return {
+    auction: auction,
+    availableModerators: availableModerators
   }
 }
 

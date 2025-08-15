@@ -146,7 +146,7 @@
 
 {#if GlobalAuctioneerAccessPolicy.includes(userContext.role)}
 	<Sidebar.Group>
-		<Sidebar.GroupLabel>Auctioneer Options</Sidebar.GroupLabel>
+		<Sidebar.GroupLabel>Auction House Administration</Sidebar.GroupLabel>
 		<Sidebar.Menu>
 			{#each auctioneerRoutes as route (route.title)}
 				{#if route.accessPolicy.includes(userContext.role)}
@@ -312,7 +312,7 @@
 
 {#if userContext.role == 'Developer' || userContext.role == 'Tzar'}
 	<Sidebar.Group>
-		<Sidebar.GroupLabel>Admin</Sidebar.GroupLabel>
+		<Sidebar.GroupLabel>System Administration</Sidebar.GroupLabel>
 		<Sidebar.Menu>
 			{@const adminRoutes = getAdminRoutes()}
 			{#each adminRoutes as route (route.title)}

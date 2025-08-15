@@ -10,6 +10,9 @@ export const load = async ({ locals }) => {
 
   const auctions = await db.auctionLive.findMany({
     where: {},
+    orderBy: {
+      startTime: 'asc'
+    },
     include: {
       _count: {
         select: {

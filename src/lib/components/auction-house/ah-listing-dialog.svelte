@@ -13,6 +13,7 @@
 	import { Badge } from '$lib/components/ui/badge';
 	import NumberInput from '$lib/components/number-input.svelte';
 	import { invalidate } from '$app/navigation';
+	import { broadcastListing } from '$lib/remote-fns/auction-house/live-auctions/broadcast-listing.remote';
 
 	interface Props {
 		listingId: string;
@@ -81,13 +82,13 @@
 	}
 
 	async function handleBroadcastListing(id: string) {
-		const response = await fetch(`/api/auctions/live/${auctionId}/listings/${id}/broadcast`, {
-			method: 'POST'
-		});
+		const result = await broadcastListing(id);
 
-		const result = await response.json();
-
-		toast.success(result.message || 'Broadcast sent successfully!');
+		if (result.success) {
+			toast.success(result.message);
+		} else {
+			toast.error(result.message || 'Failed to broadcast listing');
+		}
 	}
 </script>
 
@@ -154,7 +155,7 @@
 						</div>
 					</Tabs.Content>
 
-					<Tabs.Content value="2">
+					<Tabs.Content value="2" class="grid grid-cols-1 gap-1">
 						{#each data.items as item}
 							<Card.Root>
 								<Card.Content>

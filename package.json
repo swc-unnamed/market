@@ -81,10 +81,11 @@
     "date-fns": "^4.1.0",
     "discord.js": "^14.21.0",
     "dotenv": "^16.6.1",
+    "fuse.js": "^7.1.0",
     "gsap": "^3.13.0",
     "jsonwebtoken": "^9.0.2",
     "nanoid": "^5.1.5",
-    "svelte-ez-form": "^0.0.3",
+    "svelte-ez-form": "^0.0.9",
     "swcombine.js": "^0.0.11"
   }
 }
