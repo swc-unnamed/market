@@ -27,7 +27,7 @@ export const getOrganizationRoutes = (orgSlug: string): Route[] => {
 export const getAuctioneerRoutes = (): Route[] => {
   return [
     {
-      title: 'Auction House',
+      title: 'Auctions',
       icon: 'lucide:settings',
       href: '/auction-house/admin',
       accessPolicy: GlobalAuctioneerAccessPolicy

@@ -6,10 +6,15 @@
 	import { Button } from '$lib/components/ui/button';
 	import AuctionHouseAdminMenu from '$lib/components/common/auction-house/auction-house-admin-menu.svelte';
 	import StatusBadge from '$lib/components/layout/modules/auction-house/live-auctions/status-badge.svelte';
+	import LabeledSelect from '$lib/components/common/inputs/labeled-select.svelte';
+	import { page } from '$app/state';
+	import { goto } from '$app/navigation';
 
 	const { data } = $props();
 
 	let auctions = $derived(data.auctions);
+
+	let selectedStatus = $state(page.url.searchParams.get('status') || 'Upcoming');
 </script>
 
 <PageWrapper
@@ -33,9 +38,30 @@
 		<Card.Header>
 			<div class="flex items-center justify-between">
 				<Card.Title>Open Live Auctions</Card.Title>
-				<Button href="/auction-house/admin/live-auctions/create" size="sm" variant="outline">
-					Create Live Auction
-				</Button>
+				<div class="flex items-center gap-2">
+					<div class="w-64">
+						<LabeledSelect
+							label="Filter by Status"
+							options={[
+								{ value: 'ALL', label: 'All' },
+								{ value: 'Cancelled', label: 'Cancelled' },
+								{ value: 'Closed', label: 'Closed' },
+								{ value: 'Completed', label: 'Completed' },
+								{ value: 'InProgress', label: 'In Progress' },
+								{ value: 'Upcoming', label: 'Upcoming' }
+							]}
+							key="value"
+							selectLabel="label"
+							bind:value={selectedStatus}
+							onValueChange={async (e) => {
+								await goto(`/auction-house/admin/live-auctions?status=${e}`);
+							}}
+						/>
+					</div>
+					<Button class="mt-3" href="/auction-house/admin/live-auctions/create" variant="outline">
+						Create Auction
+					</Button>
+				</div>
 			</div>
 		</Card.Header>
 		<Card.Content>
