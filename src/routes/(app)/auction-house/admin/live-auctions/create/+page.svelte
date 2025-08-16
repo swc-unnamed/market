@@ -46,7 +46,7 @@
 	breadcrumb={[
 		{ title: 'Auction House', href: '/auction-house' },
 		{
-			title: 'Admin Terminal',
+			title: 'Admin',
 			href: '/auction-house/admin'
 		},
 		{
@@ -164,7 +164,7 @@
 								<Table.Cell>{listing.anonymous ? 'Yes' : 'No'}</Table.Cell>
 							</Table.Row>
 						{/each}
-						{#if pendingListings.length === 0}
+						{#if pendingListings?.length === 0}
 							<Table.Row>
 								<Table.Cell colspan={5} class="text-muted-foreground text-center">
 									No pending listings available.

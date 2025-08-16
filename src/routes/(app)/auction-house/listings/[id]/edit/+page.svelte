@@ -4,8 +4,8 @@
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
 	import * as Menubar from '$lib/components/ui/menubar/index.js';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
-	import TableListingItems from '$lib/components/ah-table-listing-items.svelte';
-	import ItemForm from '$lib/components/ah-item-form.svelte';
+	import TableListingItems from '$lib/components/auction-house/ah-table-listing-items.svelte';
+	import ItemForm from '$lib/components/auction-house/ah-item-form.svelte';
 	import NumberInput from '$lib/components/number-input.svelte';
 	import AuctionHouseMenu from '$lib/components/common/auction-house/auction-house-menu.svelte';
 	import { Input } from '$lib/components/ui/input/index.js';
